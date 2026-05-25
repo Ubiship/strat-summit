@@ -1,159 +1,70 @@
 # Strathcona Summit Solutions
 
-A multi-page brochure website for Strathcona Summit Solutions — a Vancouver Island property management and renovation company.
+A multi-page marketing site for Strathcona Summit Solutions — a Vancouver Island property management and renovation company.
 
 ## Overview
 
-**Company:** Strathcona Summit Solutions (Joel & Amanda)
-**Location:** Vancouver Island, BC
-**Services:**
-- Property Management & Cleaning (Primary)
-- Renovations & Construction (Seasonal)
+**Company:** Strathcona Summit Solutions (Joel & Amanda)  
+**Location:** Vancouver Island, BC  
+**Services:** Property Management & Cleaning · Renovations & Construction
 
-## Tech Stack
+Built on the [Tailwind Plus Studio](https://tailwindcss.com/plus) template (Next.js + Tailwind v4 + Framer Motion).
 
-- **Framework:** Next.js 15 (App Router)
-- **Styling:** Tailwind CSS + shadcn/ui
-- **Hosting:** Vercel
-- **Forms:** Server Actions + Resend
-- **Icons:** Lucide React
+## Site map
 
-## Project Structure
+| Route | Page |
+|-------|------|
+| `/` | Homepage |
+| `/property-management` | PM & cleaning services |
+| `/renovations` | Construction services |
+| `/about` | Company story |
+| `/contact` | Contact form |
 
-```
-strat-summit/
-├── app/
-│   ├── layout.tsx                 # Root layout (header/footer)
-│   ├── page.tsx                   # Homepage
-│   ├── globals.css                # Global styles + Tailwind
-│   ├── property-management/
-│   │   └── page.tsx               # PM & Cleaning services
-│   ├── renovations/
-│   │   └── page.tsx               # Construction services
-│   ├── about/
-│   │   └── page.tsx               # Company story
-│   └── contact/
-│       └── page.tsx               # Contact form
-├── components/
-│   ├── ui/                        # shadcn/ui components
-│   ├── header.tsx
-│   ├── footer.tsx
-│   ├── hero.tsx
-│   ├── service-card.tsx
-│   └── contact-form.tsx
-├── lib/
-│   ├── utils.ts                   # Utility functions (cn helper)
-│   └── actions.ts                 # Server Actions (contact form)
-├── public/
-│   └── images/                    # Static assets
-├── tailwind.config.ts
-├── next.config.ts
-├── package.json
-├── tsconfig.json
-└── README.md
-```
+Legacy template routes (`/blog`, `/work`, `/process`) remain in the build; `/process` redirects to `/property-management`.
 
-## Site Map
+## Brand
 
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | Homepage | Hero, service overview, trust signals |
-| `/property-management` | Property Management | Cleaning & caretaking services |
-| `/renovations` | Renovations | Construction & renovation services |
-| `/about` | About | Joel & Amanda's story, company values |
-| `/contact` | Contact | Contact form + business info |
+| Role | Hex |
+|------|-----|
+| Primary (forest) | `#1B4332` |
+| Secondary (stone) | `#D4C5B5` |
+| Accent (copper) | `#B87333` |
+| Background (cream) | `#FAFAF8` |
 
-## Brand Guidelines
+Site copy and contact details live in `src/lib/site.ts`.
 
-### Color Palette
-
-| Role | Color | Hex |
-|------|-------|-----|
-| Primary | Deep Forest Green | `#1B4332` |
-| Secondary | Warm Stone | `#D4C5B5` |
-| Accent | Copper/Rust | `#B87333` |
-| Background | Off-White | `#FAFAF8` |
-| Text | Charcoal | `#2D2D2D` |
-
-### Typography
-
-- **Headings:** Inter (or similar geometric sans)
-- **Body:** System font stack
-
-### Brand Direction
-
-"Strathcona" references Strathcona Park on Vancouver Island — rugged mountains, pristine nature. The brand should feel:
-- Professional but approachable
-- Pacific Northwest aesthetic (nature, mountains, water)
-- Trustworthy (they're in people's homes)
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 20+
-- npm or pnpm
-
-### Installation
+## Getting started
 
 ```bash
-# Clone the repository
-git clone <repo-url>
-cd strat-summit
-
-# Install dependencies
 npm install
-
-# Set up environment variables
 cp .env.example .env.local
-# Edit .env.local with your values
-
-# Run development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to view the site.
+Open [http://localhost:3000](http://localhost:3000).
 
-### Environment Variables
+### Environment variables
 
 ```bash
-# .env.local
 RESEND_API_KEY=re_xxxxxxxxxxxxx
 CONTACT_EMAIL=hello@strathconasummit.com
+RESEND_FROM_EMAIL=Strathcona Summit <hello@strathconasummit.com>
+NEXT_PUBLIC_SITE_URL=https://strathconasummit.com
 ```
 
-## Development
+## Scripts
 
 ```bash
-npm run dev      # Start dev server
+npm run dev      # Development server
 npm run build    # Production build
-npm run start    # Start production server
-npm run lint     # Run ESLint
+npm run start    # Production server
+npm run lint     # ESLint
 ```
 
-## Deployment
+## Related docs
 
-The site deploys automatically to Vercel on push to `main`.
-
-### Manual Deployment
-
-```bash
-vercel           # Deploy to preview
-vercel --prod    # Deploy to production
-```
-
-### Domain Configuration
-
-Configure custom domain in Vercel Dashboard → Project → Settings → Domains.
-
-## Content Updates
-
-### Page Content
-Edit page content directly in the respective `app/*/page.tsx` files.
-
-### Contact Form
-The contact form uses Resend for email delivery. Submissions go to the email configured in `CONTACT_EMAIL`.
+Operational platform specs (Go backend, portals) are in `00_PROJECT.md` and sibling docs — separate from this marketing site.
 
 ## License
 
-Private — Strathcona Summit Solutions
+Private — Strathcona Summit Solutions. Studio template licensed under [Tailwind Plus](https://tailwindcss.com/plus/license).

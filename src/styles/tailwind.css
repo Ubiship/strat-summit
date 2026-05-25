@@ -1,0 +1,56 @@
+@import 'tailwindcss';
+@import './base.css';
+@import './typography.css' layer(components);
+
+@theme {
+  --text-*: initial;
+  --text-xs: 0.75rem;
+  --text-xs--line-height: 1rem;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1rem;
+  --text-base--line-height: 1.75rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.75rem;
+  --text-xl: 1.25rem;
+  --text-xl--line-height: 2rem;
+  --text-2xl: 1.5rem;
+  --text-2xl--line-height: 2.25rem;
+  --text-3xl: 1.75rem;
+  --text-3xl--line-height: 2.25rem;
+  --text-4xl: 2rem;
+  --text-4xl--line-height: 2.5rem;
+  --text-5xl: 2.5rem;
+  --text-5xl--line-height: 3rem;
+  --text-6xl: 3rem;
+  --text-6xl--line-height: 3.5rem;
+  --text-7xl: 4rem;
+  --text-7xl--line-height: 4.5rem;
+
+  --radius-4xl: 2.5rem;
+
+  /* Strathcona Summit brand */
+  --color-forest: #1b4332;
+  --color-stone: #d4c5b5;
+  --color-copper: #b87333;
+  --color-cream: #fafaf8;
+  --color-charcoal: #2d2d2d;
+
+  /* Map template neutrals to brand darks */
+  --color-neutral-950: #1b4332;
+  --color-neutral-900: #234d3a;
+  --color-neutral-800: #2d5f4a;
+  --color-neutral-700: #3d5248;
+  --color-neutral-600: #4a5c52;
+  --color-neutral-500: #6b7a72;
+  --color-neutral-400: #8a968f;
+  --color-neutral-300: #b8c4bc;
+  --color-neutral-200: #d4c5b5;
+  --color-neutral-100: #ede8e2;
+  --color-neutral-50: #fafaf8;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display--font-variation-settings: normal;
+  --font-display-length: 2;
+}
