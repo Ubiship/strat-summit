@@ -1,4 +1,4 @@
-# Strathcona Summit — Project Spec
+    # Strathcona Summit — Project Spec
 
 ## Overview
 
