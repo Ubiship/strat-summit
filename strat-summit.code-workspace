@@ -1,11 +1,38 @@
 {
-	"folders": [
-		{
-			"path": "."
-		},
-		{
-			"path": "../../../Desktop/tailwind-plus-studio/studio-ts"
-		}
-	],
-	"settings": {}
+  "folders": [
+    {
+      "path": ".",
+      "name": "root"
+    },
+    {
+      "path": "backend",
+      "name": "backend (Go)"
+    },
+    {
+      "path": "frontend",
+      "name": "frontend (Next.js)"
+    }
+  ],
+  "settings": {
+    "typescript.tsdk": "frontend/node_modules/typescript/lib",
+    "go.gopath": null,
+    "editor.formatOnSave": true,
+    "[go]": {
+      "editor.defaultFormatter": "golang.go"
+    },
+    "[typescript]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+      "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "golang.go",
+      "esbenp.prettier-vscode",
+      "bradlc.vscode-tailwindcss",
+      "dbaeumer.vscode-eslint"
+    ]
+  }
 }
