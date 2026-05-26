@@ -15,6 +15,12 @@ type Config struct {
 	JWTAccessTTL  time.Duration
 	JWTRefreshTTL time.Duration
 
+	// CORS
+	CORSAllowedOrigins []string
+
+	// Request limits
+	MaxRequestBodySize int64
+
 	MinioEndpoint  string
 	MinioAccessKey string
 	MinioSecretKey string
@@ -32,6 +38,10 @@ func Load() (*Config, error) {
 	accessTTL, _ := strconv.Atoi(getEnv("JWT_ACCESS_TTL_MIN", "15"))
 	refreshTTL, _ := strconv.Atoi(getEnv("JWT_REFRESH_TTL_DAYS", "30"))
 	minioSSL, _ := strconv.ParseBool(getEnv("MINIO_USE_SSL", "true"))
+	maxBodySize, _ := strconv.ParseInt(getEnv("MAX_REQUEST_BODY_SIZE", "1048576"), 10, 64) // 1MB default
+
+	// Parse CORS origins (comma-separated)
+	corsOrigins := parseCSV(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000"))
 
 	return &Config{
 		Port:          getEnv("PORT", "8080"),
@@ -39,6 +49,9 @@ func Load() (*Config, error) {
 		JWTSecret:     []byte(os.Getenv("JWT_SECRET")),
 		JWTAccessTTL:  time.Duration(accessTTL) * time.Minute,
 		JWTRefreshTTL: time.Duration(refreshTTL) * 24 * time.Hour,
+
+		CORSAllowedOrigins: corsOrigins,
+		MaxRequestBodySize: maxBodySize,
 
 		MinioEndpoint:  os.Getenv("MINIO_ENDPOINT"),
 		MinioAccessKey: os.Getenv("MINIO_ACCESS_KEY"),
@@ -57,4 +70,42 @@ func getEnv(key, fallback string) string {
 		return v
 	}
 	return fallback
+}
+
+func parseCSV(s string) []string {
+	if s == "" {
+		return nil
+	}
+	parts := make([]string, 0)
+	for _, p := range splitAndTrim(s, ",") {
+		if p != "" {
+			parts = append(parts, p)
+		}
+	}
+	return parts
+}
+
+func splitAndTrim(s, sep string) []string {
+	var result []string
+	start := 0
+	for i := 0; i < len(s); i++ {
+		if i+len(sep) <= len(s) && s[i:i+len(sep)] == sep {
+			part := trimSpace(s[start:i])
+			result = append(result, part)
+			start = i + len(sep)
+		}
+	}
+	result = append(result, trimSpace(s[start:]))
+	return result
+}
+
+func trimSpace(s string) string {
+	start, end := 0, len(s)
+	for start < end && (s[start] == ' ' || s[start] == '\t') {
+		start++
+	}
+	for end > start && (s[end-1] == ' ' || s[end-1] == '\t') {
+		end--
+	}
+	return s[start:end]
 }

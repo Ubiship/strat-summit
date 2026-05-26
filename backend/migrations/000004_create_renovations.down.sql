@@ -1,0 +1,10 @@
+DROP INDEX IF EXISTS idx_photos_project;
+DROP TABLE IF EXISTS project_subtrades;
+DROP TABLE IF EXISTS project_milestones;
+DROP TABLE IF EXISTS change_orders;
+DROP TABLE IF EXISTS contracts;
+DROP TABLE IF EXISTS estimate_line_items;
+DROP TABLE IF EXISTS estimates;
+ALTER TABLE photos DROP CONSTRAINT IF EXISTS fk_photos_project;
+DROP TABLE IF EXISTS projects;
+DROP TABLE IF EXISTS subtrades;

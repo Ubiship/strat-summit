@@ -1,0 +1,14 @@
+DROP TYPE IF EXISTS agreement_type;
+DROP TYPE IF EXISTS photo_visibility;
+DROP TYPE IF EXISTS user_role;
+DROP TYPE IF EXISTS change_order_status;
+DROP TYPE IF EXISTS billing_model;
+DROP TYPE IF EXISTS project_status;
+DROP TYPE IF EXISTS comp_model;
+DROP TYPE IF EXISTS job_status;
+DROP TYPE IF EXISTS statement_status;
+DROP TYPE IF EXISTS tax_type;
+DROP TYPE IF EXISTS service_line_type;
+DROP TYPE IF EXISTS tax_treatment;
+DROP TYPE IF EXISTS booking_source;
+DROP TYPE IF EXISTS service_tier;

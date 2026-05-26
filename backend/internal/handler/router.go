@@ -6,15 +6,19 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/ubiship/strat-summit/backend/internal/auth"
 	"github.com/ubiship/strat-summit/backend/internal/config"
+	"github.com/ubiship/strat-summit/backend/internal/domain"
+	"github.com/ubiship/strat-summit/backend/internal/service"
 )
 
 type Handler struct {
 	cfg *config.Config
+	svc *service.Service
 }
 
-func New(cfg *config.Config) *Handler {
-	return &Handler{cfg: cfg}
+func New(cfg *config.Config, svc *service.Service) *Handler {
+	return &Handler{cfg: cfg, svc: svc}
 }
 
 func (h *Handler) Router() chi.Router {
@@ -24,40 +28,56 @@ func (h *Handler) Router() chi.Router {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.RequestID)
-	r.Use(corsMiddleware)
+	r.Use(h.corsMiddleware())
+	r.Use(h.maxBodySize())
 
 	// Public routes
 	r.Get("/health", h.Health)
 
-	// API routes (will add auth middleware later)
+	// API routes
 	r.Route("/api/v1", func(r chi.Router) {
-		// Auth routes
-		r.Post("/auth/login", h.notImplemented)
-		r.Post("/auth/refresh", h.notImplemented)
-		r.Post("/auth/logout", h.notImplemented)
+		// Auth routes (public)
+		r.Post("/auth/login", h.Login)
+		r.Post("/auth/refresh", h.RefreshToken)
 
-		// Protected routes (add auth middleware)
+		// Protected routes
 		r.Group(func(r chi.Router) {
+			r.Use(auth.Authenticate([]byte(h.cfg.JWTSecret)))
+
+			// Auth
+			r.Post("/auth/logout", h.Logout)
+
 			// Properties
 			r.Route("/properties", func(r chi.Router) {
-				r.Get("/", h.notImplemented)
-				r.Post("/", h.notImplemented)
-				r.Get("/{id}", h.notImplemented)
-				r.Put("/{id}", h.notImplemented)
+				r.Get("/", h.ListProperties)
+				r.Post("/", h.CreateProperty)
+				r.Get("/{id}", h.GetProperty)
+				r.Put("/{id}", h.UpdateProperty)
 			})
 
 			// Bookings
 			r.Route("/bookings", func(r chi.Router) {
-				r.Get("/", h.notImplemented)
-				r.Post("/", h.notImplemented)
-				r.Get("/{id}", h.notImplemented)
+				r.Get("/", h.ListBookings)
+				r.Post("/", h.CreateBooking)
+				r.Get("/{id}", h.GetBooking)
 			})
 
 			// Cleaning Jobs
 			r.Route("/jobs", func(r chi.Router) {
-				r.Get("/", h.notImplemented)
-				r.Get("/{id}", h.notImplemented)
-				r.Put("/{id}/status", h.notImplemented)
+				r.Get("/", h.ListJobs)
+				r.Get("/{id}", h.GetJob)
+				r.Post("/{id}/clock-in", h.ClockInJob)
+				r.Post("/{id}/clock-out", h.ClockOutJob)
+				r.Put("/{id}/status", h.UpdateJobStatus)
+				r.Post("/{id}/assign", h.AssignStaffToJob)
+			})
+
+			// Contacts (admin only)
+			r.Route("/contacts", func(r chi.Router) {
+				r.Use(auth.RequireRole(domain.RoleAdmin))
+				r.Get("/", h.ListContacts)
+				r.Post("/", h.CreateContact)
+				r.Get("/{id}", h.GetContact)
 			})
 		})
 	})
@@ -65,25 +85,71 @@ func (h *Handler) Router() chi.Router {
 	return r
 }
 
-func (h *Handler) notImplemented(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotImplemented)
-	json.NewEncoder(w).Encode(map[string]string{
-		"error": "not implemented",
-	})
+func (h *Handler) corsMiddleware() func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			origin := r.Header.Get("Origin")
+			allowed := false
+
+			// Check if origin is in allowed list
+			for _, o := range h.cfg.CORSAllowedOrigins {
+				if o == origin || o == "*" {
+					allowed = true
+					break
+				}
+			}
+
+			if allowed {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+				w.Header().Set("Access-Control-Allow-Credentials", "true")
+			}
+
+			w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+			if r.Method == "OPTIONS" {
+				w.WriteHeader(http.StatusOK)
+				return
+			}
+
+			next.ServeHTTP(w, r)
+		})
+	}
 }
 
-func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+func (h *Handler) maxBodySize() func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			r.Body = http.MaxBytesReader(w, r.Body, h.cfg.MaxRequestBodySize)
+			next.ServeHTTP(w, r)
+		})
+	}
+}
 
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
+// ============================================================================
+// Response Helpers
+// ============================================================================
 
-		next.ServeHTTP(w, r)
+type APIResponse struct {
+	Data  interface{} `json:"data,omitempty"`
+	Error *APIError   `json:"error,omitempty"`
+}
+
+type APIError struct {
+	Message string `json:"message"`
+	Code    string `json:"code,omitempty"`
+}
+
+func respondJSON(w http.ResponseWriter, status int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(APIResponse{Data: data})
+}
+
+func respondError(w http.ResponseWriter, status int, message string, code string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(status)
+	json.NewEncoder(w).Encode(APIResponse{
+		Error: &APIError{Message: message, Code: code},
 	})
 }

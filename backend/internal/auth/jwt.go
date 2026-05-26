@@ -12,12 +12,16 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"github.com/ubiship/strat-summit/backend/internal/domain"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
-	ErrInvalidToken = errors.New("invalid token")
-	ErrExpiredToken = errors.New("token expired")
+	ErrInvalidToken       = errors.New("invalid token")
+	ErrExpiredToken       = errors.New("token expired")
+	ErrInvalidCredentials = errors.New("invalid credentials")
 )
+
+const bcryptCost = 12
 
 type ctxKey string
 
@@ -87,6 +91,29 @@ func ValidateToken(tokenString string, secret []byte) (*Claims, error) {
 	return claims, nil
 }
 
+// ParseTokenUnverified extracts claims from a token without validating expiry.
+// Used for refresh token flow where we accept expired access tokens.
+// Still validates signature to prevent tampering.
+func ParseTokenUnverified(tokenString string, secret []byte) (*Claims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, ErrInvalidToken
+		}
+		return secret, nil
+	}, jwt.WithoutClaimsValidation())
+
+	if err != nil {
+		return nil, ErrInvalidToken
+	}
+
+	claims, ok := token.Claims.(*Claims)
+	if !ok {
+		return nil, ErrInvalidToken
+	}
+
+	return claims, nil
+}
+
 // Authenticate is middleware that validates JWT and adds auth context
 func Authenticate(secret []byte) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -150,4 +177,45 @@ func extractBearer(header string) string {
 		return strings.TrimPrefix(header, "Bearer ")
 	}
 	return ""
+}
+
+// ============================================================================
+// Password Hashing
+// ============================================================================
+
+// HashPassword generates a bcrypt hash for a password
+func HashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+// CheckPassword compares a password against a hash
+func CheckPassword(password, hash string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+}
+
+// HashRefreshToken hashes a refresh token for storage
+func HashRefreshToken(token string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(token), bcryptCost)
+	if err != nil {
+		return "", err
+	}
+	return string(bytes), nil
+}
+
+// CheckRefreshToken compares a refresh token against a hash
+func CheckRefreshToken(token, hash string) error {
+	return bcrypt.CompareHashAndPassword([]byte(hash), []byte(token))
+}
+
+// ToDomainAuthContext converts auth.AuthContext to domain.AuthContext
+func (a *AuthContext) ToDomainAuthContext() *domain.AuthContext {
+	return &domain.AuthContext{
+		UserID:    a.UserID,
+		ContactID: a.ContactID,
+		Role:      a.Role,
+	}
 }

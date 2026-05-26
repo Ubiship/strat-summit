@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS photos;
+DROP TABLE IF EXISTS service_lines;
+DROP TABLE IF EXISTS cleaning_job_staff;
+ALTER TABLE cleaning_jobs DROP CONSTRAINT IF EXISTS fk_cleaning_jobs_booking;
+DROP TABLE IF EXISTS bookings;
+DROP TABLE IF EXISTS cleaning_jobs;
+DROP TABLE IF EXISTS owner_statements;
+DROP TABLE IF EXISTS service_agreements;
+DROP TABLE IF EXISTS property_owners;
+DROP TABLE IF EXISTS properties;
+DROP TABLE IF EXISTS checklist_templates;

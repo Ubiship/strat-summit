@@ -9,8 +9,11 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/handler"
+	"github.com/ubiship/strat-summit/backend/internal/repository"
+	"github.com/ubiship/strat-summit/backend/internal/service"
 )
 
 func main() {
@@ -23,8 +26,26 @@ func main() {
 		os.Exit(1)
 	}
 
-	// Initialize handler
-	h := handler.New(cfg)
+	// Connect to database
+	ctx := context.Background()
+	dbpool, err := pgxpool.New(ctx, cfg.DatabaseURL)
+	if err != nil {
+		logger.Error("failed to connect to database", "error", err)
+		os.Exit(1)
+	}
+	defer dbpool.Close()
+
+	// Verify database connection
+	if err := dbpool.Ping(ctx); err != nil {
+		logger.Error("failed to ping database", "error", err)
+		os.Exit(1)
+	}
+	logger.Info("connected to database")
+
+	// Initialize layers
+	repo := repository.New(dbpool)
+	svc := service.New(cfg, repo)
+	h := handler.New(cfg, svc)
 
 	// Create server
 	srv := &http.Server{
@@ -51,10 +72,10 @@ func main() {
 
 	logger.Info("shutting down server")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 
-	if err := srv.Shutdown(ctx); err != nil {
+	if err := srv.Shutdown(shutdownCtx); err != nil {
 		logger.Error("shutdown error", "error", err)
 		os.Exit(1)
 	}
