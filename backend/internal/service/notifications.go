@@ -70,12 +70,15 @@ func (s *Service) NotifyJobReminder(ctx context.Context, job *domain.CleaningJob
 	}
 
 	payload := map[string]interface{}{
-		"jobId":         job.ID.String(),
-		"propertyName":  property.Name,
-		"propertyAddr":  property.Address,
-		"jobDate":       job.ScheduledDate.Format("Monday, Jan 2"),
-		"scheduledTime": job.ScheduledTime,
-		"firstName":     staff.FirstName,
+		"jobId":        job.ID.String(),
+		"propertyName": property.Name,
+		"propertyAddr": property.Address,
+		"jobDate":      job.ScheduledDate.Format("Monday, Jan 2"),
+		"firstName":    staff.FirstName,
+	}
+
+	if job.ScheduledTime != nil {
+		payload["scheduledTime"] = *job.ScheduledTime
 	}
 
 	return s.novu.Trigger(ctx, EventJobReminder, staff.ID.String(), payload)
@@ -119,6 +122,12 @@ func (s *Service) NotifyBookingConfirmed(ctx context.Context, booking *domain.Bo
 		return nil
 	}
 
+	// Helper to safely dereference float64 pointer
+	revenue := 0.0
+	if booking.RevenueInclCleaningFee != nil {
+		revenue = *booking.RevenueInclCleaningFee
+	}
+
 	payload := map[string]interface{}{
 		"bookingId":    booking.ID.String(),
 		"propertyName": property.Name,
@@ -127,7 +136,7 @@ func (s *Service) NotifyBookingConfirmed(ctx context.Context, booking *domain.Bo
 		"checkIn":      booking.CheckIn.Format("2006-01-02"),
 		"checkOut":     booking.CheckOut.Format("2006-01-02"),
 		"nights":       booking.Nights,
-		"revenue":      booking.RevenueInclCleaningFee,
+		"revenue":      revenue,
 	}
 
 	return s.novu.BulkTrigger(ctx, EventBookingConfirmed, subscriberIDs, payload)
