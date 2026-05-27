@@ -140,6 +140,48 @@ const (
 	PhotoVisibilityPublic   PhotoVisibility = "public"
 )
 
+// ServiceLineType represents the type of service line
+type ServiceLineType string
+
+const (
+	ServiceLineTypeCleaning    ServiceLineType = "cleaning"
+	ServiceLineTypeLaundry     ServiceLineType = "laundry"
+	ServiceLineTypeShoveling   ServiceLineType = "shoveling"
+	ServiceLineTypeMaintenance ServiceLineType = "maintenance"
+	ServiceLineTypePurchase    ServiceLineType = "purchase"
+	ServiceLineTypeRestock     ServiceLineType = "restock"
+)
+
+// TaxType represents the tax treatment for a service line
+type TaxType string
+
+const (
+	TaxTypeGSTOnly    TaxType = "gst_only"
+	TaxTypeGSTPST     TaxType = "gst_pst"
+	TaxTypeGSTPSTMRDT TaxType = "gst_pst_mrdt"
+	TaxTypeNone       TaxType = "none"
+)
+
+// AgreementType represents the type of service agreement
+type AgreementType string
+
+const (
+	AgreementTypeCleaning          AgreementType = "cleaning"
+	AgreementTypePM                AgreementType = "pm"
+	AgreementTypeRenovationFixed   AgreementType = "renovation_fixed"
+	AgreementTypeRenovationCostPlus AgreementType = "renovation_cost_plus"
+	AgreementTypeRenovationTAndM   AgreementType = "renovation_t_and_m"
+)
+
+// ChangeOrderStatus represents the status of a change order
+type ChangeOrderStatus string
+
+const (
+	ChangeOrderStatusPending  ChangeOrderStatus = "pending"
+	ChangeOrderStatusApproved ChangeOrderStatus = "approved"
+	ChangeOrderStatusRejected ChangeOrderStatus = "rejected"
+)
+
 // ============================================================================
 // Auth Context
 // ============================================================================
@@ -345,6 +387,29 @@ type CleaningJobStaff struct {
 	Contact *Contact `json:"contact,omitempty" db:"-"`
 }
 
+// ServiceAgreement represents a service contract with a property owner
+type ServiceAgreement struct {
+	ID             uuid.UUID     `json:"id" db:"id"`
+	PropertyID     uuid.UUID     `json:"property_id" db:"property_id"`
+	ContactID      uuid.UUID     `json:"contact_id" db:"contact_id"`
+	Tier           ServiceTier   `json:"tier" db:"tier"`
+	Type           AgreementType `json:"type" db:"type"`
+	MonthlyRate    *float64      `json:"monthly_rate,omitempty" db:"monthly_rate"`
+	CommissionRate *float64      `json:"commission_rate,omitempty" db:"commission_rate"`
+	EffectiveDate  time.Time     `json:"effective_date" db:"effective_date"`
+	ExpiryDate     *time.Time    `json:"expiry_date,omitempty" db:"expiry_date"`
+	DropboxSignID  *string       `json:"dropbox_sign_id,omitempty" db:"dropbox_sign_id"`
+	SignedAt       *time.Time    `json:"signed_at,omitempty" db:"signed_at"`
+	DocumentKey    *string       `json:"document_key,omitempty" db:"document_key"`
+	Status         string        `json:"status" db:"status"`
+	CreatedAt      time.Time     `json:"created_at" db:"created_at"`
+	UpdatedAt      time.Time     `json:"updated_at" db:"updated_at"`
+
+	// Joined fields
+	Property *Property `json:"property,omitempty" db:"-"`
+	Contact  *Contact  `json:"contact,omitempty" db:"-"`
+}
+
 // OwnerStatement represents a monthly payout statement for Tier 3 properties
 type OwnerStatement struct {
 	ID                    uuid.UUID       `json:"id" db:"id"`
@@ -372,6 +437,31 @@ type OwnerStatement struct {
 	QBOInvoiceID          *string         `json:"qbo_invoice_id,omitempty" db:"qbo_invoice_id"`
 	CreatedAt             time.Time       `json:"created_at" db:"created_at"`
 	UpdatedAt             time.Time       `json:"updated_at" db:"updated_at"`
+}
+
+// ServiceLine represents a billable line item on the internal breakdown
+type ServiceLine struct {
+	ID          uuid.UUID       `json:"id" db:"id"`
+	PropertyID  uuid.UUID       `json:"property_id" db:"property_id"`
+	BookingID   *uuid.UUID      `json:"booking_id,omitempty" db:"booking_id"`
+	StatementID *uuid.UUID      `json:"statement_id,omitempty" db:"statement_id"`
+	Type        ServiceLineType `json:"type" db:"type"`
+	Date        time.Time       `json:"date" db:"date"`
+	Description *string         `json:"description,omitempty" db:"description"`
+	Quantity    float64         `json:"quantity" db:"quantity"`
+	Rate        float64         `json:"rate" db:"rate"`
+	MarkupRate  float64         `json:"markup_rate" db:"markup_rate"`
+	Subtotal    float64         `json:"subtotal" db:"subtotal"` // Generated column
+	TaxType     TaxType         `json:"tax_type" db:"tax_type"`
+	GST         float64         `json:"gst" db:"gst"`     // Generated column
+	PST         float64         `json:"pst" db:"pst"`     // Generated column
+	Total       float64         `json:"total" db:"total"` // Generated column
+	CreatedAt   time.Time       `json:"created_at" db:"created_at"`
+	UpdatedAt   time.Time       `json:"updated_at" db:"updated_at"`
+
+	// Joined fields
+	Property *Property `json:"property,omitempty" db:"-"`
+	Booking  *Booking  `json:"booking,omitempty" db:"-"`
 }
 
 // Photo represents a photo attached to a job or project
