@@ -53,11 +53,11 @@ func (s *Service) NotifyJobAssigned(ctx context.Context, job *domain.CleaningJob
 	}
 
 	payload := map[string]interface{}{
-		"job_id":         job.ID.String(),
-		"property_name":  property.Name,
-		"property_addr":  property.Address,
-		"scheduled_date": job.ScheduledDate.Format("2006-01-02"),
-		"staff_name":     staff.FullName(),
+		"jobId":        job.ID.String(),
+		"propertyName": property.Name,
+		"propertyAddr": property.Address,
+		"jobDate":      job.ScheduledDate.Format("Monday, Jan 2"),
+		"firstName":    staff.FirstName,
 	}
 
 	return s.novu.Trigger(ctx, EventJobAssigned, staff.ID.String(), payload)
@@ -70,12 +70,12 @@ func (s *Service) NotifyJobReminder(ctx context.Context, job *domain.CleaningJob
 	}
 
 	payload := map[string]interface{}{
-		"job_id":         job.ID.String(),
-		"property_name":  property.Name,
-		"property_addr":  property.Address,
-		"scheduled_date": job.ScheduledDate.Format("2006-01-02"),
-		"scheduled_time": job.ScheduledTime,
-		"staff_name":     staff.FullName(),
+		"jobId":         job.ID.String(),
+		"propertyName":  property.Name,
+		"propertyAddr":  property.Address,
+		"jobDate":       job.ScheduledDate.Format("Monday, Jan 2"),
+		"scheduledTime": job.ScheduledTime,
+		"firstName":     staff.FirstName,
 	}
 
 	return s.novu.Trigger(ctx, EventJobReminder, staff.ID.String(), payload)
@@ -96,10 +96,10 @@ func (s *Service) NotifyJobCompleted(ctx context.Context, job *domain.CleaningJo
 	}
 
 	payload := map[string]interface{}{
-		"job_id":        job.ID.String(),
-		"property_name": property.Name,
-		"property_addr": property.Address,
-		"completed_at":  job.CompletedAt,
+		"jobId":        job.ID.String(),
+		"propertyName": property.Name,
+		"propertyAddr": property.Address,
+		"completedAt":  job.CompletedAt,
 	}
 
 	return s.novu.BulkTrigger(ctx, EventJobCompleted, subscriberIDs, payload)
@@ -120,13 +120,14 @@ func (s *Service) NotifyBookingConfirmed(ctx context.Context, booking *domain.Bo
 	}
 
 	payload := map[string]interface{}{
-		"booking_id":    booking.ID.String(),
-		"property_name": property.Name,
-		"source":        string(booking.Source),
-		"guest_name":    booking.GuestName,
-		"check_in":      booking.CheckIn.Format("2006-01-02"),
-		"check_out":     booking.CheckOut.Format("2006-01-02"),
-		"nights":        booking.Nights,
+		"bookingId":    booking.ID.String(),
+		"propertyName": property.Name,
+		"source":       string(booking.Source),
+		"guestName":    booking.GuestName,
+		"checkIn":      booking.CheckIn.Format("2006-01-02"),
+		"checkOut":     booking.CheckOut.Format("2006-01-02"),
+		"nights":       booking.Nights,
+		"revenue":      booking.RevenueInclCleaningFee,
 	}
 
 	return s.novu.BulkTrigger(ctx, EventBookingConfirmed, subscriberIDs, payload)
@@ -147,11 +148,9 @@ func (s *Service) NotifyHotTubAlert(ctx context.Context, property *domain.Proper
 	}
 
 	payload := map[string]interface{}{
-		"property_id":   property.ID.String(),
-		"property_name": property.Name,
-		"property_addr": property.Address,
-		"status":        status,
-		"notes":         notes,
+		"propertyName": property.Name,
+		"status":       status,
+		"notes":        notes,
 	}
 
 	return s.novu.BulkTrigger(ctx, EventHotTubAlert, subscriberIDs, payload)
@@ -172,9 +171,9 @@ func (s *Service) NotifyStatementGenerated(ctx context.Context, property *domain
 	}
 
 	payload := map[string]interface{}{
-		"property_id":   property.ID.String(),
-		"property_name": property.Name,
-		"month":         month.Format("January 2006"),
+		"propertyId":   property.ID.String(),
+		"propertyName": property.Name,
+		"month":        month.Format("January 2006"),
 	}
 
 	return s.novu.BulkTrigger(ctx, EventStatementGenerated, subscriberIDs, payload)
@@ -196,13 +195,13 @@ func (s *Service) NotifyStatementSent(
 	}
 
 	payload := map[string]interface{}{
-		"owner_name":    owner.FullName(),
-		"property_name": property.Name,
-		"month":         month.Format("January 2006"),
-		"gross_revenue": grossRevenue,
-		"commission":    commission,
-		"payout":        payout,
-		"pdf_url":       pdfURL,
+		"ownerName":    owner.FullName(),
+		"propertyName": property.Name,
+		"month":        month.Format("January 2006"),
+		"grossRevenue": grossRevenue,
+		"commission":   commission,
+		"payout":       payout,
+		"pdfUrl":       pdfURL,
 	}
 
 	return s.novu.Trigger(ctx, EventStatementSent, owner.ID.String(), payload)
@@ -222,11 +221,11 @@ func (s *Service) NotifyEstimateSent(
 	}
 
 	payload := map[string]interface{}{
-		"client_name":  client.FullName(),
-		"project_name": projectName,
-		"total":        total,
-		"valid_until":  validUntil.Format("January 2, 2006"),
-		"pdf_url":      pdfURL,
+		"clientName":  client.FullName(),
+		"projectName": projectName,
+		"total":       total,
+		"validUntil":  validUntil.Format("January 2, 2006"),
+		"pdfUrl":      pdfURL,
 	}
 
 	return s.novu.Trigger(ctx, EventEstimateSent, client.ID.String(), payload)
@@ -253,10 +252,10 @@ func (s *Service) NotifyExpensePending(
 	}
 
 	payload := map[string]interface{}{
-		"vendor_name": vendorName,
-		"amount":      amount,
-		"category":    category,
-		"receipt_url": receiptURL,
+		"vendorName": vendorName,
+		"amount":     amount,
+		"category":   category,
+		"receiptUrl": receiptURL,
 	}
 
 	return s.novu.BulkTrigger(ctx, EventExpensePending, subscriberIDs, payload)
