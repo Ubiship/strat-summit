@@ -10,6 +10,7 @@ import (
 	"github.com/ubiship/strat-summit/backend/internal/auth"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/domain"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/novu"
 	"github.com/ubiship/strat-summit/backend/internal/repository"
 )
 
@@ -24,13 +25,15 @@ var (
 type Service struct {
 	cfg  *config.Config
 	repo *repository.Repository
+	novu *novu.Client
 }
 
 // New creates a new Service instance
-func New(cfg *config.Config, repo *repository.Repository) *Service {
+func New(cfg *config.Config, repo *repository.Repository, novuClient *novu.Client) *Service {
 	return &Service{
 		cfg:  cfg,
 		repo: repo,
+		novu: novuClient,
 	}
 }
 

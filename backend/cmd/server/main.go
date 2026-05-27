@@ -12,6 +12,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/handler"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/novu"
 	"github.com/ubiship/strat-summit/backend/internal/repository"
 	"github.com/ubiship/strat-summit/backend/internal/service"
 )
@@ -42,9 +43,21 @@ func main() {
 	}
 	logger.Info("connected to database")
 
+	// Initialize Novu client
+	var novuClient *novu.Client
+	if cfg.NovuAPIKey != "" {
+		novuClient = novu.New(novu.Config{
+			APIKey:  cfg.NovuAPIKey,
+			BaseURL: cfg.NovuAPIURL,
+		})
+		logger.Info("novu client initialized")
+	} else {
+		logger.Warn("novu not configured, notifications disabled")
+	}
+
 	// Initialize layers
 	repo := repository.New(dbpool)
-	svc := service.New(cfg, repo)
+	svc := service.New(cfg, repo, novuClient)
 	h := handler.New(cfg, svc)
 
 	// Create server
