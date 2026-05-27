@@ -260,7 +260,7 @@ func (s *Service) CreateBooking(ctx context.Context, auth *domain.AuthContext, b
 		ScheduledDate:       b.CheckOut,
 		Status:              domain.JobStatusAssigned,
 		CompModel:           domain.CompModelHourly,
-		HotTubPhotoRequired: &property.HotTub,
+		HotTubPhotoRequired: property.HotTub,
 	}
 
 	return s.repo.CreateCleaningJob(ctx, job)

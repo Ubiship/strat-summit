@@ -358,7 +358,7 @@ type CleaningJob struct {
 	CompletedAt           *time.Time `json:"completed_at,omitempty" db:"completed_at"`
 	ChecklistData         JSONB      `json:"checklist_data,omitempty" db:"checklist_data"`
 	ChecklistCompletionPct int       `json:"checklist_completion_pct" db:"checklist_completion_pct"`
-	HotTubPhotoRequired   *bool      `json:"hot_tub_photo_required,omitempty" db:"hot_tub_photo_required"`
+	HotTubPhotoRequired   bool       `json:"hot_tub_photo_required" db:"hot_tub_photo_required"`
 	HotTubStatus          *string    `json:"hot_tub_status,omitempty" db:"hot_tub_status"`
 	DamageNotes           *string    `json:"damage_notes,omitempty" db:"damage_notes"`
 	RestockNotes          *string    `json:"restock_notes,omitempty" db:"restock_notes"`
@@ -572,6 +572,63 @@ type EstimateLineItem struct {
 	Notes       *string   `json:"notes,omitempty" db:"notes"`
 	CreatedAt   time.Time `json:"created_at" db:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at" db:"updated_at"`
+}
+
+// ============================================================================
+// Financial Domain
+// ============================================================================
+
+// Expense represents a receipt-captured expense pending QBO push
+type Expense struct {
+	ID           uuid.UUID  `json:"id" db:"id"`
+	SubmittedBy  uuid.UUID  `json:"submitted_by" db:"submitted_by"`
+	PropertyID   *uuid.UUID `json:"property_id,omitempty" db:"property_id"`
+	ProjectID    *uuid.UUID `json:"project_id,omitempty" db:"project_id"`
+	Date         time.Time  `json:"date" db:"date"`
+	Vendor       *string    `json:"vendor,omitempty" db:"vendor"`
+	Description  *string    `json:"description,omitempty" db:"description"`
+	Amount       float64    `json:"amount" db:"amount"`
+	GST          float64    `json:"gst" db:"gst"`
+	PST          float64    `json:"pst" db:"pst"`
+	QBOCategory  *string    `json:"qbo_category,omitempty" db:"qbo_category"`
+	ReceiptKey   *string    `json:"receipt_key,omitempty" db:"receipt_key"`
+	AIConfidence *float64   `json:"ai_confidence,omitempty" db:"ai_confidence"`
+	Status       string     `json:"status" db:"status"`
+	QBOExpenseID *string    `json:"qbo_expense_id,omitempty" db:"qbo_expense_id"`
+	PushedAt     *time.Time `json:"pushed_at,omitempty" db:"pushed_at"`
+	CreatedAt    time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at" db:"updated_at"`
+
+	// Joined fields
+	Submitter *Contact  `json:"submitter,omitempty" db:"-"`
+	Property  *Property `json:"property,omitempty" db:"-"`
+	Project   *Project  `json:"project,omitempty" db:"-"`
+}
+
+// ============================================================================
+// Chatwoot Sync Domain
+// ============================================================================
+
+// ChatwootEvent represents an audit log entry for Chatwoot webhooks
+type ChatwootEvent struct {
+	ID                     uuid.UUID  `json:"id" db:"id"`
+	ChatwootEventType      string     `json:"chatwoot_event_type" db:"chatwoot_event_type"`
+	ChatwootConversationID *int64     `json:"chatwoot_conversation_id,omitempty" db:"chatwoot_conversation_id"`
+	ChatwootContactID      *int64     `json:"chatwoot_contact_id,omitempty" db:"chatwoot_contact_id"`
+	Payload                JSONB      `json:"payload" db:"payload"`
+	Processed              bool       `json:"processed" db:"processed"`
+	ProcessedAt            *time.Time `json:"processed_at,omitempty" db:"processed_at"`
+	Error                  *string    `json:"error,omitempty" db:"error"`
+	ContactID              *uuid.UUID `json:"contact_id,omitempty" db:"contact_id"`
+	BookingID              *uuid.UUID `json:"booking_id,omitempty" db:"booking_id"`
+	ProjectID              *uuid.UUID `json:"project_id,omitempty" db:"project_id"`
+	CreatedAt              time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt              time.Time  `json:"updated_at" db:"updated_at"`
+
+	// Joined fields
+	Contact *Contact `json:"contact,omitempty" db:"-"`
+	Booking *Booking `json:"booking,omitempty" db:"-"`
+	Project *Project `json:"project,omitempty" db:"-"`
 }
 
 // ============================================================================
