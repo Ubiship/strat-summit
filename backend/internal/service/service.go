@@ -154,7 +154,14 @@ func (s *Service) Logout(ctx context.Context, userID uuid.UUID) error {
 // ============================================================================
 
 func (s *Service) CreateContact(ctx context.Context, c *domain.Contact) error {
-	return s.repo.CreateContact(ctx, c)
+	if err := s.repo.CreateContact(ctx, c); err != nil {
+		return fmt.Errorf("creating contact: %w", err)
+	}
+
+	// Sync to Novu for notifications
+	_ = s.SyncContactToNovu(ctx, c)
+
+	return nil
 }
 
 func (s *Service) GetContact(ctx context.Context, id uuid.UUID) (*domain.Contact, error) {
@@ -266,7 +273,14 @@ func (s *Service) CreateBooking(ctx context.Context, auth *domain.AuthContext, b
 		HotTubPhotoRequired: property.HotTub,
 	}
 
-	return s.repo.CreateCleaningJob(ctx, job)
+	if err := s.repo.CreateCleaningJob(ctx, job); err != nil {
+		return fmt.Errorf("creating cleaning job: %w", err)
+	}
+
+	// Notify admins of new booking
+	_ = s.NotifyBookingConfirmed(ctx, b, property)
+
+	return nil
 }
 
 func (s *Service) GetBooking(ctx context.Context, auth *domain.AuthContext, id uuid.UUID) (*domain.Booking, error) {
@@ -389,7 +403,24 @@ func (s *Service) ClockOutJob(ctx context.Context, auth *domain.AuthContext, id 
 		}
 	}
 
-	return s.repo.ClockOutCleaningJob(ctx, id)
+	if err := s.repo.ClockOutCleaningJob(ctx, id); err != nil {
+		return fmt.Errorf("clocking out: %w", err)
+	}
+
+	// Notify admins of job completion
+	job, err := s.repo.GetCleaningJobByID(ctx, id)
+	if err != nil {
+		return nil
+	}
+	if job.Status == domain.JobStatusComplete {
+		property, err := s.repo.GetPropertyByID(ctx, job.PropertyID)
+		if err != nil {
+			return nil
+		}
+		_ = s.NotifyJobCompleted(ctx, job, property)
+	}
+
+	return nil
 }
 
 func (s *Service) UpdateJobStatus(ctx context.Context, auth *domain.AuthContext, id uuid.UUID, status domain.JobStatus) error {
@@ -403,5 +434,26 @@ func (s *Service) AssignStaffToJob(ctx context.Context, auth *domain.AuthContext
 	if auth.Role != domain.RoleAdmin {
 		return ErrForbidden
 	}
-	return s.repo.AssignStaffToJob(ctx, jobID, contactID, hourlyRate)
+
+	if err := s.repo.AssignStaffToJob(ctx, jobID, contactID, hourlyRate); err != nil {
+		return fmt.Errorf("assigning staff: %w", err)
+	}
+
+	// Trigger notification (fire and forget - don't fail the operation if notification fails)
+	job, err := s.repo.GetCleaningJobByID(ctx, jobID)
+	if err != nil {
+		return nil // Assignment succeeded, notification failed - acceptable
+	}
+	staff, err := s.repo.GetContactByID(ctx, contactID)
+	if err != nil {
+		return nil
+	}
+	property, err := s.repo.GetPropertyByID(ctx, job.PropertyID)
+	if err != nil {
+		return nil
+	}
+
+	_ = s.NotifyJobAssigned(ctx, job, staff, property)
+
+	return nil
 }
