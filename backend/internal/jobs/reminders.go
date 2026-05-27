@@ -9,7 +9,8 @@ import (
 // SendJobReminders sends reminder notifications to staff for upcoming cleaning jobs.
 // It runs every 15 minutes and checks for jobs approximately 2 hours away.
 func (s *Scheduler) SendJobReminders() error {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
 	// Get all jobs for today
 	now := time.Now()
@@ -75,10 +76,10 @@ func (s *Scheduler) SendJobReminders() error {
 			)
 		}
 
-		// Only remind for jobs 1h45m to 2h15m away (around 2 hours before)
-		// This window ensures we catch jobs within our 15-minute polling interval
+		// Only remind for jobs 1h30m to 2h30m away (around 2 hours before)
+		// This 60-minute window ensures we catch jobs within our 15-minute polling interval
 		timeTillJob := time.Until(jobTime)
-		if timeTillJob < 105*time.Minute || timeTillJob > 135*time.Minute {
+		if timeTillJob < 90*time.Minute || timeTillJob > 150*time.Minute {
 			continue
 		}
 

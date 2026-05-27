@@ -63,7 +63,10 @@ func main() {
 
 	// Initialize and start cron scheduler
 	scheduler := jobs.NewScheduler(repo, svc, logger)
-	scheduler.Start()
+	if err := scheduler.Start(); err != nil {
+		logger.Error("failed to start scheduler", "error", err)
+		os.Exit(1)
+	}
 	defer scheduler.Stop()
 
 	// Create server

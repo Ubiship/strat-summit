@@ -11,7 +11,8 @@ import (
 
 // SendWeeklyReport sends a weekly summary report to all admins.
 func (s *Scheduler) SendWeeklyReport() error {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
 	// Calculate period (last 7 days)
 	now := time.Now()
@@ -59,7 +60,8 @@ func (s *Scheduler) SendWeeklyReport() error {
 
 // SendMonthlyReport sends a monthly summary report to all admins and bookkeepers.
 func (s *Scheduler) SendMonthlyReport() error {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
 
 	// Calculate period (previous month)
 	now := time.Now()
