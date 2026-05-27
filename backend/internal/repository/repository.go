@@ -575,7 +575,7 @@ func (r *Repository) GetCleaningJobByID(ctx context.Context, id uuid.UUID) (*dom
 			   comp_model, job_rate, duration_hours, arrived_at, completed_at,
 			   checklist_data, checklist_completion_pct, hot_tub_photo_required,
 			   hot_tub_status, damage_notes, restock_notes, internal_notes,
-			   dispatched_at, created_at, updated_at
+			   dispatched_at, reminder_sent_at, created_at, updated_at
 		FROM cleaning_jobs
 		WHERE id = $1`
 
@@ -585,7 +585,7 @@ func (r *Repository) GetCleaningJobByID(ctx context.Context, id uuid.UUID) (*dom
 		&j.CompModel, &j.JobRate, &j.DurationHours, &j.ArrivedAt, &j.CompletedAt,
 		&j.ChecklistData, &j.ChecklistCompletionPct, &j.HotTubPhotoRequired,
 		&j.HotTubStatus, &j.DamageNotes, &j.RestockNotes, &j.InternalNotes,
-		&j.DispatchedAt, &j.CreatedAt, &j.UpdatedAt,
+		&j.DispatchedAt, &j.ReminderSentAt, &j.CreatedAt, &j.UpdatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -635,7 +635,7 @@ func (r *Repository) ListCleaningJobsByDate(ctx context.Context, date time.Time)
 			   comp_model, job_rate, duration_hours, arrived_at, completed_at,
 			   checklist_data, checklist_completion_pct, hot_tub_photo_required,
 			   hot_tub_status, damage_notes, restock_notes, internal_notes,
-			   dispatched_at, created_at, updated_at
+			   dispatched_at, reminder_sent_at, created_at, updated_at
 		FROM cleaning_jobs
 		WHERE scheduled_date = $1
 		ORDER BY scheduled_time, created_at`
@@ -654,7 +654,7 @@ func (r *Repository) ListCleaningJobsByDate(ctx context.Context, date time.Time)
 			&j.CompModel, &j.JobRate, &j.DurationHours, &j.ArrivedAt, &j.CompletedAt,
 			&j.ChecklistData, &j.ChecklistCompletionPct, &j.HotTubPhotoRequired,
 			&j.HotTubStatus, &j.DamageNotes, &j.RestockNotes, &j.InternalNotes,
-			&j.DispatchedAt, &j.CreatedAt, &j.UpdatedAt,
+			&j.DispatchedAt, &j.ReminderSentAt, &j.CreatedAt, &j.UpdatedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("scanning cleaning job: %w", err)
@@ -683,7 +683,7 @@ func (r *Repository) ListCleaningJobsByStaff(ctx context.Context, contactID uuid
 				   cj.comp_model, cj.job_rate, cj.duration_hours, cj.arrived_at, cj.completed_at,
 				   cj.checklist_data, cj.checklist_completion_pct, cj.hot_tub_photo_required,
 				   cj.hot_tub_status, cj.damage_notes, cj.restock_notes, cj.internal_notes,
-				   cj.dispatched_at, cj.created_at, cj.updated_at
+				   cj.dispatched_at, cj.reminder_sent_at, cj.created_at, cj.updated_at
 			FROM cleaning_jobs cj
 			INNER JOIN cleaning_job_staff cjs ON cj.id = cjs.job_id
 			WHERE cjs.contact_id = $1 AND cj.scheduled_date = $2
@@ -696,7 +696,7 @@ func (r *Repository) ListCleaningJobsByStaff(ctx context.Context, contactID uuid
 				   cj.comp_model, cj.job_rate, cj.duration_hours, cj.arrived_at, cj.completed_at,
 				   cj.checklist_data, cj.checklist_completion_pct, cj.hot_tub_photo_required,
 				   cj.hot_tub_status, cj.damage_notes, cj.restock_notes, cj.internal_notes,
-				   cj.dispatched_at, cj.created_at, cj.updated_at
+				   cj.dispatched_at, cj.reminder_sent_at, cj.created_at, cj.updated_at
 			FROM cleaning_jobs cj
 			INNER JOIN cleaning_job_staff cjs ON cj.id = cjs.job_id
 			WHERE cjs.contact_id = $1
@@ -717,7 +717,7 @@ func (r *Repository) ListCleaningJobsByStaff(ctx context.Context, contactID uuid
 			&j.CompModel, &j.JobRate, &j.DurationHours, &j.ArrivedAt, &j.CompletedAt,
 			&j.ChecklistData, &j.ChecklistCompletionPct, &j.HotTubPhotoRequired,
 			&j.HotTubStatus, &j.DamageNotes, &j.RestockNotes, &j.InternalNotes,
-			&j.DispatchedAt, &j.CreatedAt, &j.UpdatedAt,
+			&j.DispatchedAt, &j.ReminderSentAt, &j.CreatedAt, &j.UpdatedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("scanning cleaning job: %w", err)
@@ -751,6 +751,49 @@ func (r *Repository) AssignStaffToJob(ctx context.Context, jobID, contactID uuid
 	_, err := r.db.Exec(ctx, query, jobID, contactID, hourlyRate)
 	if err != nil {
 		return fmt.Errorf("assigning staff to job: %w", err)
+	}
+	return nil
+}
+
+// GetStaffForJob returns all contacts assigned to a cleaning job
+func (r *Repository) GetStaffForJob(ctx context.Context, jobID uuid.UUID) ([]*domain.Contact, error) {
+	query := `
+		SELECT c.id, c.first_name, c.last_name, c.email, c.phone, c.company_name, c.role,
+		       c.notes, c.chatwoot_contact_id, c.created_at, c.updated_at
+		FROM contacts c
+		INNER JOIN cleaning_job_staff cjs ON cjs.contact_id = c.id
+		WHERE cjs.job_id = $1`
+
+	rows, err := r.db.Query(ctx, query, jobID)
+	if err != nil {
+		return nil, fmt.Errorf("querying staff for job: %w", err)
+	}
+	defer rows.Close()
+
+	var staff []*domain.Contact
+	for rows.Next() {
+		var c domain.Contact
+		if err := rows.Scan(
+			&c.ID, &c.FirstName, &c.LastName, &c.Email, &c.Phone, &c.CompanyName, &c.Role,
+			&c.Notes, &c.ChatwootContactID, &c.CreatedAt, &c.UpdatedAt,
+		); err != nil {
+			return nil, fmt.Errorf("scanning contact: %w", err)
+		}
+		staff = append(staff, &c)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterating staff: %w", err)
+	}
+
+	return staff, nil
+}
+
+// MarkReminderSent marks a cleaning job as having had its reminder sent
+func (r *Repository) MarkReminderSent(ctx context.Context, jobID uuid.UUID) error {
+	query := `UPDATE cleaning_jobs SET reminder_sent_at = NOW(), updated_at = NOW() WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, jobID)
+	if err != nil {
+		return fmt.Errorf("marking reminder sent: %w", err)
 	}
 	return nil
 }

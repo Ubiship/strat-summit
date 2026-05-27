@@ -37,6 +37,12 @@ func New(cfg *config.Config, repo *repository.Repository, novuClient *novu.Clien
 	}
 }
 
+// Novu returns the Novu client for notification triggering.
+// Returns nil if Novu is not configured.
+func (s *Service) Novu() *novu.Client {
+	return s.novu
+}
+
 // ============================================================================
 // Auth Service
 // ============================================================================

@@ -13,6 +13,7 @@ import (
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/handler"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/novu"
+	"github.com/ubiship/strat-summit/backend/internal/jobs"
 	"github.com/ubiship/strat-summit/backend/internal/repository"
 	"github.com/ubiship/strat-summit/backend/internal/service"
 )
@@ -59,6 +60,11 @@ func main() {
 	repo := repository.New(dbpool)
 	svc := service.New(cfg, repo, novuClient)
 	h := handler.New(cfg, svc)
+
+	// Initialize and start cron scheduler
+	scheduler := jobs.NewScheduler(repo, svc, logger)
+	scheduler.Start()
+	defer scheduler.Stop()
 
 	// Create server
 	srv := &http.Server{

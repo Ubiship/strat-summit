@@ -345,27 +345,28 @@ type Booking struct {
 
 // CleaningJob represents a cleaning assignment
 type CleaningJob struct {
-	ID                    uuid.UUID  `json:"id" db:"id"`
-	PropertyID            uuid.UUID  `json:"property_id" db:"property_id"`
-	BookingID             *uuid.UUID `json:"booking_id,omitempty" db:"booking_id"`
-	ScheduledDate         time.Time  `json:"scheduled_date" db:"scheduled_date"`
-	ScheduledTime         *string    `json:"scheduled_time,omitempty" db:"scheduled_time"`
-	Status                JobStatus  `json:"status" db:"status"`
-	CompModel             CompModel  `json:"comp_model" db:"comp_model"`
-	JobRate               *float64   `json:"job_rate,omitempty" db:"job_rate"`
-	DurationHours         *float64   `json:"duration_hours,omitempty" db:"duration_hours"`
-	ArrivedAt             *time.Time `json:"arrived_at,omitempty" db:"arrived_at"`
-	CompletedAt           *time.Time `json:"completed_at,omitempty" db:"completed_at"`
-	ChecklistData         JSONB      `json:"checklist_data,omitempty" db:"checklist_data"`
-	ChecklistCompletionPct int       `json:"checklist_completion_pct" db:"checklist_completion_pct"`
-	HotTubPhotoRequired   bool       `json:"hot_tub_photo_required" db:"hot_tub_photo_required"`
-	HotTubStatus          *string    `json:"hot_tub_status,omitempty" db:"hot_tub_status"`
-	DamageNotes           *string    `json:"damage_notes,omitempty" db:"damage_notes"`
-	RestockNotes          *string    `json:"restock_notes,omitempty" db:"restock_notes"`
-	InternalNotes         *string    `json:"internal_notes,omitempty" db:"internal_notes"`
-	DispatchedAt          *time.Time `json:"dispatched_at,omitempty" db:"dispatched_at"`
-	CreatedAt             time.Time  `json:"created_at" db:"created_at"`
-	UpdatedAt             time.Time  `json:"updated_at" db:"updated_at"`
+	ID                     uuid.UUID  `json:"id" db:"id"`
+	PropertyID             uuid.UUID  `json:"property_id" db:"property_id"`
+	BookingID              *uuid.UUID `json:"booking_id,omitempty" db:"booking_id"`
+	ScheduledDate          time.Time  `json:"scheduled_date" db:"scheduled_date"`
+	ScheduledTime          *string    `json:"scheduled_time,omitempty" db:"scheduled_time"`
+	Status                 JobStatus  `json:"status" db:"status"`
+	CompModel              CompModel  `json:"comp_model" db:"comp_model"`
+	JobRate                *float64   `json:"job_rate,omitempty" db:"job_rate"`
+	DurationHours          *float64   `json:"duration_hours,omitempty" db:"duration_hours"`
+	ArrivedAt              *time.Time `json:"arrived_at,omitempty" db:"arrived_at"`
+	CompletedAt            *time.Time `json:"completed_at,omitempty" db:"completed_at"`
+	ChecklistData          JSONB      `json:"checklist_data,omitempty" db:"checklist_data"`
+	ChecklistCompletionPct int        `json:"checklist_completion_pct" db:"checklist_completion_pct"`
+	HotTubPhotoRequired    bool       `json:"hot_tub_photo_required" db:"hot_tub_photo_required"`
+	HotTubStatus           *string    `json:"hot_tub_status,omitempty" db:"hot_tub_status"`
+	DamageNotes            *string    `json:"damage_notes,omitempty" db:"damage_notes"`
+	RestockNotes           *string    `json:"restock_notes,omitempty" db:"restock_notes"`
+	InternalNotes          *string    `json:"internal_notes,omitempty" db:"internal_notes"`
+	DispatchedAt           *time.Time `json:"dispatched_at,omitempty" db:"dispatched_at"`
+	ReminderSentAt         *time.Time `json:"reminder_sent_at,omitempty" db:"reminder_sent_at"`
+	CreatedAt              time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt              time.Time  `json:"updated_at" db:"updated_at"`
 
 	// Joined fields
 	Property *Property           `json:"property,omitempty" db:"-"`
