@@ -34,6 +34,9 @@ func (h *Handler) Router() chi.Router {
 	// Public routes
 	r.Get("/health", h.Health)
 
+	// Webhook routes (public but signature-verified)
+	r.Post("/webhooks/chatwoot", h.ChatwootWebhook)
+
 	// API routes
 	r.Route("/api/v1", func(r chi.Router) {
 		// Auth routes (public)

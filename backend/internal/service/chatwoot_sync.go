@@ -134,3 +134,8 @@ func parseFullName(fullName string) (first, last string) {
 	}
 	return
 }
+
+// LogChatwootEvent logs a webhook event to the audit table.
+func (s *Service) LogChatwootEvent(ctx context.Context, event *domain.ChatwootEvent) error {
+	return s.repo.CreateChatwootEvent(ctx, event)
+}
