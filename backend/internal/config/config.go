@@ -31,6 +31,12 @@ type Config struct {
 	NovuAppID  string
 
 	GotenbergURL string
+
+	// Chatwoot
+	ChatwootBaseURL       string
+	ChatwootAPIToken      string
+	ChatwootAccountID     int
+	ChatwootWebhookSecret string
 }
 
 func Load() (*Config, error) {
@@ -40,6 +46,7 @@ func Load() (*Config, error) {
 	refreshTTL, _ := strconv.Atoi(getEnv("JWT_REFRESH_TTL_DAYS", "30"))
 	minioSSL, _ := strconv.ParseBool(getEnv("MINIO_USE_SSL", "true"))
 	maxBodySize, _ := strconv.ParseInt(getEnv("MAX_REQUEST_BODY_SIZE", "1048576"), 10, 64) // 1MB default
+	chatwootAccountID, _ := strconv.Atoi(getEnv("CHATWOOT_ACCOUNT_ID", "1"))
 
 	// Parse CORS origins (comma-separated)
 	corsOrigins := parseCSV(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000"))
@@ -64,6 +71,11 @@ func Load() (*Config, error) {
 		NovuAppID:  os.Getenv("NOVU_APP_ID"),
 
 		GotenbergURL: getEnv("GOTENBERG_URL", "http://localhost:3000"),
+
+		ChatwootBaseURL:       os.Getenv("CHATWOOT_BASE_URL"),
+		ChatwootAPIToken:      os.Getenv("CHATWOOT_API_TOKEN"),
+		ChatwootAccountID:     chatwootAccountID,
+		ChatwootWebhookSecret: os.Getenv("CHATWOOT_WEBHOOK_SECRET"),
 	}, nil
 }
 
