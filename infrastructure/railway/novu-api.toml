@@ -1,0 +1,19 @@
+# infrastructure/railway/novu-api.toml
+[service]
+name = "novu-api"
+
+[build]
+dockerImage = "ghcr.io/novuhq/novu/api:latest"
+
+[deploy]
+healthcheckPath = "/v1/health-check"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[service.env]
+NODE_ENV = "production"
+PORT = "3000"
+MONGO_URL = { type = "reference", value = "mongodb.MONGO_URL" }
+REDIS_URL = { type = "reference", value = "redis.REDIS_URL" }
+JWT_SECRET = { type = "secret" }
+API_ROOT_URL = "https://novu-api.railway.app"

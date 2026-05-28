@@ -1,0 +1,15 @@
+# infrastructure/railway/novu-worker.toml
+[service]
+name = "novu-worker"
+
+[build]
+dockerImage = "ghcr.io/novuhq/novu/worker:latest"
+
+[deploy]
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[service.env]
+NODE_ENV = "production"
+MONGO_URL = { type = "reference", value = "mongodb.MONGO_URL" }
+REDIS_URL = { type = "reference", value = "redis.REDIS_URL" }

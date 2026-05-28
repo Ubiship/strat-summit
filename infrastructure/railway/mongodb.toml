@@ -1,0 +1,15 @@
+# infrastructure/railway/mongodb.toml
+[service]
+name = "mongodb"
+
+[build]
+dockerImage = "mongo:6"
+
+[deploy]
+healthcheckPath = ""
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[service.env]
+MONGO_INITDB_ROOT_USERNAME = "novu"
+MONGO_INITDB_ROOT_PASSWORD = { type = "secret" }

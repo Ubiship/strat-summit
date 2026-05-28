@@ -1,0 +1,18 @@
+# infrastructure/railway/novu-ws.toml
+[service]
+name = "novu-ws"
+
+[build]
+dockerImage = "ghcr.io/novuhq/novu/ws:latest"
+
+[deploy]
+healthcheckPath = "/health"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 3
+
+[service.env]
+NODE_ENV = "production"
+PORT = "3002"
+MONGO_URL = { type = "reference", value = "mongodb.MONGO_URL" }
+REDIS_URL = { type = "reference", value = "redis.REDIS_URL" }
+JWT_SECRET = { type = "reference", value = "novu-api.JWT_SECRET" }
