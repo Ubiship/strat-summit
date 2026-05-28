@@ -255,6 +255,60 @@ func (r *Repository) ListContactsByRole(ctx context.Context, role domain.UserRol
 	return contacts, nil
 }
 
+// FindContactByPhone finds a contact by phone number.
+func (r *Repository) FindContactByPhone(ctx context.Context, phone string) (*domain.Contact, error) {
+	query := `
+		SELECT id, first_name, last_name, email, phone, company_name, role, notes,
+		       chatwoot_contact_id, created_at, updated_at
+		FROM contacts
+		WHERE phone = $1`
+
+	var c domain.Contact
+	err := r.db.QueryRow(ctx, query, phone).Scan(
+		&c.ID, &c.FirstName, &c.LastName, &c.Email, &c.Phone, &c.CompanyName,
+		&c.Role, &c.Notes, &c.ChatwootContactID, &c.CreatedAt, &c.UpdatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("querying contact by phone: %w", err)
+	}
+	return &c, nil
+}
+
+// FindContactByChatwootID finds a contact by their Chatwoot contact ID.
+func (r *Repository) FindContactByChatwootID(ctx context.Context, chatwootID int64) (*domain.Contact, error) {
+	query := `
+		SELECT id, first_name, last_name, email, phone, company_name, role, notes,
+		       chatwoot_contact_id, created_at, updated_at
+		FROM contacts
+		WHERE chatwoot_contact_id = $1`
+
+	var c domain.Contact
+	err := r.db.QueryRow(ctx, query, chatwootID).Scan(
+		&c.ID, &c.FirstName, &c.LastName, &c.Email, &c.Phone, &c.CompanyName,
+		&c.Role, &c.Notes, &c.ChatwootContactID, &c.CreatedAt, &c.UpdatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("querying contact by chatwoot id: %w", err)
+	}
+	return &c, nil
+}
+
+// SetChatwootContactID sets the Chatwoot contact ID on a contact.
+func (r *Repository) SetChatwootContactID(ctx context.Context, contactID uuid.UUID, chatwootID int64) error {
+	query := `UPDATE contacts SET chatwoot_contact_id = $2, updated_at = NOW() WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, contactID, chatwootID)
+	if err != nil {
+		return fmt.Errorf("setting chatwoot contact id: %w", err)
+	}
+	return nil
+}
+
 // ============================================================================
 // Property Repository
 // ============================================================================
@@ -546,6 +600,48 @@ func (r *Repository) ListBookingsByProperty(ctx context.Context, propertyID uuid
 	return bookings, nil
 }
 
+// FindOpenBookingByOwner finds the most recent open booking for properties owned by a contact.
+func (r *Repository) FindOpenBookingByOwner(ctx context.Context, ownerID uuid.UUID) (*domain.Booking, error) {
+	query := `
+		SELECT b.id, b.property_id, b.source, b.tax_treatment, b.external_uid, b.guest_name,
+		       b.guest_email, b.guest_phone, b.check_in, b.check_out, b.nights, b.nightly_rate,
+		       b.nightly_rate_weekend, b.nightly_rate_holiday, b.revenue_incl_cleaning_fee,
+		       b.revenue_excl_cleaning_fee, b.cleaning_fee_charged, b.gst, b.pst, b.mrdt, b.notes,
+		       b.cleaning_job_id, b.statement_id, b.chatwoot_conversation_id, b.created_at, b.updated_at
+		FROM bookings b
+		INNER JOIN property_owners po ON b.property_id = po.property_id
+		WHERE po.contact_id = $1
+		  AND b.check_out >= CURRENT_DATE
+		ORDER BY b.check_in ASC
+		LIMIT 1`
+
+	var b domain.Booking
+	err := r.db.QueryRow(ctx, query, ownerID).Scan(
+		&b.ID, &b.PropertyID, &b.Source, &b.TaxTreatment, &b.ExternalUID, &b.GuestName,
+		&b.GuestEmail, &b.GuestPhone, &b.CheckIn, &b.CheckOut, &b.Nights, &b.NightlyRate,
+		&b.NightlyRateWeekend, &b.NightlyRateHoliday, &b.RevenueInclCleaningFee,
+		&b.RevenueExclCleaningFee, &b.CleaningFeeCharged, &b.GST, &b.PST, &b.MRDT, &b.Notes,
+		&b.CleaningJobID, &b.StatementID, &b.ChatwootConversationID, &b.CreatedAt, &b.UpdatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("finding open booking by owner: %w", err)
+	}
+	return &b, nil
+}
+
+// SetBookingChatwootConversation sets the Chatwoot conversation ID on a booking.
+func (r *Repository) SetBookingChatwootConversation(ctx context.Context, bookingID uuid.UUID, conversationID int64) error {
+	query := `UPDATE bookings SET chatwoot_conversation_id = $2, updated_at = NOW() WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, bookingID, conversationID)
+	if err != nil {
+		return fmt.Errorf("setting booking chatwoot conversation: %w", err)
+	}
+	return nil
+}
+
 // ============================================================================
 // Cleaning Job Repository
 // ============================================================================
@@ -794,6 +890,88 @@ func (r *Repository) MarkReminderSent(ctx context.Context, jobID uuid.UUID) erro
 	_, err := r.db.Exec(ctx, query, jobID)
 	if err != nil {
 		return fmt.Errorf("marking reminder sent: %w", err)
+	}
+	return nil
+}
+
+// ============================================================================
+// Project Repository (Chatwoot-related)
+// ============================================================================
+
+// FindOpenProjectByClient finds the most recent open project for a client contact.
+func (r *Repository) FindOpenProjectByClient(ctx context.Context, clientID uuid.UUID) (*domain.Project, error) {
+	query := `
+		SELECT id, contact_id, name, address, status, billing_model, description,
+		       start_date, estimated_end_date, actual_end_date, deposit_pct,
+		       deposit_amount, deposit_paid_at, total_estimate, total_invoiced,
+		       total_paid, margin_target_pct, notes, chatwoot_conversation_id,
+		       created_at, updated_at
+		FROM projects
+		WHERE contact_id = $1
+		  AND status IN ('estimate', 'booked', 'in_progress')
+		ORDER BY created_at DESC
+		LIMIT 1`
+
+	var p domain.Project
+	err := r.db.QueryRow(ctx, query, clientID).Scan(
+		&p.ID, &p.ContactID, &p.Name, &p.Address, &p.Status, &p.BillingModel, &p.Description,
+		&p.StartDate, &p.EstimatedEndDate, &p.ActualEndDate, &p.DepositPct,
+		&p.DepositAmount, &p.DepositPaidAt, &p.TotalEstimate, &p.TotalInvoiced,
+		&p.TotalPaid, &p.MarginTargetPct, &p.Notes, &p.ChatwootConversationID,
+		&p.CreatedAt, &p.UpdatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("finding open project by client: %w", err)
+	}
+	return &p, nil
+}
+
+// SetProjectChatwootConversation sets the Chatwoot conversation ID on a project.
+func (r *Repository) SetProjectChatwootConversation(ctx context.Context, projectID uuid.UUID, conversationID int64) error {
+	query := `UPDATE projects SET chatwoot_conversation_id = $2, updated_at = NOW() WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, projectID, conversationID)
+	if err != nil {
+		return fmt.Errorf("setting project chatwoot conversation: %w", err)
+	}
+	return nil
+}
+
+// ============================================================================
+// ChatwootEvent Repository
+// ============================================================================
+
+// CreateChatwootEvent logs a Chatwoot webhook event.
+func (r *Repository) CreateChatwootEvent(ctx context.Context, event *domain.ChatwootEvent) error {
+	query := `
+		INSERT INTO chatwoot_events (
+			chatwoot_event_type, chatwoot_conversation_id, chatwoot_contact_id,
+			payload, contact_id, booking_id, project_id
+		)
+		VALUES ($1, $2, $3, $4, $5, $6, $7)
+		RETURNING id, created_at, updated_at`
+
+	err := r.db.QueryRow(ctx, query,
+		event.ChatwootEventType, event.ChatwootConversationID, event.ChatwootContactID,
+		event.Payload, event.ContactID, event.BookingID, event.ProjectID,
+	).Scan(&event.ID, &event.CreatedAt, &event.UpdatedAt)
+	if err != nil {
+		return fmt.Errorf("creating chatwoot event: %w", err)
+	}
+	return nil
+}
+
+// MarkChatwootEventProcessed marks an event as processed.
+func (r *Repository) MarkChatwootEventProcessed(ctx context.Context, id uuid.UUID, errMsg *string) error {
+	query := `
+		UPDATE chatwoot_events
+		SET processed = true, processed_at = NOW(), error = $2, updated_at = NOW()
+		WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, id, errMsg)
+	if err != nil {
+		return fmt.Errorf("marking chatwoot event processed: %w", err)
 	}
 	return nil
 }
