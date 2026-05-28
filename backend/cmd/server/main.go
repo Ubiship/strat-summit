@@ -12,6 +12,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/handler"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/chatwoot"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/novu"
 	"github.com/ubiship/strat-summit/backend/internal/jobs"
 	"github.com/ubiship/strat-summit/backend/internal/repository"
@@ -56,9 +57,23 @@ func main() {
 		logger.Warn("novu not configured, notifications disabled")
 	}
 
+	// Initialize Chatwoot client
+	var chatwootClient *chatwoot.Client
+	if cfg.ChatwootBaseURL != "" && cfg.ChatwootAPIToken != "" {
+		chatwootClient = chatwoot.New(chatwoot.Config{
+			BaseURL:       cfg.ChatwootBaseURL,
+			APIToken:      cfg.ChatwootAPIToken,
+			AccountID:     cfg.ChatwootAccountID,
+			WebhookSecret: cfg.ChatwootWebhookSecret,
+		})
+		logger.Info("chatwoot client initialized")
+	} else {
+		logger.Warn("chatwoot not configured, contact sync disabled")
+	}
+
 	// Initialize layers
 	repo := repository.New(dbpool)
-	svc := service.New(cfg, repo, novuClient)
+	svc := service.New(cfg, repo, novuClient, chatwootClient)
 	h := handler.New(cfg, svc)
 
 	// Initialize and start cron scheduler

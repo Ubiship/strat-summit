@@ -10,6 +10,7 @@ import (
 	"github.com/ubiship/strat-summit/backend/internal/auth"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/domain"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/chatwoot"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/novu"
 	"github.com/ubiship/strat-summit/backend/internal/repository"
 )
@@ -23,17 +24,19 @@ var (
 
 // Service handles business logic
 type Service struct {
-	cfg  *config.Config
-	repo *repository.Repository
-	novu *novu.Client
+	cfg      *config.Config
+	repo     *repository.Repository
+	novu     *novu.Client
+	chatwoot *chatwoot.Client
 }
 
 // New creates a new Service instance
-func New(cfg *config.Config, repo *repository.Repository, novuClient *novu.Client) *Service {
+func New(cfg *config.Config, repo *repository.Repository, novuClient *novu.Client, chatwootClient *chatwoot.Client) *Service {
 	return &Service{
-		cfg:  cfg,
-		repo: repo,
-		novu: novuClient,
+		cfg:      cfg,
+		repo:     repo,
+		novu:     novuClient,
+		chatwoot: chatwootClient,
 	}
 }
 
@@ -41,6 +44,12 @@ func New(cfg *config.Config, repo *repository.Repository, novuClient *novu.Clien
 // Returns nil if Novu is not configured.
 func (s *Service) Novu() *novu.Client {
 	return s.novu
+}
+
+// Chatwoot returns the Chatwoot client for contact/conversation management.
+// Returns nil if Chatwoot is not configured.
+func (s *Service) Chatwoot() *chatwoot.Client {
+	return s.chatwoot
 }
 
 // ============================================================================
