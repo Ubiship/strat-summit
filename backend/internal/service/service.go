@@ -176,6 +176,9 @@ func (s *Service) CreateContact(ctx context.Context, c *domain.Contact) error {
 	// Sync to Novu for notifications
 	_ = s.SyncContactToNovu(ctx, c)
 
+	// Sync to Chatwoot for inbox
+	_ = s.PushContactToChatwoot(ctx, c)
+
 	return nil
 }
 
