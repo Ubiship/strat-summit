@@ -632,6 +632,21 @@ type ChatwootEvent struct {
 	Project *Project `json:"project,omitempty" db:"-"`
 }
 
+// PendingContact represents an unmatched contact from Chatwoot requiring admin review
+type PendingContact struct {
+	ID                uuid.UUID  `json:"id" db:"id"`
+	ChatwootContactID int64      `json:"chatwoot_contact_id" db:"chatwoot_contact_id"`
+	Name              string     `json:"name" db:"name"`
+	Email             *string    `json:"email,omitempty" db:"email"`
+	Phone             *string    `json:"phone,omitempty" db:"phone"`
+	Source            string     `json:"source" db:"source"`
+	CreatedAt         time.Time  `json:"created_at" db:"created_at"`
+	ReviewedAt        *time.Time `json:"reviewed_at,omitempty" db:"reviewed_at"`
+	ReviewedBy        *uuid.UUID `json:"reviewed_by,omitempty" db:"reviewed_by"`
+	Action            *string    `json:"action,omitempty" db:"action"`
+	MergedWithID      *uuid.UUID `json:"merged_with_id,omitempty" db:"merged_with_id"`
+}
+
 // ============================================================================
 // Scheduling Domain
 // ============================================================================
