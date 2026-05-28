@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 )
 
 type Client struct {
@@ -23,7 +24,9 @@ func New(cfg Config) *Client {
 	return &Client{
 		apiKey:  cfg.APIKey,
 		baseURL: cfg.BaseURL,
-		http:    &http.Client{},
+		http: &http.Client{
+			Timeout: 30 * time.Second,
+		},
 	}
 }
 
