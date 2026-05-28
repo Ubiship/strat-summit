@@ -28,6 +28,7 @@ type Config struct {
 
 	NovuAPIKey string
 	NovuAPIURL string
+	NovuAppID  string
 
 	GotenbergURL string
 }
@@ -60,6 +61,7 @@ func Load() (*Config, error) {
 
 		NovuAPIKey: os.Getenv("NOVU_API_KEY"),
 		NovuAPIURL: getEnv("NOVU_API_URL", "http://localhost:3000"),
+		NovuAppID:  os.Getenv("NOVU_APP_ID"),
 
 		GotenbergURL: getEnv("GOTENBERG_URL", "http://localhost:3000"),
 	}, nil
