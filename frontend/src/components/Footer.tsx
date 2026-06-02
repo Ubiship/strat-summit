@@ -33,7 +33,7 @@ function Navigation() {
       <ul role="list" className="grid grid-cols-2 gap-8 sm:grid-cols-3">
         {navigation.map((section, sectionIndex) => (
           <li key={sectionIndex}>
-            <div className="font-display text-sm font-semibold tracking-wider text-neutral-950">
+            <div className="font-display text-sm font-semibold tracking-wider text-gold uppercase">
               {section.title}
             </div>
             <ul role="list" className="mt-4 text-sm text-neutral-700">
@@ -41,7 +41,7 @@ function Navigation() {
                 <li key={linkIndex} className="mt-4">
                   <Link
                     href={link.href}
-                    className="transition hover:text-neutral-950"
+                    className="transition hover:text-gold"
                   >
                     {link.title}
                   </Link>
@@ -60,9 +60,9 @@ export function Footer() {
     <Container as="footer" className="mt-24 w-full sm:mt-32 lg:mt-40">
       <FadeIn>
         <Navigation />
-        <div className="mt-24 mb-20 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-neutral-950/10 pt-12">
-          <Link href="/" aria-label="Home">
-            <Logo className="h-8" fillOnHover />
+        <div className="mt-24 mb-20 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-gold/20 pt-12">
+          <Link href="/" aria-label="Home" className="group/logo">
+            <Logo size="footer" fillOnHover />
           </Link>
           <p className="text-sm text-neutral-700">
             © {site.shortName} {new Date().getFullYear()}

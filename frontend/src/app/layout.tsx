@@ -17,6 +17,17 @@ export const metadata: Metadata = {
     default: `${site.shortName} - Property Management & Renovations`,
   },
   description: site.description,
+  icons: {
+    icon: site.logos.icon,
+    apple: site.logos.icon,
+  },
+  openGraph: {
+    title: site.name,
+    description: site.description,
+    url: site.url,
+    siteName: site.shortName,
+    images: [{ url: site.logos.full, alt: site.name }],
+  },
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {

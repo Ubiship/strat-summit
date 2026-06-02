@@ -1,13 +1,6 @@
 'use client'
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import clsx from 'clsx'
@@ -17,14 +10,9 @@ import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { Footer } from '@/components/Footer'
 import { GridPattern } from '@/components/GridPattern'
-import { Logo, Logomark } from '@/components/Logo'
+import { Logo } from '@/components/Logo'
 import { Offices } from '@/components/Offices'
 import { SocialMedia } from '@/components/SocialMedia'
-
-const RootLayoutContext = createContext<{
-  logoHovered: boolean
-  setLogoHovered: React.Dispatch<React.SetStateAction<boolean>>
-} | null>(null)
 
 function XIcon(props: React.ComponentPropsWithoutRef<'svg'>) {
   return (
@@ -58,27 +46,11 @@ function Header({
   toggleRef: React.RefObject<HTMLButtonElement | null>
   invert?: boolean
 }) {
-  let { logoHovered, setLogoHovered } = useContext(RootLayoutContext)!
-
   return (
     <Container>
       <div className="flex items-center justify-between">
-        <Link
-          href="/"
-          aria-label="Home"
-          onMouseEnter={() => setLogoHovered(true)}
-          onMouseLeave={() => setLogoHovered(false)}
-        >
-          <Logomark
-            className="h-8 sm:hidden"
-            invert={invert}
-            filled={logoHovered}
-          />
-          <Logo
-            className="hidden h-8 sm:block"
-            invert={invert}
-            filled={logoHovered}
-          />
+        <Link href="/" aria-label="Home" className="group/logo shrink-0">
+          <Logo invert={invert} size="header" fillOnHover />
         </Link>
         <div className="flex items-center gap-x-8">
           <Button href="/contact" invert={invert}>
@@ -131,10 +103,10 @@ function NavigationItem({
   return (
     <Link
       href={href}
-      className="group relative isolate -mx-6 bg-neutral-950 px-6 py-10 even:mt-px sm:mx-0 sm:px-0 sm:py-16 sm:odd:pr-16 sm:even:mt-0 sm:even:border-l sm:even:border-neutral-800 sm:even:pl-16"
+      className="group relative isolate -mx-6 bg-neutral-950 px-6 py-10 even:mt-px sm:mx-0 sm:px-0 sm:py-16 sm:odd:pr-16 sm:even:mt-0 sm:even:border-l sm:even:border-gold/20 sm:even:pl-16 transition-colors hover:text-gold-light"
     >
       {children}
-      <span className="absolute inset-y-0 -z-10 w-screen bg-neutral-900 opacity-0 transition group-odd:right-0 group-even:left-0 group-hover:opacity-100" />
+      <span className="absolute inset-y-0 -z-10 w-screen opacity-0 transition group-odd:right-0 group-even:left-0 group-hover:bg-gold/10 group-hover:opacity-100" />
     </Link>
   )
 }
@@ -271,7 +243,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
           className="relative isolate flex w-full flex-col pt-9"
         >
           <GridPattern
-            className="absolute inset-x-0 -top-14 -z-10 h-[1000px] w-full mask-[linear-gradient(to_bottom_left,white_40%,transparent_50%)] fill-neutral-50 stroke-neutral-950/5"
+            className="absolute inset-x-0 -top-14 -z-10 h-[1000px] w-full mask-[linear-gradient(to_bottom_left,white_40%,transparent_50%)] fill-neutral-50 stroke-gold/10"
             yOffset={-96}
             interactive
           />
@@ -287,11 +259,6 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
 
 export function RootLayout({ children }: { children: React.ReactNode }) {
   let pathname = usePathname()
-  let [logoHovered, setLogoHovered] = useState(false)
 
-  return (
-    <RootLayoutContext.Provider value={{ logoHovered, setLogoHovered }}>
-      <RootLayoutInner key={pathname}>{children}</RootLayoutInner>
-    </RootLayoutContext.Provider>
-  )
+  return <RootLayoutInner key={pathname}>{children}</RootLayoutInner>
 }

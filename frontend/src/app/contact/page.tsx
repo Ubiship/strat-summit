@@ -34,7 +34,7 @@ function ContactDetails() {
             <dd className="mt-2">
               <Link
                 href={`mailto:${site.contactEmail}`}
-                className="text-neutral-600 hover:text-neutral-950"
+                className="text-neutral-600 hover:text-gold"
               >
                 {site.contactEmail}
               </Link>

@@ -61,7 +61,7 @@ export default function About() {
         </StatList>
       </Container>
 
-      <div className="mt-24 rounded-4xl bg-neutral-950 py-24 sm:mt-32 lg:mt-40 lg:py-32">
+      <div className="mt-24 rounded-4xl bg-neutral-950 py-24 ring-1 ring-gold/15 sm:mt-32 lg:mt-40 lg:py-32">
         <SectionIntro
           eyebrow="Our values"
           title="Professional, approachable, and Pacific Northwest at heart."

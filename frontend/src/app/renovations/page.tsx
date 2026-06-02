@@ -10,8 +10,7 @@ import { PageIntro } from '@/components/PageIntro'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionIntro } from '@/components/SectionIntro'
 import { StylizedImage } from '@/components/StylizedImage'
-import imageLaptop from '@/images/laptop.jpg'
-import imageWhiteboard from '@/images/whiteboard.jpg'
+import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Renovations & Construction',
@@ -37,7 +36,11 @@ export default function Renovations() {
         <div className="lg:flex lg:items-start lg:gap-x-12">
           <FadeIn className="w-full max-w-lg flex-none lg:w-1/2">
             <StylizedImage
-              src={imageWhiteboard}
+              src={site.images.renovations}
+              width={800}
+              height={600}
+              alt="Interior renovation framing and construction in progress"
+              grayscale={false}
               sizes="(min-width: 1024px) 33rem, 100vw"
               className="justify-center"
             />
@@ -101,8 +104,12 @@ export default function Renovations() {
       <Container className="mt-24">
         <FadeIn>
           <StylizedImage
-            src={imageLaptop}
+            src={site.images.renovations}
+            width={800}
+            height={600}
+            alt="Renovation construction framing and electrical rough-in"
             shape={2}
+            grayscale={false}
             sizes="(min-width: 1024px) 40rem, 100vw"
             className="justify-center"
           />

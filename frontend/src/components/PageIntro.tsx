@@ -20,7 +20,7 @@ export function PageIntro({
     >
       <FadeIn>
         <h1>
-          <span className="block font-display text-base font-semibold text-neutral-950">
+          <span className="block font-display text-base font-semibold tracking-wider text-gold uppercase">
             {eyebrow}
           </span>
           <span className="sr-only"> - </span>

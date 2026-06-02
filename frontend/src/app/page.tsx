@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
+import { EntrySplash } from '@/components/EntrySplash'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { GridList, GridListItem } from '@/components/GridList'
 import { List, ListItem } from '@/components/List'
@@ -11,8 +12,6 @@ import { RootLayout } from '@/components/RootLayout'
 import { SectionIntro } from '@/components/SectionIntro'
 import { StylizedImage } from '@/components/StylizedImage'
 import { Testimonial } from '@/components/Testimonial'
-import imageMeeting from '@/images/meeting.jpg'
-import imageWhiteboard from '@/images/whiteboard.jpg'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -26,7 +25,9 @@ function ServiceOverview() {
       href: '/property-management',
       description:
         'Turnover cleaning, caretaking, and full property management for vacation rentals and second homes on Vancouver Island.',
-      image: imageMeeting,
+      image: site.images.propertyManagement,
+      imageWidth: 800,
+      imageHeight: 600,
       shape: 0 as const,
     },
     {
@@ -34,7 +35,9 @@ function ServiceOverview() {
       href: '/renovations',
       description:
         'Seasonal renovation work from estimates through completion — kitchens, bathrooms, decks, and whole-home refreshes.',
-      image: imageWhiteboard,
+      image: site.images.renovations,
+      imageWidth: 800,
+      imageHeight: 600,
       shape: 1 as const,
     },
   ]
@@ -59,17 +62,21 @@ function ServiceOverview() {
               <Link href={service.href} className="group">
                 <StylizedImage
                   src={service.image}
+                  width={service.imageWidth}
+                  height={service.imageHeight}
+                  alt={service.title}
                   shape={service.shape}
+                  grayscale={false}
                   sizes="(min-width: 1024px) 33rem, 100vw"
                   className="justify-center"
                 />
-                <h3 className="mt-8 font-display text-2xl font-semibold text-neutral-950 group-hover:text-copper">
+                <h3 className="mt-8 font-display text-2xl font-semibold text-neutral-950 group-hover:text-gold">
                   {service.title}
                 </h3>
                 <p className="mt-4 text-base text-neutral-600">
                   {service.description}
                 </p>
-                <span className="mt-4 inline-block text-sm font-semibold text-copper">
+                <span className="mt-4 inline-block text-sm font-semibold text-gold">
                   Learn more <span aria-hidden="true">→</span>
                 </span>
               </Link>
@@ -83,7 +90,7 @@ function ServiceOverview() {
 
 function WhyUs() {
   return (
-    <div className="mt-24 rounded-4xl bg-neutral-950 py-20 sm:mt-32 sm:py-32 lg:mt-40">
+    <div className="mt-24 rounded-4xl bg-neutral-950 py-20 ring-1 ring-gold/15 sm:mt-32 sm:py-32 lg:mt-40">
       <SectionIntro
         eyebrow="Why owners choose us"
         title="Local, accountable, and detail-oriented."
@@ -153,10 +160,12 @@ function Approach() {
 
 export default function Home() {
   return (
-    <RootLayout>
+    <>
+      <EntrySplash />
+      <RootLayout>
       <Container className="mt-24 sm:mt-32 md:mt-56">
         <FadeIn className="max-w-3xl">
-          <p className="font-display text-sm font-semibold tracking-wider text-copper uppercase">
+          <p className="font-display text-sm font-semibold tracking-wider text-gold uppercase">
             Vancouver Island
           </p>
           <h1 className="mt-4 font-display text-5xl font-medium tracking-tight text-balance text-neutral-950 sm:text-7xl">
@@ -170,13 +179,13 @@ export default function Home() {
           <div className="mt-10 flex flex-wrap gap-4">
             <Link
               href="/contact"
-              className="inline-flex rounded-full bg-copper px-5 py-2 text-sm font-semibold text-white transition hover:bg-copper/90"
+              className="inline-flex rounded-full bg-gold px-5 py-2 text-sm font-semibold text-white transition hover:bg-gold-dark"
             >
               Get in touch
             </Link>
             <Link
               href="/property-management"
-              className="inline-flex rounded-full px-5 py-2 text-sm font-semibold text-neutral-950 ring-1 ring-neutral-950/10 transition hover:bg-neutral-50"
+              className="inline-flex rounded-full px-5 py-2 text-sm font-semibold text-neutral-950 ring-1 ring-gold/30 transition hover:bg-gold/10"
             >
               View services
             </Link>
@@ -187,11 +196,13 @@ export default function Home() {
       <div className="relative mt-16 sm:mt-24">
         <Container>
           <FadeIn>
-            <div className="overflow-hidden rounded-4xl">
+            <div className="overflow-hidden rounded-4xl ring-1 ring-gold/20">
               <Image
-                src={imageMeeting}
-                alt="Property team reviewing plans"
-                className="aspect-16/7 w-full object-cover"
+                src={site.images.hero}
+                alt="Snow-capped mountain peak above Vancouver Island forest"
+                width={1920}
+                height={840}
+                className="aspect-16/7 w-full object-cover object-center"
                 priority
               />
             </div>
@@ -213,5 +224,6 @@ export default function Home() {
       <Approach />
       <ContactSection />
     </RootLayout>
+    </>
   )
 }

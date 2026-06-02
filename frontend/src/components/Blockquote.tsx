@@ -59,7 +59,7 @@ function BlockquoteWithoutImage({
         <blockquote className="text-neutral-600 *:relative *:first:before:absolute *:first:before:right-full *:first:before:content-['“'] *:last:after:content-['”']">
           {typeof children === 'string' ? <p>{children}</p> : children}
         </blockquote>
-        <figcaption className="mt-6 font-semibold text-neutral-950">
+        <figcaption className="mt-6 font-semibold text-gold">
           {author.name}, {author.role}
         </figcaption>
       </figure>

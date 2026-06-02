@@ -19,7 +19,7 @@ export function Button({
     'inline-flex rounded-full px-4 py-1.5 text-sm font-semibold transition',
     invert
       ? 'bg-white text-neutral-950 hover:bg-stone'
-      : 'bg-copper text-white hover:bg-copper/90',
+      : 'bg-gold text-white hover:bg-gold-dark',
     'disabled:cursor-not-allowed disabled:opacity-50',
   )
 

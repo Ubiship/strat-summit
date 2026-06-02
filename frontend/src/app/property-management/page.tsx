@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { type Metadata } from 'next'
 
 import { ContactSection } from '@/components/ContactSection'
@@ -10,8 +11,6 @@ import { RootLayout } from '@/components/RootLayout'
 import { SectionIntro } from '@/components/SectionIntro'
 import { StylizedImage } from '@/components/StylizedImage'
 import { TagList, TagListItem } from '@/components/TagList'
-import imageMeeting from '@/images/meeting.jpg'
-import imageWhiteboard from '@/images/whiteboard.jpg'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -38,7 +37,11 @@ export default function PropertyManagement() {
         <div className="lg:flex lg:items-start lg:justify-end lg:gap-x-12">
           <FadeIn className="w-full max-w-lg flex-none lg:w-1/2">
             <StylizedImage
-              src={imageMeeting}
+              src={site.images.propertyManagement}
+              width={800}
+              height={600}
+              alt="Model home with keys representing property management"
+              grayscale={false}
               sizes="(min-width: 1024px) 33rem, 100vw"
               className="justify-center"
             />
@@ -85,7 +88,7 @@ export default function PropertyManagement() {
         </TagList>
       </Container>
 
-      <div className="mt-24 rounded-4xl bg-neutral-950 py-20 sm:mt-32 sm:py-28">
+      <div className="mt-24 rounded-4xl bg-neutral-950 py-20 ring-1 ring-gold/15 sm:mt-32 sm:py-28">
         <SectionIntro
           eyebrow="Platforms"
           title="Works with how you already book."
@@ -114,12 +117,15 @@ export default function PropertyManagement() {
 
       <Container className="mt-24 lg:mt-32">
         <FadeIn>
-          <StylizedImage
-            src={imageWhiteboard}
-            shape={1}
-            sizes="(min-width: 1024px) 40rem, 100vw"
-            className="justify-center"
-          />
+          <div className="overflow-hidden rounded-4xl ring-1 ring-gold/20">
+            <Image
+              src={site.images.hero}
+              alt="Snow-capped mountain peak above Vancouver Island forest"
+              width={1920}
+              height={840}
+              className="aspect-16/7 w-full object-cover object-center"
+            />
+          </div>
         </FadeIn>
       </Container>
 

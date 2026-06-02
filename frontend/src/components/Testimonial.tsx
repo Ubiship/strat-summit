@@ -22,14 +22,14 @@ export function Testimonial({
       )}
     >
       <GridPattern
-        className="absolute inset-0 -z-10 h-full w-full mask-[linear-gradient(to_bottom_left,white_50%,transparent_60%)] fill-neutral-100 stroke-neutral-950/5"
+        className="absolute inset-0 -z-10 h-full w-full mask-[linear-gradient(to_bottom_left,white_50%,transparent_60%)] fill-gold/5 stroke-gold/15"
         yOffset={-256}
       />
       <Container>
         <FadeIn>
           <figure className="mx-auto max-w-4xl">
             <blockquote className="relative font-display text-3xl font-medium tracking-tight text-neutral-950 sm:text-4xl">
-              <p className="before:content-['“'] after:content-['”'] sm:before:absolute sm:before:right-full">
+              <p className="before:text-gold after:text-gold before:content-['“'] after:content-['”'] sm:before:absolute sm:before:right-full">
                 {children}
               </p>
             </blockquote>

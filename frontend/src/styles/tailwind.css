@@ -29,12 +29,19 @@
 
   --radius-4xl: 2.5rem;
 
-  /* Strathcona Summit brand */
+  /* Strathcona Summit brand — matched to logo */
   --color-forest: #1b4332;
   --color-stone: #d4c5b5;
-  --color-copper: #b87333;
   --color-cream: #fafaf8;
   --color-charcoal: #2d2d2d;
+
+  /* Logo sun — darker gold for UI, lighter for highlights on dark bg */
+  --color-gold: #c9882a;
+  --color-gold-dark: #a87220;
+  --color-gold-light: #e8a032;
+
+  /* Legacy alias */
+  --color-copper: #c9882a;
 
   /* Map template neutrals to brand darks */
   --color-neutral-950: #1b4332;
