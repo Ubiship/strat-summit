@@ -441,3 +441,151 @@ func TestError_Response(t *testing.T) {
 		t.Errorf("expected error to mention status 500, got: %v", err)
 	}
 }
+
+func TestUpdateContact(t *testing.T) {
+	contactID := int64(456)
+	contact := Contact{
+		ID:         contactID,
+		Name:       "Updated Name",
+		Email:      "updated@example.com",
+		Phone:      "+1111111111",
+		ExternalID: "user-123",
+	}
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Verify method
+		if r.Method != "PUT" {
+			t.Errorf("expected PUT, got %s", r.Method)
+		}
+
+		// Verify path
+		expectedPath := "/api/v1/accounts/123/contacts/456"
+		if r.URL.Path != expectedPath {
+			t.Errorf("expected path %s, got %s", expectedPath, r.URL.Path)
+		}
+
+		// Verify auth header
+		authHeader := r.Header.Get("api_access_token")
+		if authHeader != "test-token" {
+			t.Errorf("expected auth token 'test-token', got '%s'", authHeader)
+		}
+
+		// Verify request body
+		var reqBody Contact
+		if err := json.NewDecoder(r.Body).Decode(&reqBody); err != nil {
+			t.Fatalf("failed to decode request body: %v", err)
+		}
+		if reqBody.Name != contact.Name {
+			t.Errorf("expected name %s, got %s", contact.Name, reqBody.Name)
+		}
+
+		w.WriteHeader(http.StatusOK)
+	}))
+	defer server.Close()
+
+	client := &Client{
+		baseURL:   server.URL,
+		apiToken:  "test-token",
+		accountID: 123,
+		http:      server.Client(),
+	}
+
+	err := client.UpdateContact(context.Background(), contactID, contact)
+	if err != nil {
+		t.Fatalf("UpdateContact failed: %v", err)
+	}
+}
+
+func TestUpdateContact_Error(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer server.Close()
+
+	client := &Client{
+		baseURL:   server.URL,
+		apiToken:  "test-token",
+		accountID: 123,
+		http:      server.Client(),
+	}
+
+	err := client.UpdateContact(context.Background(), 999, Contact{Name: "Test"})
+	if err == nil {
+		t.Error("expected error on 404 response, got nil")
+	}
+}
+
+func TestGetContact(t *testing.T) {
+	contactID := int64(789)
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Verify method
+		if r.Method != "GET" {
+			t.Errorf("expected GET, got %s", r.Method)
+		}
+
+		// Verify path
+		expectedPath := "/api/v1/accounts/123/contacts/789"
+		if r.URL.Path != expectedPath {
+			t.Errorf("expected path %s, got %s", expectedPath, r.URL.Path)
+		}
+
+		// Verify auth header
+		authHeader := r.Header.Get("api_access_token")
+		if authHeader != "test-token" {
+			t.Errorf("expected auth token 'test-token', got '%s'", authHeader)
+		}
+
+		// Send response
+		response := contactResponse{
+			Payload: Contact{
+				ID:         contactID,
+				Name:       "Found Contact",
+				Email:      "found@example.com",
+				Phone:      "+1234567890",
+				ExternalID: "user-789",
+			},
+		}
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(response)
+	}))
+	defer server.Close()
+
+	client := &Client{
+		baseURL:   server.URL,
+		apiToken:  "test-token",
+		accountID: 123,
+		http:      server.Client(),
+	}
+
+	result, err := client.GetContact(context.Background(), contactID)
+	if err != nil {
+		t.Fatalf("GetContact failed: %v", err)
+	}
+
+	if result.ID != contactID {
+		t.Errorf("expected ID %d, got %d", contactID, result.ID)
+	}
+	if result.Name != "Found Contact" {
+		t.Errorf("expected name 'Found Contact', got %s", result.Name)
+	}
+}
+
+func TestGetContact_NotFound(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+	}))
+	defer server.Close()
+
+	client := &Client{
+		baseURL:   server.URL,
+		apiToken:  "test-token",
+		accountID: 123,
+		http:      server.Client(),
+	}
+
+	_, err := client.GetContact(context.Background(), 999)
+	if err == nil {
+		t.Error("expected error on 404 response, got nil")
+	}
+}

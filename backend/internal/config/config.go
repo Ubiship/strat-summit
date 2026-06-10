@@ -36,6 +36,7 @@ type Config struct {
 	ChatwootBaseURL       string
 	ChatwootAPIToken      string
 	ChatwootAccountID     int
+	ChatwootInboxID       int
 	ChatwootWebhookSecret string
 }
 
@@ -47,6 +48,7 @@ func Load() (*Config, error) {
 	minioSSL, _ := strconv.ParseBool(getEnv("MINIO_USE_SSL", "true"))
 	maxBodySize, _ := strconv.ParseInt(getEnv("MAX_REQUEST_BODY_SIZE", "1048576"), 10, 64) // 1MB default
 	chatwootAccountID, _ := strconv.Atoi(getEnv("CHATWOOT_ACCOUNT_ID", "1"))
+	chatwootInboxID, _ := strconv.Atoi(getEnv("CHATWOOT_INBOX_ID", "1"))
 
 	// Parse CORS origins (comma-separated)
 	corsOrigins := parseCSV(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000"))
@@ -75,6 +77,7 @@ func Load() (*Config, error) {
 		ChatwootBaseURL:       os.Getenv("CHATWOOT_BASE_URL"),
 		ChatwootAPIToken:      os.Getenv("CHATWOOT_API_TOKEN"),
 		ChatwootAccountID:     chatwootAccountID,
+		ChatwootInboxID:       chatwootInboxID,
 		ChatwootWebhookSecret: os.Getenv("CHATWOOT_WEBHOOK_SECRET"),
 	}, nil
 }

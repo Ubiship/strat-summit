@@ -288,3 +288,58 @@ func (c *Client) ResolveConversation(ctx context.Context, conversationID int64) 
 
 	return nil
 }
+
+// UpdateContact updates an existing contact in Chatwoot.
+func (c *Client) UpdateContact(ctx context.Context, id int64, contact Contact) error {
+	body, err := json.Marshal(contact)
+	if err != nil {
+		return fmt.Errorf("marshaling contact: %w", err)
+	}
+
+	url := fmt.Sprintf("%s/api/v1/accounts/%d/contacts/%d", c.baseURL, c.accountID, id)
+	req, err := http.NewRequestWithContext(ctx, "PUT", url, bytes.NewReader(body))
+	if err != nil {
+		return fmt.Errorf("creating request: %w", err)
+	}
+	req.Header.Set("api_access_token", c.apiToken)
+	req.Header.Set("Content-Type", "application/json")
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return fmt.Errorf("executing request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return fmt.Errorf("update contact failed: status %d", resp.StatusCode)
+	}
+
+	return nil
+}
+
+// GetContact retrieves a contact by ID from Chatwoot.
+func (c *Client) GetContact(ctx context.Context, id int64) (*Contact, error) {
+	url := fmt.Sprintf("%s/api/v1/accounts/%d/contacts/%d", c.baseURL, c.accountID, id)
+	req, err := http.NewRequestWithContext(ctx, "GET", url, nil)
+	if err != nil {
+		return nil, fmt.Errorf("creating request: %w", err)
+	}
+	req.Header.Set("api_access_token", c.apiToken)
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("executing request: %w", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= 400 {
+		return nil, fmt.Errorf("get contact failed: status %d", resp.StatusCode)
+	}
+
+	var result contactResponse
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, fmt.Errorf("decoding response: %w", err)
+	}
+
+	return &result.Payload, nil
+}

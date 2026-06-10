@@ -1,7 +1,4 @@
-@import 'tailwindcss';
-@import './base.css';
-@import './typography.css' layer(components);
-
+/* Strathcona Summit Brand Theme for Tailwind v4 */
 @theme {
   --text-*: initial;
   --text-xs: 0.75rem;

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -22,10 +23,73 @@ var (
 	ErrForbidden          = errors.New("forbidden")
 )
 
+// Repository defines the data access methods required by Service.
+// This interface allows for easier testing with mocks.
+type Repository interface {
+	// User methods
+	GetUserByEmail(ctx context.Context, email string) (*domain.User, error)
+	GetUserByID(ctx context.Context, id uuid.UUID) (*domain.User, error)
+	UpdateRefreshToken(ctx context.Context, userID uuid.UUID, hash *string, expiresAt *time.Time) error
+	UpdateLastLogin(ctx context.Context, userID uuid.UUID) error
+
+	// Contact methods
+	CreateContact(ctx context.Context, c *domain.Contact) error
+	GetContactByID(ctx context.Context, id uuid.UUID) (*domain.Contact, error)
+	GetContactByEmail(ctx context.Context, email string) (*domain.Contact, error)
+	ListContacts(ctx context.Context, opts domain.ListOptions) ([]*domain.Contact, error)
+	ListContactsByRole(ctx context.Context, role domain.UserRole, opts domain.ListOptions) ([]*domain.Contact, error)
+	FindContactByPhone(ctx context.Context, phone string) (*domain.Contact, error)
+	FindContactByChatwootID(ctx context.Context, chatwootID int64) (*domain.Contact, error)
+	SetChatwootContactID(ctx context.Context, contactID uuid.UUID, chatwootID int64) error
+	UpdateContact(ctx context.Context, c *domain.Contact) error
+
+	// Property methods
+	CreateProperty(ctx context.Context, p *domain.Property) error
+	GetPropertyByID(ctx context.Context, id uuid.UUID) (*domain.Property, error)
+	ListProperties(ctx context.Context, opts domain.ListOptions) ([]*domain.Property, error)
+	GetPropertiesByOwner(ctx context.Context, contactID uuid.UUID) ([]*domain.Property, error)
+	OwnerHasProperty(ctx context.Context, contactID, propertyID uuid.UUID) (bool, error)
+	UpdateProperty(ctx context.Context, p *domain.Property) error
+
+	// Booking methods
+	CreateBooking(ctx context.Context, b *domain.Booking) error
+	GetBookingByID(ctx context.Context, id uuid.UUID) (*domain.Booking, error)
+	ListBookingsByProperty(ctx context.Context, propertyID uuid.UUID, opts domain.ListOptions) ([]*domain.Booking, error)
+	FindOpenBookingByOwner(ctx context.Context, ownerID uuid.UUID) (*domain.Booking, error)
+	SetBookingChatwootConversation(ctx context.Context, bookingID uuid.UUID, conversationID int64) error
+	FindBookingByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Booking, error)
+	UpdateBookingStatus(ctx context.Context, bookingID uuid.UUID, notes string) error
+
+	// Cleaning job methods
+	CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error
+	GetCleaningJobByID(ctx context.Context, id uuid.UUID) (*domain.CleaningJob, error)
+	UpdateCleaningJobStatus(ctx context.Context, id uuid.UUID, status domain.JobStatus) error
+	ClockInCleaningJob(ctx context.Context, id uuid.UUID) error
+	ClockOutCleaningJob(ctx context.Context, id uuid.UUID) error
+	ListCleaningJobsByDate(ctx context.Context, date time.Time) ([]*domain.CleaningJob, error)
+	ListCleaningJobsByStaff(ctx context.Context, contactID uuid.UUID, date *time.Time, opts domain.ListOptions) ([]*domain.CleaningJob, error)
+	IsStaffAssignedToJob(ctx context.Context, jobID, contactID uuid.UUID) (bool, error)
+	AssignStaffToJob(ctx context.Context, jobID, contactID uuid.UUID, hourlyRate float64) error
+
+	// Project methods
+	FindOpenProjectByClient(ctx context.Context, clientID uuid.UUID) (*domain.Project, error)
+	SetProjectChatwootConversation(ctx context.Context, projectID uuid.UUID, conversationID int64) error
+	FindProjectByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Project, error)
+	SetProjectConversationResolved(ctx context.Context, projectID uuid.UUID, resolved bool) error
+
+	// Chatwoot sync methods
+	CreateChatwootEvent(ctx context.Context, event *domain.ChatwootEvent) error
+	ListUnreviewedPendingContacts(ctx context.Context, opts domain.ListOptions) ([]*domain.PendingContact, error)
+	GetPendingContactByID(ctx context.Context, id uuid.UUID) (*domain.PendingContact, error)
+	GetPendingContactByChatwootID(ctx context.Context, chatwootID int64) (*domain.PendingContact, error)
+	CreatePendingContact(ctx context.Context, pc *domain.PendingContact) error
+	MarkPendingContactReviewed(ctx context.Context, id, reviewerID uuid.UUID, action string, mergedWithID *uuid.UUID) error
+}
+
 // Service handles business logic
 type Service struct {
 	cfg      *config.Config
-	repo     *repository.Repository
+	repo     Repository
 	novu     *novu.Client
 	chatwoot *chatwoot.Client
 }
@@ -174,10 +238,14 @@ func (s *Service) CreateContact(ctx context.Context, c *domain.Contact) error {
 	}
 
 	// Sync to Novu for notifications
-	_ = s.SyncContactToNovu(ctx, c)
+	if err := s.SyncContactToNovu(ctx, c); err != nil {
+		log.Printf("novu sync failed for contact %s: %v", c.ID, err)
+	}
 
 	// Sync to Chatwoot for inbox
-	_ = s.PushContactToChatwoot(ctx, c)
+	if err := s.PushContactToChatwoot(ctx, c); err != nil {
+		log.Printf("chatwoot sync failed for contact %s: %v", c.ID, err)
+	}
 
 	return nil
 }
@@ -296,7 +364,14 @@ func (s *Service) CreateBooking(ctx context.Context, auth *domain.AuthContext, b
 	}
 
 	// Notify admins of new booking
-	_ = s.NotifyBookingConfirmed(ctx, b, property)
+	if err := s.NotifyBookingConfirmed(ctx, b, property); err != nil {
+		log.Printf("failed to send booking notification: %v", err)
+	}
+
+	// Create Chatwoot conversation for guest communication
+	if err := s.CreateBookingConversation(ctx, b); err != nil {
+		log.Printf("failed to create chatwoot conversation for booking %s: %v", b.ID, err)
+	}
 
 	return nil
 }

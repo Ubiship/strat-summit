@@ -975,3 +975,109 @@ func (r *Repository) MarkChatwootEventProcessed(ctx context.Context, id uuid.UUI
 	}
 	return nil
 }
+
+// ============================================================================
+// Contact Update
+// ============================================================================
+
+// UpdateContact updates a contact's details.
+func (r *Repository) UpdateContact(ctx context.Context, c *domain.Contact) error {
+	query := `
+		UPDATE contacts SET
+			first_name = $2, last_name = $3, email = $4, phone = $5,
+			company_name = $6, role = $7, notes = $8, updated_at = NOW()
+		WHERE id = $1
+		RETURNING updated_at`
+
+	err := r.db.QueryRow(ctx, query,
+		c.ID, c.FirstName, c.LastName, c.Email, c.Phone,
+		c.CompanyName, c.Role, c.Notes,
+	).Scan(&c.UpdatedAt)
+	if err != nil {
+		return fmt.Errorf("updating contact: %w", err)
+	}
+	return nil
+}
+
+// FindBookingByChatwootConversation finds a booking by Chatwoot conversation ID.
+func (r *Repository) FindBookingByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Booking, error) {
+	query := `
+		SELECT id, property_id, source, tax_treatment, external_uid, guest_name,
+		       guest_email, guest_phone, check_in, check_out, nights, nightly_rate,
+		       nightly_rate_weekend, nightly_rate_holiday, revenue_incl_cleaning_fee,
+		       revenue_excl_cleaning_fee, cleaning_fee_charged, gst, pst, mrdt, notes,
+		       cleaning_job_id, statement_id, chatwoot_conversation_id, created_at, updated_at
+		FROM bookings
+		WHERE chatwoot_conversation_id = $1`
+
+	var b domain.Booking
+	err := r.db.QueryRow(ctx, query, conversationID).Scan(
+		&b.ID, &b.PropertyID, &b.Source, &b.TaxTreatment, &b.ExternalUID, &b.GuestName,
+		&b.GuestEmail, &b.GuestPhone, &b.CheckIn, &b.CheckOut, &b.Nights, &b.NightlyRate,
+		&b.NightlyRateWeekend, &b.NightlyRateHoliday, &b.RevenueInclCleaningFee,
+		&b.RevenueExclCleaningFee, &b.CleaningFeeCharged, &b.GST, &b.PST, &b.MRDT, &b.Notes,
+		&b.CleaningJobID, &b.StatementID, &b.ChatwootConversationID, &b.CreatedAt, &b.UpdatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("finding booking by chatwoot conversation: %w", err)
+	}
+	return &b, nil
+}
+
+// FindProjectByChatwootConversation finds a project by Chatwoot conversation ID.
+func (r *Repository) FindProjectByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Project, error) {
+	query := `
+		SELECT id, contact_id, name, address, status, billing_model, description,
+		       start_date, estimated_end_date, actual_end_date, deposit_pct,
+		       deposit_amount, deposit_paid_at, total_estimate, total_invoiced,
+		       total_paid, margin_target_pct, notes, chatwoot_conversation_id,
+		       created_at, updated_at
+		FROM projects
+		WHERE chatwoot_conversation_id = $1`
+
+	var p domain.Project
+	err := r.db.QueryRow(ctx, query, conversationID).Scan(
+		&p.ID, &p.ContactID, &p.Name, &p.Address, &p.Status, &p.BillingModel, &p.Description,
+		&p.StartDate, &p.EstimatedEndDate, &p.ActualEndDate, &p.DepositPct,
+		&p.DepositAmount, &p.DepositPaidAt, &p.TotalEstimate, &p.TotalInvoiced,
+		&p.TotalPaid, &p.MarginTargetPct, &p.Notes, &p.ChatwootConversationID,
+		&p.CreatedAt, &p.UpdatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, nil
+		}
+		return nil, fmt.Errorf("finding project by chatwoot conversation: %w", err)
+	}
+	return &p, nil
+}
+
+// UpdateBookingStatus updates a booking's status-related fields.
+func (r *Repository) UpdateBookingStatus(ctx context.Context, bookingID uuid.UUID, notes string) error {
+	query := `
+		UPDATE bookings
+		SET notes = COALESCE(notes || ' ', '') || $2, updated_at = NOW()
+		WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, bookingID, notes)
+	if err != nil {
+		return fmt.Errorf("updating booking status: %w", err)
+	}
+	return nil
+}
+
+// SetProjectConversationResolved marks a project conversation as resolved.
+func (r *Repository) SetProjectConversationResolved(ctx context.Context, projectID uuid.UUID, resolved bool) error {
+	note := "[Chatwoot conversation resolved]"
+	query := `
+		UPDATE projects
+		SET notes = COALESCE(notes || ' ', '') || $2, updated_at = NOW()
+		WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, projectID, note)
+	if err != nil {
+		return fmt.Errorf("setting project conversation resolved: %w", err)
+	}
+	return nil
+}

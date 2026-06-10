@@ -2,12 +2,18 @@
   "name": "strat-summit",
   "private": true,
   "scripts": {
-    "dev": "pnpm --filter frontend dev",
-    "build": "pnpm --filter frontend build",
-    "start": "pnpm --filter frontend start",
-    "lint": "pnpm --filter frontend lint"
+    "dev": "turbo dev",
+    "dev:web": "turbo dev --filter @repo/web",
+    "dev:admin": "turbo dev --filter @repo/admin",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4"
   },
   "engines": {
     "node": ">=20.0.0"
-  }
+  },
+  "packageManager": "pnpm@10.12.4"
 }

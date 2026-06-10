@@ -7,26 +7,37 @@ Each integration has its own package under `backend/internal/integrations/`.
 
 ## Integration Index
 
-| Integration | Package | Phase | Direction |
-|---|---|---|---|
-| Chatwoot | `integrations/chatwoot` | P1 | Bidirectional |
-| Novu | `integrations/novu` | P1 | Outbound (trigger) |
-| Gotenberg | `integrations/gotenberg` | P2 | Outbound (PDF) |
-| Cal.com | `integrations/cal` | P3 | Inbound (webhooks) |
-| QuickBooks Online | `integrations/qbo` | P0 | Bidirectional |
-| Twilio | via Novu provider | P1 | Outbound (SMS) |
-| Resend | via Novu provider | P1 | Outbound (email) |
-| iCal | `integrations/ical` | P1 | Inbound (booking sync) |
-| Dropbox Sign | `integrations/dropboxsign` | P2 | Outbound (signing) |
-| VAPI | `integrations/vapi` | P4 | Inbound (webhooks) |
-| Archivus | `integrations/archivus` | P4 | Bidirectional |
-| MinIO | `integrations/minio` | P0 | Outbound (storage) |
-| Stripe | `integrations/stripe` | P3+ | Outbound (payments) |
-| Square | `integrations/square` | P4 | Inbound (laundromat) |
+| Integration | Package | Phase | Direction | Status |
+|---|---|---|---|---|
+| Chatwoot | `integrations/chatwoot` | P1 | Bidirectional | **Done** |
+| Novu | `integrations/novu` | P1 | Outbound (trigger) | Partial |
+| Gotenberg | `integrations/gotenberg` | P2 | Outbound (PDF) | Stub |
+| Cal.com | `integrations/cal` | P3 | Inbound (webhooks) | Not started |
+| QuickBooks Online | `integrations/qbo` | P0 | Bidirectional | Stub |
+| Twilio | via Novu provider | P1 | Outbound (SMS) | Not started |
+| Resend | via Novu provider | P1 | Outbound (email) | Not started |
+| iCal | `integrations/ical` | P1 | Inbound (booking sync) | Schema only |
+| Dropbox Sign | `integrations/dropboxsign` | P2 | Outbound (signing) | Not started |
+| VAPI | `integrations/vapi` | P4 | Inbound (webhooks) | Not started |
+| Archivus | `integrations/archivus` | P4 | Bidirectional | Not started |
+| MinIO | `integrations/minio` | P0 | Outbound (storage) | Stub |
+| Stripe | `integrations/stripe` | P3+ | Outbound (payments) | Not started |
+| Square | `integrations/square` | P4 | Inbound (laundromat) | Not started |
 
 ---
 
 ## Chatwoot
+
+> **Implementation Status: v0.1 COMPLETE**
+>
+> | Feature | Status |
+> |---------|--------|
+> | Webhook handler with HMAC | Done |
+> | Contact sync (bidirectional) | Done |
+> | Conversation linking (bookings/projects) | Done |
+> | Pending contact workflow | Done |
+> | Test coverage | Done |
+> | VAPI → Chatwoot bridge | Not started |
 
 **Role:** Unified client-facing inbox. All external communication from property
 owners, renovation clients, direct booking inquiries, and guests flows through
@@ -336,6 +347,17 @@ Archivus) to be documented in subsequent sections.*
 
 ## Novu
 
+> **Implementation Status: PARTIAL**
+>
+> | Feature | Status |
+> |---------|--------|
+> | Go client structure | Done |
+> | Wired into service layer | Done |
+> | Trigger methods | Stubbed (fire-and-forget) |
+> | Frontend NovuProvider | Done |
+> | NotificationBell component | Done |
+> | Event templates | Not configured |
+
 **Role:** Unified notification hub. Replaces all direct Twilio and Resend calls
 from the Go backend. Single `Trigger()` call per event — Novu handles routing,
 templating, provider delivery, retry, and delivery tracking. Also provides
@@ -461,6 +483,11 @@ ALTER TABLE contacts ADD COLUMN novu_subscriber_id text
 ---
 
 ## Gotenberg
+
+> **Implementation Status: NOT STARTED**
+> - Client stub exists in `integrations/gotenberg/`
+> - No templates created yet
+> - PDF generation will be needed for Phase 2 (owner statements)
 
 **Role:** PDF generation microservice. Accepts HTML templates + data, returns
 PDF bytes. Replaces any Go PDF library for all document generation.
@@ -589,6 +616,10 @@ err = s.minio.PutObject(ctx, "statements", key, bytes.NewReader(pdfBytes),
 ---
 
 ## Cal.com (Self-Hosted)
+
+> **Implementation Status: NOT STARTED**
+> - Planned for Phase 3 (Renovations Pipeline)
+> - No deployment or configuration yet
 
 **Role:** Scheduling for renovation consultations and property walkthroughs.
 Clients book directly via an embedded widget in the renovation portal.

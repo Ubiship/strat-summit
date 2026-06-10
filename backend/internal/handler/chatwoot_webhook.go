@@ -102,12 +102,19 @@ func (h *Handler) ChatwootWebhook(w http.ResponseWriter, r *http.Request) {
 		}
 
 	case "message_created":
-		// Log only - no processing needed
-		// Already logged asynchronously above
+		if payload.Message != nil && payload.Conversation != nil {
+			msg := &chatwoot.Message{
+				Content:     payload.Message.Content,
+				MessageType: payload.Message.MessageType,
+				Private:     payload.Message.Private,
+			}
+			_ = h.svc.HandleMessageCreated(ctx, msg, payload.Conversation.ID)
+		}
 
 	case "conversation_resolved":
-		// Log only - no automatic status changes
-		// Already logged asynchronously above
+		if payload.Conversation != nil {
+			_ = h.svc.HandleConversationResolved(ctx, payload.Conversation.ID)
+		}
 	}
 
 	w.WriteHeader(http.StatusOK)

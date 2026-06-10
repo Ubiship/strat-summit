@@ -1,5 +1,26 @@
     # Strathcona Summit — Project Spec
 
+> **Last Updated:** June 2025
+
+## Current Status Summary
+
+| Phase | Status | Progress |
+|-------|--------|----------|
+| Phase 0 — Foundation | Complete | Backend scaffold, auth, database, Vercel/Railway deploys |
+| Phase 1 — PM Core | In Progress | Core APIs done, Chatwoot integration done, admin dashboard scaffold ready |
+| Phase 2 — Payout Engine | Not Started | Schema exists |
+| Phase 3 — Renovations | Not Started | Schema exists |
+| Phase 4 — Intelligence | Not Started | — |
+
+**Recent Milestones:**
+- Chatwoot webhook handler with HMAC verification
+- Contact sync service (bidirectional)
+- Pending contact approval workflow
+- Monorepo restructure (apps/web, apps/admin, packages/*)
+- Strathcona branding applied to marketing site
+
+---
+
 ## Overview
 
 Custom operational platform for Strathcona Summit Solutions (Joel & Amanda),
@@ -14,8 +35,9 @@ Built and managed by UbiShip Limited. No upfront cost. Monthly subscription mode
 
 | Layer | Technology | Host |
 |---|---|---|
-| Backend | Go | Railway |
-| Frontend | Next.js 14 (App Router) | Vercel |
+| Backend | Go 1.22 (chi router, pgx) | Railway |
+| Frontend | Next.js 16 (App Router), React 19, Tailwind CSS v4 | Vercel |
+| Monorepo | pnpm workspaces + Turbo | — |
 | Database | PostgreSQL 15 (self-hosted) | Railway |
 | Auth | Custom JWT (Go — bcrypt + refresh tokens) | Backend service |
 | File Storage | MinIO (S3-compatible, self-hosted) | Railway |
@@ -38,40 +60,62 @@ Built and managed by UbiShip Limited. No upfront cost. Monthly subscription mode
 ## Repository Structure
 
 ```
-strathcona/
-├── backend/               # Go service
+strat-summit/
+├── backend/                    # Go API service → Railway
 │   ├── cmd/
-│   │   └── server/        # main.go entrypoint
+│   │   └── server/             # main.go entrypoint
 │   ├── internal/
-│   │   ├── auth/          # JWT generation, validation, middleware
-│   │   ├── domain/        # entity structs, interfaces
-│   │   ├── handler/       # HTTP handlers + SSE
-│   │   ├── service/       # business logic
-│   │   ├── repository/    # DB queries (pgx)
-│   │   ├── jobs/          # cron jobs (iCal sync, reports, statements)
-│   │   └── integrations/  # QBO, Twilio, Resend, VAPI, Dropbox, Chatwoot, MinIO
-│   ├── migrations/        # golang-migrate SQL files
+│   │   ├── auth/               # JWT generation, validation, middleware
+│   │   ├── config/             # Environment variable loading
+│   │   ├── domain/             # Entity structs, enums
+│   │   ├── handler/            # HTTP handlers (chi router)
+│   │   ├── service/            # Business logic layer
+│   │   ├── repository/         # Data access layer (pgx)
+│   │   ├── jobs/               # Background jobs & cron scheduler
+│   │   └── integrations/       # External service clients
+│   │       ├── chatwoot/       # Chatwoot API client (✓ implemented)
+│   │       ├── novu/           # Novu notification client (✓ implemented)
+│   │       ├── minio/          # MinIO storage client (stub)
+│   │       ├── gotenberg/      # PDF generation client (stub)
+│   │       └── qbo/            # QuickBooks Online client (stub)
+│   ├── migrations/             # golang-migrate SQL files (26 migrations)
 │   └── Dockerfile
-├── frontend/              # Next.js app
-│   ├── app/
-│   │   ├── (admin)/       # Joel & Amanda portal
-│   │   ├── (staff)/       # Cleaner mobile views
-│   │   ├── (owner)/       # Property owner portal
-│   │   ├── (client)/      # Cleaning/renovation client portal
-│   │   └── (subtrade)/    # Subtrade portal
-│   ├── components/
-│   ├── lib/
-│   └── public/
-├── migrations/              # golang-migrate SQL files (versioned)
+├── apps/
+│   ├── web/                    # Next.js marketing site + public portal → Vercel
+│   │   ├── src/app/
+│   │   │   ├── page.tsx        # Homepage (Strathcona branding)
+│   │   │   ├── about/
+│   │   │   ├── contact/
+│   │   │   ├── property-management/
+│   │   │   ├── renovations/
+│   │   │   ├── blog/
+│   │   │   └── work/           # Case studies
+│   │   └── src/components/
+│   └── admin/                  # Next.js admin dashboard → Vercel
+│       └── src/app/
+│           ├── dashboard/      # Main dashboard
+│           ├── bookings/       # Booking management (scaffold)
+│           ├── contacts/       # Contact management (scaffold)
+│           ├── jobs/           # Cleaning job management (scaffold)
+│           ├── properties/     # Property management (scaffold)
+│           └── login/          # Authentication
+├── packages/
+│   ├── ui/                     # Shared UI components
+│   ├── types/                  # Shared TypeScript types
+│   ├── tailwind-config/        # Shared Tailwind theme (Strathcona brand)
+│   └── typescript-config/      # Shared TS configuration
+├── turbo.json                  # Turbo build configuration
+├── pnpm-workspace.yaml         # pnpm workspace definition
 └── docs/
-    ├── 00_PROJECT.md      ← this file
+    ├── 00_PROJECT.md           ← this file
     ├── 01_DATA_MODEL.md
     ├── 02_PAYOUT_ENGINE.md
     ├── 03_ROLES_ACCESS.md
     ├── 04_DOMAIN_PM.md
     ├── 05_DOMAIN_RENOVATIONS.md
     ├── 06_DOMAIN_AI.md
-    └── 07_INTEGRATIONS.md
+    ├── 07_INTEGRATIONS.md
+    └── 08_INFRASTRUCTURE.md
 ```
 
 ---
@@ -103,64 +147,61 @@ Three distinct service agreements, each with different platform scope:
 
 ## Build Phases
 
-### Phase 0 — Foundation (2–3 weeks)
-- PostgreSQL on Railway — schema, migrations via golang-migrate
-- Go backend scaffold (chi router, pgx, env config)
-- Custom JWT auth — login, refresh, logout endpoints
-- MinIO deployment + bucket creation
-- Next.js shell with auth (JWT cookie-based session)
-- All role-based routing stubs
-- QBO OAuth connection
-- Railway + Vercel deploy pipeline
-- CI via GitHub Actions
+### Phase 0 — Foundation ✓ COMPLETE
+- ✓ PostgreSQL on Railway — schema, migrations via golang-migrate (26 migrations)
+- ✓ Go backend scaffold (chi router, pgx, env config)
+- ✓ Custom JWT auth — login, refresh, logout endpoints
+- ✓ Next.js monorepo shell (apps/web + apps/admin)
+- ✓ Role-based access control (7 roles)
+- ✓ Railway + Vercel deploy pipeline
+- ○ MinIO deployment + bucket creation (stub only)
+- ○ QBO OAuth connection (stub only)
+- ○ CI via GitHub Actions (not configured)
 
-### Phase 1 — PM Core (4–6 weeks)
-- Property CRUD + tier assignment
-- iCal sync (Airbnb, VRBO) — polling job every 15 min
-- Direct booking intake form → Booking record
-- CleaningJob auto-creation on booking confirmation
-- **Novu deployment** — notification hub replacing direct Twilio + Resend calls
-- Staff job dispatch via Novu (SMS channel → Twilio provider)
-- In-app notifications via Novu in-app channel (replaces custom SSE hub)
-- Mobile checklist (digitised from `Cleaning_Checklist_2025-2026.docx`)
-- Photo upload (MinIO) with visibility controls
-- Hot tub photo required flag per property
-- Staff timesheet (clock in/out per job)
-- **Chatwoot deployment** — Railway container, Twilio SMS channel, email channel
-- **Chatwoot contact sync** — bidirectional: new contacts push to Chatwoot, inbound contacts upsert our DB
-- **Chatwoot webhook handler** — `POST /webhooks/chatwoot` — links conversations to properties, bookings, projects
-- **VAPI → Chatwoot bridge** — call transcripts and summaries pushed into relevant contact's Chatwoot thread
-- Staff timesheet (clock in/out per job)
+### Phase 1 — PM Core (IN PROGRESS)
+- ✓ Property CRUD + tier assignment
+- ✓ Direct booking creation → Booking record
+- ✓ CleaningJob auto-creation on booking confirmation
+- ✓ Staff timesheet (clock in/out per job)
+- ✓ **Chatwoot integration** — webhook handler, contact sync, conversation linking
+- ✓ **Chatwoot webhook handler** — `POST /webhooks/chatwoot` with HMAC verification
+- ✓ **Pending contact workflow** — contacts from Chatwoot queued for admin review
+- ✓ **Novu client** — wired into service layer (triggers stubbed)
+- ✓ **Admin dashboard scaffold** — layout, routing, auth context ready
+- ○ iCal sync (Airbnb, VRBO) — schema ready, polling job not implemented
+- ○ Mobile checklist — not implemented
+- ○ Photo upload (MinIO) — not implemented
+- ○ Hot tub photo required flag — schema ready
+- ○ VAPI → Chatwoot bridge — not implemented
 
-### Phase 2 — Payout Engine (3–4 weeks)
-- Full payout calculation (see `02_PAYOUT_ENGINE.md`)
-- Breakdown tab + Owner Payout tab data models
-- **Gotenberg deployment** — HTML template → PDF microservice
-- Owner statement PDF generation via Gotenberg (replaces Go PDF lib)
-- Statement delivery via Novu (email channel → Resend provider)
-- QBO sync for payout accounting records
-- Dropbox Sign for service agreements
+### Phase 2 — Payout Engine (NOT STARTED)
+- ○ Full payout calculation (see `02_PAYOUT_ENGINE.md`)
+- ✓ Breakdown tab + Owner Payout tab data models (schema exists)
+- ○ **Gotenberg deployment** — HTML template → PDF microservice
+- ○ Owner statement PDF generation via Gotenberg
+- ○ Statement delivery via Novu (email channel → Resend provider)
+- ○ QBO sync for payout accounting records
+- ○ Dropbox Sign for service agreements
 
-### Phase 3 — Renovations Pipeline (3–4 weeks)
-- Contact + Project CRUD
-- Estimate builder (line items: materials + labour + margin)
-- Gotenberg PDF generation for estimates and contracts
-- Three contract templates (fixed, cost-plus, T&M) via Gotenberg
-- Change order workflow with Dropbox Sign
-- Project phase pipeline (Estimate → Booked → In Progress → Complete)
-- Subtrade portal
-- Milestone billing triggers → QBO invoice push
-- **Cal.com deployment** — self-hosted scheduling for renovation consultations
-- Cal.com booking widget embedded in renovation client portal
-- Cal.com webhook → `consultations` record + Chatwoot conversation link
+### Phase 3 — Renovations Pipeline (NOT STARTED)
+- ✓ Project entity defined (domain + schema)
+- ○ Estimate builder (line items: materials + labour + margin)
+- ○ Gotenberg PDF generation for estimates and contracts
+- ○ Three contract templates (fixed, cost-plus, T&M) via Gotenberg
+- ○ Change order workflow with Dropbox Sign
+- ○ Project phase pipeline (Estimate → Booked → In Progress → Complete)
+- ○ Subtrade portal
+- ○ Milestone billing triggers → QBO invoice push
+- ○ **Cal.com deployment** — self-hosted scheduling for renovation consultations
+- ○ Cal.com booking widget embedded in renovation client portal
 
-### Phase 4 — Intelligence Layer (2–3 weeks)
-- Unified KPI dashboard
-- AI receipt capture (photo → Vision API → QBO draft expense)
-- VAPI agent configuration and webhook handling
-- Archie (Archivus) integration
-- Automated report generation + Resend delivery
-- Laundromat data model stub
+### Phase 4 — Intelligence Layer (NOT STARTED)
+- ○ Unified KPI dashboard
+- ○ AI receipt capture (photo → Vision API → QBO draft expense)
+- ○ VAPI agent configuration and webhook handling
+- ○ Archie (Archivus) integration
+- ○ Automated report generation + Resend delivery
+- ✓ Laundromat data model stub (schema exists)
 
 ---
 

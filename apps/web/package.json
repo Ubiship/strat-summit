@@ -1,12 +1,13 @@
 {
-  "name": "frontend",
+  "name": "@repo/web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --webpack",
+    "dev": "next dev --port 3000 --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
   },
   "browserslist": "defaults, not ie <= 11",
   "dependencies": {
@@ -15,6 +16,9 @@
     "@mdx-js/react": "^3.1.0",
     "@next/mdx": "16.1.6",
     "@novu/react": "^3.16.0",
+    "@repo/tailwind-config": "workspace:*",
+    "@repo/types": "workspace:*",
+    "@repo/ui": "workspace:*",
     "@tailwindcss/postcss": "^4.2.4",
     "@types/mdx": "^2.0.13",
     "acorn": "^8.15.0",
@@ -33,10 +37,10 @@
     "resend": "^6.12.3",
     "shiki": "^0.11.1",
     "tailwindcss": "^4.2.4",
-    "typescript": "^5.8.3",
     "unified-conditional": "0.0.2"
   },
   "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
     "@types/node": "^24.1.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
@@ -44,7 +48,8 @@
     "eslint-config-next": "^16.1.6",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
-    "sharp": "0.34.3"
+    "sharp": "0.34.3",
+    "typescript": "^5.8.3"
   },
   "overrides": {
     "@types/react": "19.2.14",

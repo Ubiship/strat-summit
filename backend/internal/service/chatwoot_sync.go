@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/ubiship/strat-summit/backend/internal/domain"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/chatwoot"
 )
@@ -130,7 +132,7 @@ func parseFullName(fullName string) (first, last string) {
 		first = parts[0]
 	}
 	if len(parts) >= 2 {
-		last = parts[1]
+		last = strings.TrimSpace(parts[1])
 	}
 	return
 }
@@ -138,4 +140,343 @@ func parseFullName(fullName string) (first, last string) {
 // LogChatwootEvent logs a webhook event to the audit table.
 func (s *Service) LogChatwootEvent(ctx context.Context, event *domain.ChatwootEvent) error {
 	return s.repo.CreateChatwootEvent(ctx, event)
+}
+
+// ============================================================================
+// Pending Contacts Admin API
+// ============================================================================
+
+// ListPendingContacts returns pending contacts awaiting admin review.
+func (s *Service) ListPendingContacts(ctx context.Context, auth *domain.AuthContext, opts domain.ListOptions) ([]*domain.PendingContact, error) {
+	if auth.Role != domain.RoleAdmin {
+		return nil, ErrForbidden
+	}
+	return s.repo.ListUnreviewedPendingContacts(ctx, opts)
+}
+
+// GetPendingContact returns a single pending contact.
+func (s *Service) GetPendingContact(ctx context.Context, auth *domain.AuthContext, id uuid.UUID) (*domain.PendingContact, error) {
+	if auth.Role != domain.RoleAdmin {
+		return nil, ErrForbidden
+	}
+	return s.repo.GetPendingContactByID(ctx, id)
+}
+
+// ApprovePendingContact links a pending contact to an existing contact.
+func (s *Service) ApprovePendingContact(ctx context.Context, auth *domain.AuthContext, pendingID, targetContactID uuid.UUID) error {
+	if auth.Role != domain.RoleAdmin {
+		return ErrForbidden
+	}
+
+	// Get the pending contact
+	pending, err := s.repo.GetPendingContactByID(ctx, pendingID)
+	if err != nil {
+		return fmt.Errorf("getting pending contact: %w", err)
+	}
+	if pending.ReviewedAt != nil {
+		return fmt.Errorf("pending contact already reviewed")
+	}
+
+	// Link the Chatwoot ID to the target contact
+	if err := s.repo.SetChatwootContactID(ctx, targetContactID, pending.ChatwootContactID); err != nil {
+		return fmt.Errorf("linking chatwoot contact: %w", err)
+	}
+
+	// Mark as reviewed
+	if err := s.repo.MarkPendingContactReviewed(ctx, pendingID, auth.UserID, "merged", &targetContactID); err != nil {
+		return fmt.Errorf("marking pending contact reviewed: %w", err)
+	}
+
+	return nil
+}
+
+// CreateContactFromPending creates a new contact from a pending contact.
+func (s *Service) CreateContactFromPending(ctx context.Context, auth *domain.AuthContext, pendingID uuid.UUID, role domain.UserRole) (*domain.Contact, error) {
+	if auth.Role != domain.RoleAdmin {
+		return nil, ErrForbidden
+	}
+
+	// Get the pending contact
+	pending, err := s.repo.GetPendingContactByID(ctx, pendingID)
+	if err != nil {
+		return nil, fmt.Errorf("getting pending contact: %w", err)
+	}
+	if pending.ReviewedAt != nil {
+		return nil, fmt.Errorf("pending contact already reviewed")
+	}
+
+	// Parse name into first/last
+	first, last := parseFullName(pending.Name)
+
+	// Create the new contact
+	contact := &domain.Contact{
+		FirstName:         first,
+		LastName:          last,
+		Email:             pending.Email,
+		Phone:             pending.Phone,
+		Role:              role,
+		ChatwootContactID: &pending.ChatwootContactID,
+	}
+
+	if err := s.repo.CreateContact(ctx, contact); err != nil {
+		return nil, fmt.Errorf("creating contact: %w", err)
+	}
+
+	// Mark as reviewed
+	if err := s.repo.MarkPendingContactReviewed(ctx, pendingID, auth.UserID, "created", &contact.ID); err != nil {
+		return nil, fmt.Errorf("marking pending contact reviewed: %w", err)
+	}
+
+	// Sync to Novu (fire and forget)
+	if err := s.SyncContactToNovu(ctx, contact); err != nil {
+		log.Printf("novu sync failed for new contact %s: %v", contact.ID, err)
+	}
+
+	return contact, nil
+}
+
+// RejectPendingContact marks a pending contact as rejected.
+func (s *Service) RejectPendingContact(ctx context.Context, auth *domain.AuthContext, pendingID uuid.UUID, reason string) error {
+	if auth.Role != domain.RoleAdmin {
+		return ErrForbidden
+	}
+
+	// Get the pending contact
+	pending, err := s.repo.GetPendingContactByID(ctx, pendingID)
+	if err != nil {
+		return fmt.Errorf("getting pending contact: %w", err)
+	}
+	if pending.ReviewedAt != nil {
+		return fmt.Errorf("pending contact already reviewed")
+	}
+
+	// Mark as rejected
+	if err := s.repo.MarkPendingContactReviewed(ctx, pendingID, auth.UserID, "rejected", nil); err != nil {
+		return fmt.Errorf("marking pending contact reviewed: %w", err)
+	}
+
+	return nil
+}
+
+// ============================================================================
+// Message Handling
+// ============================================================================
+
+// HandleMessageCreated processes a message_created webhook event.
+func (s *Service) HandleMessageCreated(ctx context.Context, msg *chatwoot.Message, convID int64) error {
+	// Skip internal notes
+	if msg.Private {
+		return nil
+	}
+
+	// Skip outgoing (agent) messages
+	if msg.MessageType == "outgoing" {
+		return nil
+	}
+
+	// Find linked booking
+	booking, err := s.repo.FindBookingByChatwootConversation(ctx, convID)
+	if err != nil {
+		return fmt.Errorf("finding booking by conversation: %w", err)
+	}
+	if booking != nil {
+		// TODO: Trigger notification for new message on booking
+		log.Printf("new message on booking %s: %s", booking.ID, msg.Content)
+		return nil
+	}
+
+	// Find linked project
+	project, err := s.repo.FindProjectByChatwootConversation(ctx, convID)
+	if err != nil {
+		return fmt.Errorf("finding project by conversation: %w", err)
+	}
+	if project != nil {
+		// TODO: Trigger notification for new message on project
+		log.Printf("new message on project %s: %s", project.ID, msg.Content)
+		return nil
+	}
+
+	// Unlinked conversation - just log
+	log.Printf("message on unlinked conversation %d: %s", convID, msg.Content)
+	return nil
+}
+
+// HandleConversationResolved processes a conversation_resolved webhook event.
+func (s *Service) HandleConversationResolved(ctx context.Context, convID int64) error {
+	// Check if linked to booking
+	booking, err := s.repo.FindBookingByChatwootConversation(ctx, convID)
+	if err != nil {
+		return fmt.Errorf("finding booking by conversation: %w", err)
+	}
+	if booking != nil {
+		// Append note to booking
+		if err := s.repo.UpdateBookingStatus(ctx, booking.ID, "[Chatwoot conversation resolved]"); err != nil {
+			return fmt.Errorf("updating booking status: %w", err)
+		}
+		log.Printf("conversation resolved for booking %s", booking.ID)
+		return nil
+	}
+
+	// Check if linked to project
+	project, err := s.repo.FindProjectByChatwootConversation(ctx, convID)
+	if err != nil {
+		return fmt.Errorf("finding project by conversation: %w", err)
+	}
+	if project != nil {
+		if err := s.repo.SetProjectConversationResolved(ctx, project.ID, true); err != nil {
+			return fmt.Errorf("setting project conversation resolved: %w", err)
+		}
+		log.Printf("conversation resolved for project %s", project.ID)
+		return nil
+	}
+
+	log.Printf("conversation %d resolved (unlinked)", convID)
+	return nil
+}
+
+// ============================================================================
+// Contact Update Sync
+// ============================================================================
+
+// UpdateContact updates a contact and syncs to Chatwoot if linked.
+func (s *Service) UpdateContact(ctx context.Context, auth *domain.AuthContext, contact *domain.Contact) error {
+	if auth.Role != domain.RoleAdmin {
+		return ErrForbidden
+	}
+
+	if err := s.repo.UpdateContact(ctx, contact); err != nil {
+		return fmt.Errorf("updating contact: %w", err)
+	}
+
+	// Sync to Chatwoot if linked
+	if contact.ChatwootContactID != nil && s.chatwoot != nil {
+		if err := s.SyncContactToChatwoot(ctx, contact); err != nil {
+			log.Printf("chatwoot update sync failed for contact %s: %v", contact.ID, err)
+		}
+	}
+
+	return nil
+}
+
+// SyncContactToChatwoot updates a contact in Chatwoot.
+func (s *Service) SyncContactToChatwoot(ctx context.Context, contact *domain.Contact) error {
+	if s.chatwoot == nil {
+		return nil
+	}
+	if contact.ChatwootContactID == nil {
+		return nil
+	}
+
+	cw := chatwoot.Contact{
+		ID:         *contact.ChatwootContactID,
+		Name:       contact.FullName(),
+		ExternalID: contact.ID.String(),
+	}
+	if contact.Email != nil {
+		cw.Email = *contact.Email
+	}
+	if contact.Phone != nil {
+		cw.Phone = *contact.Phone
+	}
+
+	return s.chatwoot.UpdateContact(ctx, *contact.ChatwootContactID, cw)
+}
+
+// ============================================================================
+// Outbound Conversation Creation
+// ============================================================================
+
+// CreateBookingConversation creates a Chatwoot conversation for a booking.
+// It upserts a contact using guest info and creates a conversation linked to the booking.
+func (s *Service) CreateBookingConversation(ctx context.Context, booking *domain.Booking) error {
+	if s.chatwoot == nil {
+		return nil
+	}
+
+	// Need guest contact info to create conversation
+	if (booking.GuestEmail == nil || *booking.GuestEmail == "") &&
+		(booking.GuestPhone == nil || *booking.GuestPhone == "") {
+		return nil // No contact info, can't create conversation
+	}
+
+	// Build contact from guest info
+	guestName := "Guest"
+	if booking.GuestName != nil && *booking.GuestName != "" {
+		guestName = *booking.GuestName
+	}
+
+	cw := chatwoot.Contact{
+		Name:       guestName,
+		ExternalID: fmt.Sprintf("booking-%s", booking.ID.String()),
+	}
+	if booking.GuestEmail != nil {
+		cw.Email = *booking.GuestEmail
+	}
+	if booking.GuestPhone != nil {
+		cw.Phone = *booking.GuestPhone
+	}
+
+	// Upsert contact to get Chatwoot contact ID
+	contact, err := s.chatwoot.UpsertContact(ctx, cw)
+	if err != nil {
+		return fmt.Errorf("upserting guest contact: %w", err)
+	}
+
+	// Create conversation with the guest contact
+	conv, err := s.chatwoot.CreateConversation(ctx, contact.ID, s.cfg.ChatwootInboxID)
+	if err != nil {
+		return fmt.Errorf("creating conversation: %w", err)
+	}
+
+	// Link conversation to booking
+	if err := s.repo.SetBookingChatwootConversation(ctx, booking.ID, conv.ID); err != nil {
+		return fmt.Errorf("linking conversation to booking: %w", err)
+	}
+
+	return nil
+}
+
+// CreateProjectConversation creates a Chatwoot conversation for a project.
+// It uses the project's contact to create a conversation linked to the project.
+func (s *Service) CreateProjectConversation(ctx context.Context, project *domain.Project) error {
+	if s.chatwoot == nil {
+		return nil
+	}
+
+	// Get the project's contact
+	contact, err := s.repo.GetContactByID(ctx, project.ContactID)
+	if err != nil {
+		return fmt.Errorf("getting project contact: %w", err)
+	}
+	if contact == nil {
+		return nil
+	}
+
+	// If contact not linked to Chatwoot, push them first
+	if contact.ChatwootContactID == nil {
+		if err := s.PushContactToChatwoot(ctx, contact); err != nil {
+			return fmt.Errorf("pushing contact to chatwoot: %w", err)
+		}
+		// Re-fetch contact to get Chatwoot ID
+		contact, err = s.repo.GetContactByID(ctx, project.ContactID)
+		if err != nil {
+			return fmt.Errorf("re-fetching contact: %w", err)
+		}
+		if contact == nil || contact.ChatwootContactID == nil {
+			return nil
+		}
+	}
+
+	// Create conversation with the contact
+	conv, err := s.chatwoot.CreateConversation(ctx, *contact.ChatwootContactID, s.cfg.ChatwootInboxID)
+	if err != nil {
+		return fmt.Errorf("creating conversation: %w", err)
+	}
+
+	// Link conversation to project
+	if err := s.repo.SetProjectChatwootConversation(ctx, project.ID, conv.ID); err != nil {
+		return fmt.Errorf("linking conversation to project: %w", err)
+	}
+
+	return nil
 }

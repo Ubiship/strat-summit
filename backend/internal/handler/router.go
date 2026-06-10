@@ -82,6 +82,20 @@ func (h *Handler) Router() chi.Router {
 				r.Post("/", h.CreateContact)
 				r.Get("/{id}", h.GetContact)
 			})
+
+			// Admin routes
+			r.Route("/admin", func(r chi.Router) {
+				r.Use(auth.RequireRole(domain.RoleAdmin))
+
+				// Pending contacts
+				r.Route("/pending-contacts", func(r chi.Router) {
+					r.Get("/", h.ListPendingContacts)
+					r.Get("/{id}", h.GetPendingContact)
+					r.Post("/{id}/approve", h.ApprovePendingContact)
+					r.Post("/{id}/create", h.CreateContactFromPending)
+					r.Post("/{id}/reject", h.RejectPendingContact)
+				})
+			})
 		})
 	})
 
