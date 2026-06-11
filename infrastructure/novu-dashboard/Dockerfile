@@ -3,16 +3,17 @@
 
 FROM ghcr.io/novuhq/novu/web:latest
 
-# Copy UbiShip theme CSS
+# Copy UbiShip theme CSS to public folder
 COPY ubiship-theme.css /app/public/custom/ubiship-theme.css
 
-# Inject stylesheet link into index.html
-RUN sed -i 's|</head>|<link rel="stylesheet" href="/custom/ubiship-theme.css"></head>|' /app/.next/server/app/index.html 2>/dev/null || \
-    sed -i 's|</head>|<link rel="stylesheet" href="/custom/ubiship-theme.css"></head>|' /app/public/index.html 2>/dev/null || \
-    echo "Warning: Could not find index.html to patch"
+# Create a startup script that injects CSS link and starts the app
+RUN echo '#!/bin/sh' > /app/start.sh && \
+    echo 'find /app -name "*.html" -exec sed -i "s|</head>|<link rel=\"stylesheet\" href=\"/custom/ubiship-theme.css\"></head>|g" {} \; 2>/dev/null || true' >> /app/start.sh && \
+    echo 'exec pnpm start:static:build' >> /app/start.sh && \
+    chmod +x /app/start.sh
 
 # Expose same port as original
 EXPOSE 4200
 
-# Use original entrypoint
-CMD ["node", "server.js"]
+# Run startup script
+CMD ["/app/start.sh"]
