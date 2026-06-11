@@ -1,0 +1,268 @@
+/*
+ * UbiShip Notifications - Novu White-Label Theme
+ * Inject via reverse proxy or mount in Docker container
+ *
+ * Usage (nginx):
+ *   sub_filter '</head>' '<link rel="stylesheet" href="/custom/ubiship-theme.css"></head>';
+ *
+ * Usage (Docker mount):
+ *   -v ./novu-ubiship-theme.css:/app/public/custom/ubiship-theme.css
+ */
+
+/* ============================================
+   UbiShip Brand Colors
+   ============================================ */
+:root {
+  /* Primary */
+  --ubiship-primary: #0F172A;
+  --ubiship-primary-light: #1E293B;
+  --ubiship-primary-dark: #020617;
+
+  /* Accent */
+  --ubiship-accent: #3B82F6;
+  --ubiship-accent-light: #60A5FA;
+  --ubiship-accent-dark: #2563EB;
+
+  /* Neutrals */
+  --ubiship-white: #FFFFFF;
+  --ubiship-gray-50: #F8FAFC;
+  --ubiship-gray-100: #F1F5F9;
+  --ubiship-gray-200: #E2E8F0;
+  --ubiship-gray-300: #CBD5E1;
+  --ubiship-gray-400: #94A3B8;
+  --ubiship-gray-500: #64748B;
+  --ubiship-gray-600: #475569;
+  --ubiship-gray-700: #334155;
+  --ubiship-gray-800: #1E293B;
+  --ubiship-gray-900: #0F172A;
+
+  /* Status */
+  --ubiship-success: #10B981;
+  --ubiship-warning: #F59E0B;
+  --ubiship-error: #EF4444;
+}
+
+/* ============================================
+   Override Novu CSS Variables
+   ============================================ */
+:root,
+[data-theme="light"],
+[data-theme="dark"] {
+  /* Primary colors */
+  --nv-color-primary: var(--ubiship-accent) !important;
+  --nv-color-primary-dark: var(--ubiship-accent-dark) !important;
+  --nv-color-primary-light: var(--ubiship-accent-light) !important;
+
+  /* Gradient overrides */
+  --nv-gradient-primary: linear-gradient(135deg, var(--ubiship-accent) 0%, var(--ubiship-accent-dark) 100%) !important;
+}
+
+/* ============================================
+   Header / Navigation
+   ============================================ */
+
+/* Hide Novu logo */
+[class*="Logo"],
+[class*="logo"],
+img[alt*="Novu"],
+img[alt*="novu"],
+svg[class*="logo"] {
+  display: none !important;
+}
+
+/* Header bar */
+header,
+[class*="Header"],
+[class*="Navbar"],
+nav[class*="main"] {
+  background: var(--ubiship-primary) !important;
+  border-bottom: 1px solid var(--ubiship-gray-700) !important;
+}
+
+/* Inject UbiShip logo via pseudo-element */
+header::before,
+[class*="Header"]::before {
+  content: "UbiShip";
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ubiship-white);
+  letter-spacing: -0.025em;
+  margin-left: 1rem;
+}
+
+/* If you have a logo URL, use this instead:
+header::before {
+  content: "";
+  display: block;
+  width: 120px;
+  height: 32px;
+  background: url("YOUR_LOGO_URL") no-repeat center;
+  background-size: contain;
+  margin-left: 1rem;
+}
+*/
+
+/* ============================================
+   Sidebar
+   ============================================ */
+aside,
+[class*="Sidebar"],
+[class*="sidebar"] {
+  background: var(--ubiship-gray-50) !important;
+  border-right: 1px solid var(--ubiship-gray-200) !important;
+}
+
+[data-theme="dark"] aside,
+[data-theme="dark"] [class*="Sidebar"] {
+  background: var(--ubiship-gray-900) !important;
+  border-right: 1px solid var(--ubiship-gray-700) !important;
+}
+
+/* Sidebar links */
+aside a,
+[class*="Sidebar"] a {
+  color: var(--ubiship-gray-700) !important;
+}
+
+aside a:hover,
+[class*="Sidebar"] a:hover,
+aside a[class*="active"],
+[class*="Sidebar"] a[class*="active"] {
+  color: var(--ubiship-accent) !important;
+  background: var(--ubiship-gray-100) !important;
+}
+
+/* ============================================
+   Buttons
+   ============================================ */
+button[class*="primary"],
+[class*="Button"][class*="primary"],
+.btn-primary {
+  background: var(--ubiship-accent) !important;
+  border-color: var(--ubiship-accent) !important;
+  color: var(--ubiship-white) !important;
+}
+
+button[class*="primary"]:hover,
+[class*="Button"][class*="primary"]:hover {
+  background: var(--ubiship-accent-dark) !important;
+  border-color: var(--ubiship-accent-dark) !important;
+}
+
+/* Secondary buttons */
+button[class*="secondary"],
+[class*="Button"][class*="secondary"] {
+  border-color: var(--ubiship-gray-300) !important;
+  color: var(--ubiship-gray-700) !important;
+}
+
+/* ============================================
+   Forms & Inputs
+   ============================================ */
+input,
+textarea,
+select,
+[class*="Input"],
+[class*="Select"] {
+  border-color: var(--ubiship-gray-300) !important;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+[class*="Input"]:focus,
+[class*="Select"]:focus {
+  border-color: var(--ubiship-accent) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* ============================================
+   Cards & Panels
+   ============================================ */
+[class*="Card"],
+[class*="Panel"],
+[class*="card"] {
+  border-color: var(--ubiship-gray-200) !important;
+  border-radius: 8px !important;
+}
+
+/* ============================================
+   Footer - Hide Novu branding
+   ============================================ */
+footer,
+[class*="Footer"] {
+  display: none !important;
+}
+
+/* Or replace with UbiShip branding:
+footer::after {
+  content: "Powered by UbiShip Limited";
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  color: var(--ubiship-gray-500);
+  font-size: 0.75rem;
+}
+*/
+
+/* ============================================
+   Hide "Powered by Novu" / Novu mentions
+   ============================================ */
+[class*="powered"],
+[class*="Powered"],
+*[class*="novu-branding"],
+a[href*="novu.co"],
+span:contains("Novu"),
+p:contains("Powered by") {
+  display: none !important;
+}
+
+/* ============================================
+   Loading / Skeleton states
+   ============================================ */
+[class*="Skeleton"],
+[class*="skeleton"] {
+  background: linear-gradient(
+    90deg,
+    var(--ubiship-gray-100) 25%,
+    var(--ubiship-gray-200) 50%,
+    var(--ubiship-gray-100) 75%
+  ) !important;
+}
+
+/* ============================================
+   Status badges
+   ============================================ */
+[class*="badge"][class*="success"],
+[class*="Badge"][class*="success"] {
+  background: var(--ubiship-success) !important;
+}
+
+[class*="badge"][class*="warning"],
+[class*="Badge"][class*="warning"] {
+  background: var(--ubiship-warning) !important;
+}
+
+[class*="badge"][class*="error"],
+[class*="Badge"][class*="error"] {
+  background: var(--ubiship-error) !important;
+}
+
+/* ============================================
+   Dark mode adjustments
+   ============================================ */
+[data-theme="dark"] {
+  --ubiship-accent: #60A5FA;
+  --ubiship-accent-dark: #3B82F6;
+}
+
+[data-theme="dark"] body {
+  background: var(--ubiship-gray-900) !important;
+  color: var(--ubiship-gray-100) !important;
+}
+
+[data-theme="dark"] [class*="Card"],
+[data-theme="dark"] [class*="Panel"] {
+  background: var(--ubiship-gray-800) !important;
+  border-color: var(--ubiship-gray-700) !important;
+}
