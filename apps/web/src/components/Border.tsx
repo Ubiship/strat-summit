@@ -4,14 +4,12 @@ type BorderProps<T extends React.ElementType> = {
   as?: T
   className?: string
   position?: 'top' | 'left'
-  invert?: boolean
 }
 
 export function Border<T extends React.ElementType = 'div'>({
   as,
   className,
   position = 'top',
-  invert = false,
   ...props
 }: Omit<React.ComponentPropsWithoutRef<T>, keyof BorderProps<T>> &
   BorderProps<T>) {
@@ -21,10 +19,7 @@ export function Border<T extends React.ElementType = 'div'>({
     <Component
       className={clsx(
         className,
-        'relative before:absolute after:absolute',
-        invert
-          ? 'before:bg-sun after:bg-warm-cream/15'
-          : 'before:bg-sun after:bg-warm-ink/10',
+        'relative before:absolute before:bg-sun after:absolute after:bg-warm-ink/10',
         position === 'top' &&
           'before:top-0 before:left-0 before:h-px before:w-6 after:top-0 after:right-0 after:left-8 after:h-px',
         position === 'left' &&
