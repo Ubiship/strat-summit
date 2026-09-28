@@ -38,25 +38,20 @@ export function SocialMedia({
   invert?: boolean
 }) {
   return (
-    <ul
-      role="list"
-      className={clsx(
-        'flex gap-x-10',
-        invert ? 'text-white' : 'text-neutral-950',
-        className,
-      )}
-    >
+    <ul role="list" className={clsx('flex gap-3', className)}>
       {socialMediaProfiles.map((socialMediaProfile) => (
         <li key={socialMediaProfile.title}>
           <Link
             href={socialMediaProfile.href}
             aria-label={socialMediaProfile.title}
             className={clsx(
-              'transition',
-              invert ? 'hover:text-neutral-200' : 'hover:text-neutral-700',
+              'grid size-12 place-items-center rounded-full transition',
+              invert
+                ? 'bg-warm-cream/10 text-warm-cream hover:bg-warm-cream/20'
+                : 'bg-warm-cream text-warm-ink hover:bg-white',
             )}
           >
-            <socialMediaProfile.icon className="h-6 w-6 fill-current" />
+            <socialMediaProfile.icon className="size-5.5 fill-current" />
           </Link>
         </li>
       ))}
