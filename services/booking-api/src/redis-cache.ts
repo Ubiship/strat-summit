@@ -21,7 +21,14 @@ function asPair(value: unknown): { count: number; ttlSeconds: number } {
 }
 
 export function createRedisCache(url: string): RedisCache {
-  const redis = new Redis(url)
+  const redis = new Redis(url, {
+    maxRetriesPerRequest: 1,
+    enableOfflineQueue: false,
+    commandTimeout: 500,
+  })
+  redis.on("error", (error: Error) => {
+    console.error(JSON.stringify({ event: "redis_connection_error", error: error.message }))
+  })
   return {
     async get(key) {
       return redis.get(key)

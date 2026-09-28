@@ -20,6 +20,10 @@ function createDb(databaseUrl: string) {
 
 type Database = ReturnType<typeof createDb>
 
+function isUuid(id: string): boolean {
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+}
+
 function mapService(row: typeof services.$inferSelect): ServiceRecord {
   return {
     id: row.id,
@@ -116,11 +120,13 @@ class PostgresStore implements BookingStore {
   }
 
   async findBookingById(id: string) {
+    if (!isUuid(id)) return null
     const rows = await this.bookingQuery().where(eq(bookings.id, id)).limit(1)
     return rows[0] ? mapBooking(rows[0]) : null
   }
 
   async decideBooking(input: Decision) {
+    if (!isUuid(input.id)) return null
     const updated = await this.db
       .update(bookings)
       .set({
