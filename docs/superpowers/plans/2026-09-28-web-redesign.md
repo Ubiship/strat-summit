@@ -2946,7 +2946,7 @@ function PageLink({ page }: { page: Page }) {
       <p className="mt-3 text-base/[1.55] text-warm-muted">{page.description}</p>
       <Link
         href={page.href}
-        className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-sun px-4.5 py-3 text-[0.9375rem] font-bold text-warm-ink transition hover:bg-sun-light"
+        className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-sun px-4.5 py-3 text-[0.9375rem] font-bold text-warm-ink transition hover:bg-sun-light focus-visible:-outline-offset-4"
         aria-label={`Read more: ${page.title}`}
       >
         Read more
