@@ -1,22 +1,23 @@
 'use client'
 
 import { createContext, useContext } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const FadeInStaggerContext = createContext(false)
 
 const viewport = { once: true, margin: '0px 0px -200px' }
 
+// Reduced motion is handled by RootLayout's MotionConfig, which skips the
+// slide. Branching on it here would make server and client markup differ.
 export function FadeIn(
   props: React.ComponentPropsWithoutRef<typeof motion.div>,
 ) {
-  let shouldReduceMotion = useReducedMotion()
   let isInStaggerGroup = useContext(FadeInStaggerContext)
 
   return (
     <motion.div
       variants={{
-        hidden: { opacity: 0, y: shouldReduceMotion ? 0 : 24 },
+        hidden: { opacity: 0, y: 24 },
         visible: { opacity: 1, y: 0 },
       }}
       transition={{ duration: 0.5 }}
