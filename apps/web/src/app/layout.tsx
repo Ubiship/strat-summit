@@ -1,13 +1,20 @@
 import { type Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Fraunces, Outfit } from 'next/font/google'
 
 import { site } from '@/lib/site'
 import '@/styles/tailwind.css'
 
-const inter = Inter({
+const fraunces = Fraunces({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  axes: ['SOFT', 'WONK', 'opsz'],
+  variable: '--font-fraunces',
+})
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-outfit',
 })
 
 export const metadata: Metadata = {
@@ -34,9 +41,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} h-full bg-neutral-950 text-base antialiased`}
+      className={`${fraunces.variable} ${outfit.variable} h-full bg-forest-deep text-base antialiased`}
     >
-      <body className={`${inter.className} flex min-h-full flex-col`}>
+      <body className="flex min-h-full flex-col bg-forest-deep font-sans text-warm-ink">
         {children}
       </body>
     </html>

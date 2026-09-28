@@ -55,7 +55,9 @@ The existing brand colours stay in `packages/tailwind-config/theme.css`. New war
 | `--color-sand` | `#f7e3c4` | Services band, legal strip, hover fills |
 | `--color-apricot` | `#f3c98f` | Kicker text on forest, pull-quote band |
 | `--color-sun` | `#f2a33a` | Primary buttons, sun dots, contact band, gold tile |
-| `--color-ember` | `#d9772f` | Kicker text on light bands, footer headings |
+| `--color-ember` | `#d9772f` | Decorative only (sun orb gradient, list markers) |
+| `--color-ember-deep` | `#9a4a16` | Kicker text and footer headings on light bands (plain ember fails 4.5:1 on sand and cream) |
+| `--color-sun-light` | `#f5b458` | Hover state for sun buttons |
 | `--color-forest` (existing) | `#1b4332` | Existing token, unchanged |
 | `--color-forest-warm` | `#1f4a35` | "Why" band and forest tiles on the public site |
 | `--color-forest-deep` | `#163826` | Page background behind the stacked bands |
@@ -162,7 +164,7 @@ As in the approved mockup:
 ### About (`/about`)
 
 1. Warm full-bleed opening band with "Built on trust, rooted on the Island." and the three intro paragraphs.
-2. The three stats (2, 3, 1) as oversized sun-coloured Fraunces numerals on sand.
+2. The three stats (2, 3, 1) as oversized Fraunces numerals in warm ink, each inside a large sun disc on sand. (Sun-coloured numerals directly on sand fail 3:1.)
 3. "Our values" — forest band with the three values as rounded cards.
 4. Leadership — Joel and Amanda as large rounded portrait tiles. The placeholder photo and the note about replacing it stay until real headshots are provided.
 5. Contact band and footer.

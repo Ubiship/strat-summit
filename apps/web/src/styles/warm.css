@@ -1,0 +1,90 @@
+@theme {
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), Georgia, ui-serif, serif;
+  --font-display--font-variation-settings: 'SOFT' 100, 'WONK' 1, 'opsz' 144;
+  --breakpoint-split: 56.25rem;
+}
+
+:root {
+  --band-radius: 2.5rem;
+}
+
+@media (width >= 56.25rem) {
+  :root {
+    --band-radius: 4rem;
+  }
+}
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-variation-settings: var(--font-display--font-variation-settings);
+  font-weight: 680;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+}
+
+@utility photo-warm {
+  filter: sepia(0.38) saturate(1.5) hue-rotate(-12deg) brightness(1.06);
+}
+
+@utility hero-shade {
+  background:
+    linear-gradient(
+      180deg,
+      rgb(255 150 60 / 0.1) 0%,
+      rgb(40 22 10 / 0) 45%,
+      rgb(40 22 10 / 0.62) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgb(60 30 10 / 0.52) 0%,
+      rgb(60 30 10 / 0.22) 45%,
+      rgb(60 30 10 / 0) 72%
+    );
+}
+
+@utility hero-glow {
+  background: radial-gradient(
+    40% 45% at 88% 6%,
+    rgb(255 200 110 / 0.75),
+    rgb(255 170 80 / 0.22) 45%,
+    rgb(255 170 80 / 0) 75%
+  );
+  mix-blend-mode: screen;
+}
+
+@utility hero-fill {
+  background:
+    radial-gradient(
+      55% 70% at 85% 5%,
+      rgb(255 201 120 / 0.9),
+      rgb(255 201 120 / 0) 65%
+    ),
+    linear-gradient(160deg, #e98b3a 0%, #c4612a 48%, #1f4a35 100%);
+}
+
+@utility tile-shade {
+  background: linear-gradient(
+    180deg,
+    rgb(42 24 10 / 0) 30%,
+    rgb(42 24 10 / 0.78) 100%
+  );
+}
+
+@utility sun-glow {
+  background: radial-gradient(
+    circle,
+    rgb(242 163 58 / 0.55),
+    rgb(242 163 58 / 0) 68%
+  );
+}
+
+@utility sun-orb {
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ffd58a,
+    var(--color-sun) 60%,
+    var(--color-ember)
+  );
+  box-shadow: 0 14px 30px rgb(242 163 58 / 0.3);
+}
