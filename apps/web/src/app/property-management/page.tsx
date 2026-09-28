@@ -152,10 +152,7 @@ export default function PropertyManagement() {
         </Container>
       </Band>
 
-      <PhotoBand
-        src={site.images.hero}
-        alt="Snow-capped mountain peak above Vancouver Island forest"
-      />
+      <PhotoBand src={site.images.hero} alt="" />
 
       <ContactSection />
     </RootLayout>
