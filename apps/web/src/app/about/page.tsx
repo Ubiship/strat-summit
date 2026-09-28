@@ -1,14 +1,14 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
 
+import { Band } from '@/components/Band'
 import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
-import { GridList, GridListItem } from '@/components/GridList'
-import { PageIntro } from '@/components/PageIntro'
+import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
-import { SectionIntro } from '@/components/SectionIntro'
-import { StatList, StatListItem } from '@/components/StatList'
+import { SectionHead } from '@/components/SectionHead'
+import { ValueCards } from '@/components/ValueCards'
 import imageMeeting from '@/images/meeting.jpg'
 import { site } from '@/lib/site'
 
@@ -17,6 +17,30 @@ export const metadata: Metadata = {
   description:
     'Meet Joel and Amanda — the team behind Strathcona Summit Solutions on Vancouver Island.',
 }
+
+const stats = [
+  { value: '2', label: 'Founding partners' },
+  { value: '3', label: 'Service tiers (PM)' },
+  { value: '1', label: 'Island we call home' },
+]
+
+const values = [
+  {
+    title: 'Reliability',
+    description:
+      'Turnovers happen on schedule. Renovation milestones are tracked. You hear from us when something needs a decision.',
+  },
+  {
+    title: 'Transparency',
+    description:
+      'Clear tiers, documented visits, and estimates that explain where your money goes.',
+  },
+  {
+    title: 'Local accountability',
+    description:
+      'We are not a franchise or a distant management company — Joel and Amanda stay close to the work.',
+  },
+]
 
 const founders = [
   {
@@ -32,101 +56,98 @@ const founders = [
 export default function About() {
   return (
     <RootLayout>
-      <PageIntro eyebrow="About us" title="Built on trust, rooted on the Island.">
+      <PageHero kicker="About us" title="Built on trust, rooted on the Island.">
         <p>
           {site.shortName} started with a simple idea: property owners on
           Vancouver Island deserve a local team that communicates clearly, shows
           up reliably, and treats every home with respect.
         </p>
-        <div className="mt-10 max-w-2xl space-y-6 text-base">
-          <p>
-            Joel and Amanda launched the company to combine property management
-            and seasonal renovation work under one accountable partner — so
-            owners are not juggling separate vendors for cleaning, maintenance,
-            and construction.
-          </p>
-          <p>
-            The name honours Strathcona Park — rugged coast, alpine peaks, and
-            the landscape that defines life on the Island. That is the standard we
-            bring to your property: sturdy, honest, and built to last.
-          </p>
-        </div>
-      </PageIntro>
+        <p>
+          Joel and Amanda launched the company to combine property management
+          and seasonal renovation work under one accountable partner — so owners
+          are not juggling separate vendors for cleaning, maintenance, and
+          construction.
+        </p>
+        <p>
+          The name honours Strathcona Park — rugged coast, alpine peaks, and the
+          landscape that defines life on the Island. That is the standard we
+          bring to your property: sturdy, honest, and built to last.
+        </p>
+      </PageHero>
 
-      <Container className="mt-16">
-        <StatList>
-          <StatListItem value="2" label="Founding partners" />
-          <StatListItem value="3" label="Service tiers (PM)" />
-          <StatListItem value="1" label="Island we call home" />
-        </StatList>
-      </Container>
-
-      <div className="mt-24 rounded-4xl bg-neutral-950 py-24 ring-1 ring-gold/15 sm:mt-32 lg:mt-40 lg:py-32">
-        <SectionIntro
-          eyebrow="Our values"
-          title="Professional, approachable, and Pacific Northwest at heart."
-          invert
-        >
-          <p>
-            We are in people&apos;s homes. That requires more than a checklist —
-            it requires judgment, discretion, and genuine care.
-          </p>
-        </SectionIntro>
-        <Container className="mt-16">
-          <GridList>
-            <GridListItem title="Reliability" invert>
-              Turnovers happen on schedule. Renovation milestones are tracked.
-              You hear from us when something needs a decision.
-            </GridListItem>
-            <GridListItem title="Transparency" invert>
-              Clear tiers, documented visits, and estimates that explain where
-              your money goes.
-            </GridListItem>
-            <GridListItem title="Local accountability" invert>
-              We are not a franchise or a distant management company — Joel and
-              Amanda stay close to the work.
-            </GridListItem>
-          </GridList>
+      <Band tone="sand">
+        <Container>
+          <FadeInStagger>
+            <dl className="grid gap-12 split:grid-cols-3">
+              {stats.map((stat) => (
+                <FadeIn
+                  key={stat.label}
+                  className="flex flex-col-reverse items-center text-center"
+                >
+                  <dt className="mt-5 text-lg font-semibold text-warm-muted">
+                    {stat.label}
+                  </dt>
+                  <dd className="grid size-40 place-items-center rounded-full bg-sun type-display text-[5.5rem] text-warm-ink shadow-[0_24px_50px_rgb(217_119_47/0.3)] split:size-48 split:text-[6.5rem]">
+                    {stat.value}
+                  </dd>
+                </FadeIn>
+              ))}
+            </dl>
+          </FadeInStagger>
         </Container>
-      </div>
+      </Band>
 
-      <Container className="mt-24 sm:mt-32 lg:mt-40">
-        <FadeInStagger>
-          <h2 className="font-display text-2xl font-semibold text-neutral-950">
-            Leadership
-          </h2>
-          <ul
-            role="list"
-            className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-2"
+      <Band tone="forest">
+        <Container>
+          <SectionHead
+            tone="dark"
+            kicker="Our values"
+            title="Professional, approachable, and Pacific Northwest at heart."
           >
-            {founders.map((person) => (
-              <li key={person.name}>
-                <FadeIn>
-                  <div className="overflow-hidden rounded-3xl bg-neutral-100">
+            <p>
+              We are in people&apos;s homes. That requires more than a checklist
+              — it requires judgment, discretion, and genuine care.
+            </p>
+          </SectionHead>
+          <ValueCards items={values} />
+        </Container>
+      </Band>
+
+      <Band tone="cream">
+        <Container>
+          <FadeInStagger>
+            <FadeIn>
+              <h2 className="type-display text-[clamp(3.25rem,6vw,5.5rem)]">
+                Leadership
+              </h2>
+            </FadeIn>
+            <ul role="list" className="mt-10 grid gap-4.5 split:grid-cols-2">
+              {founders.map((person) => (
+                <li key={person.name}>
+                  <FadeIn className="overflow-hidden rounded-[2.75rem] bg-sand">
                     <Image
                       src={imageMeeting}
                       alt=""
-                      className="h-64 w-full object-cover grayscale"
+                      sizes="(min-width: 900px) 36rem, 100vw"
+                      className="aspect-4/3 w-full object-cover photo-warm"
                     />
-                    <div className="p-6">
-                      <p className="font-display text-lg font-semibold text-neutral-950">
-                        {person.name}
-                      </p>
-                      <p className="mt-2 text-sm text-neutral-600">
+                    <div className="p-8">
+                      <p className="type-display text-4xl">{person.name}</p>
+                      <p className="mt-2 text-base text-warm-muted">
                         {person.role}
                       </p>
                     </div>
-                  </div>
-                </FadeIn>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-8 text-sm text-neutral-500">
-            Replace placeholder photos with Joel and Amanda headshots when
-            available.
-          </p>
-        </FadeInStagger>
-      </Container>
+                  </FadeIn>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-8 text-sm text-warm-muted">
+              Replace placeholder photos with Joel and Amanda headshots when
+              available.
+            </p>
+          </FadeInStagger>
+        </Container>
+      </Band>
 
       <ContactSection />
     </RootLayout>
