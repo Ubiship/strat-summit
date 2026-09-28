@@ -29,7 +29,7 @@ function TextInput({
         required={required}
         {...props}
         placeholder=" "
-        className="peer block w-full rounded-full border-2 border-sand bg-warm-cream px-6 pt-7 pb-2.5 text-base/6 text-warm-ink transition focus:border-warm-ink focus:outline-hidden"
+        className="peer block w-full rounded-full border-2 border-sand bg-white px-6 pt-7 pb-2.5 text-base/6 text-warm-ink transition focus:border-warm-ink focus:outline-hidden"
       />
       <label
         htmlFor={id}
@@ -70,7 +70,7 @@ export function ContactForm() {
   )
 
   return (
-    <FadeIn className="rounded-[2.5rem] bg-white p-7 shadow-[0_24px_60px_rgb(42_24_10/0.08)] split:p-10">
+    <FadeIn className="rounded-[2.5rem] bg-warm-cream p-7 shadow-[0_24px_60px_rgb(42_24_10/0.08)] split:p-10">
       <form action={formAction}>
         <h2 className="type-display text-4xl">Send us a message</h2>
         <p className="mt-3 text-base text-warm-muted">
@@ -104,7 +104,7 @@ export function ContactForm() {
           <TextInput label="Phone" type="tel" name="phone" autoComplete="tel" />
           <TextInput label="Property location" name="location" />
           <TextInput label="Message" name="message" required />
-          <div className="rounded-[2rem] border-2 border-sand bg-warm-cream px-6 py-6">
+          <div className="rounded-[2rem] border-2 border-sand bg-white px-6 py-6">
             <fieldset>
               <legend className="text-base/6 font-semibold text-warm-ink">
                 What can we help with?
