@@ -561,10 +561,14 @@ Replace the contents of `apps/web/src/components/Button.tsx` with:
 import Link from 'next/link'
 import clsx from 'clsx'
 
+// Filled pills draw the focus ring inside, where it contrasts with the fill;
+// outside, it would sit on whatever band the button is placed on.
 const tones = {
-  sun: 'bg-sun text-warm-ink hover:bg-sun-light',
-  forest: 'bg-forest-warm text-warm-cream hover:bg-forest',
-  cream: 'bg-warm-cream text-warm-ink hover:bg-white',
+  sun: 'bg-sun text-warm-ink hover:bg-sun-light focus-visible:-outline-offset-4',
+  forest:
+    'bg-forest-warm text-warm-cream hover:bg-forest focus-visible:-outline-offset-4',
+  cream:
+    'bg-warm-cream text-warm-ink hover:bg-white focus-visible:-outline-offset-4',
   glass:
     'bg-warm-cream/15 text-warm-cream ring-2 ring-warm-cream/60 ring-inset hover:bg-warm-cream/25',
   outline: 'text-warm-ink ring-2 ring-warm-ink ring-inset hover:bg-warm-ink/5',
@@ -1338,7 +1342,7 @@ function MenuPanel({
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="rounded-full bg-sun px-6 py-4 font-bold text-warm-ink"
+            className="rounded-full bg-sun px-6 py-4 font-bold text-warm-ink focus-visible:-outline-offset-4"
           >
             Close
           </button>
