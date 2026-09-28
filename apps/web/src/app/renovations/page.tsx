@@ -92,9 +92,9 @@ export default function Renovations() {
           <FadeInStagger className="relative">
             {/* Insets match the centres of the first and last columns
                 (three gap-6 gaps = 4.5rem) and the size-16 badge centre. */}
-            <div
+            <FadeIn
               aria-hidden="true"
-              className="absolute top-8 right-[calc((100%-4.5rem)/8)] left-[calc((100%-4.5rem)/8)] hidden h-1 -translate-y-1/2 rounded-full bg-sun/40 split:block"
+              className="absolute top-[calc(2rem-0.125rem)] right-[calc((100%-4.5rem)/8)] left-[calc((100%-4.5rem)/8)] hidden h-1 rounded-full bg-sun/40 split:block"
             />
             <ol
               role="list"

@@ -17,7 +17,7 @@ export function LogoMark({ className }: { className?: string }) {
         alt=""
         width={320}
         height={320}
-        priority
+        preload
         className="size-full scale-[2.7] object-cover"
       />
     </span>

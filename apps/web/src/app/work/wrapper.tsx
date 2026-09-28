@@ -64,7 +64,7 @@ export default async function CaseStudyLayout({
                   alt=""
                   {...caseStudy.image}
                   sizes="(min-width: 75rem) 72rem, calc(100vw - 3rem)"
-                  priority
+                  preload
                   className="w-full photo-warm"
                 />
               </div>

@@ -84,7 +84,7 @@ function ServiceTile({ service, index }: { service: Service; index: number }) {
             src={service.image}
             alt=""
             fill
-            sizes="(min-width: 900px) 33vw, 100vw"
+            sizes="(min-width: 75rem) 27rem, (min-width: 900px) 38vw, 100vw"
             className="-z-20 object-cover photo-warm"
           />
           <div

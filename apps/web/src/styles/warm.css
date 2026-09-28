@@ -37,11 +37,11 @@
     ),
     linear-gradient(
       90deg,
-      rgb(60 30 10 / 0.66) 0%,
-      rgb(60 30 10 / 0.4) 45%,
-      rgb(60 30 10 / 0.08) 80%
+      rgb(60 30 10 / 0.72) 0%,
+      rgb(60 30 10 / 0.56) 45%,
+      rgb(60 30 10 / 0.1) 80%
     ),
-    linear-gradient(rgb(40 22 10 / 0.18), rgb(40 22 10 / 0.18));
+    linear-gradient(rgb(40 22 10 / 0.24), rgb(40 22 10 / 0.24));
 
   /* Narrow screens run the heading across the whole photo, sky included. */
   @media (width < 56.25rem) {
@@ -52,7 +52,7 @@
         rgb(40 22 10 / 0) 45%,
         rgb(40 22 10 / 0.62) 100%
       ),
-      linear-gradient(rgb(60 30 10 / 0.42), rgb(60 30 10 / 0.42));
+      linear-gradient(rgb(60 30 10 / 0.58), rgb(60 30 10 / 0.58));
   }
 }
 
@@ -64,6 +64,15 @@
     rgb(255 170 80 / 0) 75%
   );
   mix-blend-mode: screen;
+
+  /* Keep the glow in the corner, clear of full-width headings. */
+  @media (width < 56.25rem) {
+    background: radial-gradient(
+      45% 22% at 92% 0%,
+      rgb(255 200 110 / 0.6),
+      rgb(255 170 80 / 0) 75%
+    );
+  }
 }
 
 @utility hero-fill {
@@ -74,6 +83,16 @@
       rgb(255 201 120 / 0) 65%
     ),
     linear-gradient(160deg, #e98b3a 0%, #c4612a 48%, #1f4a35 100%);
+
+  @media (width < 56.25rem) {
+    background:
+      radial-gradient(
+        50% 26% at 90% 0%,
+        rgb(255 201 120 / 0.85),
+        rgb(255 201 120 / 0) 70%
+      ),
+      linear-gradient(160deg, #e98b3a 0%, #c4612a 48%, #1f4a35 100%);
+  }
 }
 
 @utility band-shade {
