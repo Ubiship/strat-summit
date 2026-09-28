@@ -22,6 +22,8 @@
 - Before this plan, `pnpm --filter ./apps/web lint` already reports one error: `react-hooks/set-state-in-effect` in `EntrySplash.tsx`. In Tasks 1–3, that single error is expected and any other lint error is not. Task 4 rewrites `EntrySplash` and removes it; from Task 4 on, lint must be clean.
 - Between Task 3 and Task 13, pages that have not been redesigned yet will look broken (old dark text on the new dark page background). That is expected; only judge the pages a task has finished.
 - Tailwind v4 notes used throughout: arbitrary values like `text-[1.1875rem]/[1.5]`, fractional spacing like `px-4.5`, `size-13`, opacity modifiers like `bg-warm-cream/8`, and the custom `split:` variant (≥ 900px) defined in Task 2.
+- Reduced motion (changed during Task 7): `MotionConfig reducedMotion="user"` lives in `apps/web/src/components/MotionProvider.tsx`, wrapped around `{children}` in `app/layout.tsx`, so it also covers the not-found page. `RootLayout` no longer renders `MotionConfig`, and `FadeIn` must not call `useReducedMotion` (it made server and client markup differ). Ignore the `MotionConfig` lines in the Task 4 `RootLayout` listing.
+- `PhotoBand` uses its own lighter `band-shade` utility; `hero-shade` is for heroes with text on them.
 - Two small deviations from the spec's wording, required by the spec's own accessibility section, are applied to the spec in Task 2: kicker text on light bands uses a new darker `--color-ember-deep` (plain ember fails 4.5:1), and the About stats are ink numerals inside sun discs (sun numerals on sand fail 3:1).
 
 ## File structure
@@ -4052,7 +4054,7 @@ In the browser devtools colour picker (or any contrast checker), check these pai
 | Cream hero lede `#fbeedd` | the lightest pixel behind it on `/` and `/renovations` | 4.5:1 |
 | Cream hero headline | the lightest pixel behind it on `/`, `/renovations`, `/about` | 3:1 |
 
-If a hero pair fails, strengthen the left stop of `hero-shade` in `apps/web/src/styles/warm.css` (for example from `0.52` to `0.6`) and re-check.
+If a hero pair fails, strengthen the left stop of `hero-shade` in `apps/web/src/styles/warm.css` (currently `0.66`; for example raise it to `0.72`) and re-check.
 
 - [ ] **Step 6: Keyboard and motion**
 
