@@ -19,6 +19,7 @@
 - Code style in `apps/web`: no semicolons, single quotes, two-space indent, `let` is common, imports grouped (external, blank line, `@/` imports sorted alphabetically). Prettier with `prettier-plugin-tailwindcss` is installed; you may run `pnpm --filter ./apps/web exec prettier --write <files>` on files you touch.
 - Keep the web dev server running in its own terminal for the whole plan: `pnpm --filter ./apps/web dev` (port 3000). The copy guard fetches pages from it.
 - `/process` has a permanent redirect to `/property-management` in `apps/web/next.config.mjs`. The Process page is still restyled (Task 13), but it cannot be opened in a browser and is not part of the copy guard.
+- Before this plan, `pnpm --filter ./apps/web lint` already reports one error: `react-hooks/set-state-in-effect` in `EntrySplash.tsx`. In Tasks 1–3, that single error is expected and any other lint error is not. Task 4 rewrites `EntrySplash` and removes it; from Task 4 on, lint must be clean.
 - Between Task 3 and Task 13, pages that have not been redesigned yet will look broken (old dark text on the new dark page background). That is expected; only judge the pages a task has finished.
 - Tailwind v4 notes used throughout: arbitrary values like `text-[1.1875rem]/[1.5]`, fractional spacing like `px-4.5`, `size-13`, opacity modifiers like `bg-warm-cream/8`, and the custom `split:` variant (≥ 900px) defined in Task 2.
 - Two small deviations from the spec's wording, required by the spec's own accessibility section, are applied to the spec in Task 2: kicker text on light bands uses a new darker `--color-ember-deep` (plain ember fails 4.5:1), and the About stats are ink numerals inside sun discs (sun numerals on sand fail 3:1).
@@ -1452,7 +1453,7 @@ Replace the contents of `apps/web/src/components/EntrySplash.tsx` with:
 ```tsx
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 
 import { LogoMark } from '@/components/Logo'
@@ -1460,23 +1461,40 @@ import { site } from '@/lib/site'
 
 const SPLASH_KEY = 'strathcona-splash-seen'
 
+function subscribe() {
+  return () => {}
+}
+
+function getSeenOnClient() {
+  return sessionStorage.getItem(SPLASH_KEY) !== null
+}
+
+// The server never shows the splash, so hydration always starts hidden.
+function getSeenOnServer() {
+  return true
+}
+
 export function EntrySplash() {
   const shouldReduceMotion = useReducedMotion()
-  const [show, setShow] = useState<boolean | null>(null)
+  const alreadySeen = useSyncExternalStore(
+    subscribe,
+    getSeenOnClient,
+    getSeenOnServer,
+  )
+  const [dismissed, setDismissed] = useState(false)
+  const show = !alreadySeen && !dismissed
 
   useEffect(() => {
-    if (sessionStorage.getItem(SPLASH_KEY)) {
-      setShow(false)
+    if (alreadySeen) {
       return
     }
 
-    setShow(true)
     document.body.style.overflow = 'hidden'
 
     const timer = window.setTimeout(
       () => {
-        setShow(false)
         sessionStorage.setItem(SPLASH_KEY, '1')
+        setDismissed(true)
         document.body.style.overflow = ''
       },
       shouldReduceMotion ? 600 : 2800,
@@ -1486,7 +1504,7 @@ export function EntrySplash() {
       window.clearTimeout(timer)
       document.body.style.overflow = ''
     }
-  }, [shouldReduceMotion])
+  }, [alreadySeen, shouldReduceMotion])
 
   return (
     <AnimatePresence>
