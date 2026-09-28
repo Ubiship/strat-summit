@@ -13,7 +13,11 @@ function subscribe() {
 }
 
 function getSeenOnClient() {
-  return sessionStorage.getItem(SPLASH_KEY) !== null
+  try {
+    return sessionStorage.getItem(SPLASH_KEY) !== null
+  } catch {
+    return true
+  }
 }
 
 // The server never shows the splash, so hydration always starts hidden.
@@ -40,7 +44,9 @@ export function EntrySplash() {
 
     const timer = window.setTimeout(
       () => {
-        sessionStorage.setItem(SPLASH_KEY, '1')
+        try {
+          sessionStorage.setItem(SPLASH_KEY, '1')
+        } catch {}
         setDismissed(true)
         document.body.style.overflow = ''
       },

@@ -36,7 +36,7 @@ function SiteHeader({
   return (
     <header className="absolute inset-x-0 top-0 z-40 px-4 pt-5">
       <div className="mx-auto flex max-w-[75rem] items-center justify-between gap-4 rounded-full bg-warm-cream/95 py-2.5 pr-2.5 pl-3 text-warm-ink shadow-[0_18px_40px_rgb(42_24_10/0.18)] backdrop-blur">
-        <Link href="/" aria-label="Home" className="rounded-full">
+        <Link href="/" className="rounded-full">
           <Logo />
         </Link>
         <nav aria-label="Primary" className="flex items-center gap-1">
@@ -93,12 +93,7 @@ function MenuPanel({
     >
       <Container className="flex flex-auto flex-col">
         <div className="flex items-center justify-between pt-7">
-          <Link
-            href="/"
-            aria-label="Home"
-            onClick={onClose}
-            className="rounded-full"
-          >
+          <Link href="/" onClick={onClose} className="rounded-full">
             <Logo />
           </Link>
           <button

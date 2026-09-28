@@ -32,7 +32,7 @@ export function Footer() {
     <Band tone="cream" as="footer" last>
       <Container>
         <div className="grid gap-10 split:grid-cols-[1.3fr_repeat(3,1fr)]">
-          <Link href="/" aria-label="Home" className="self-start rounded-full">
+          <Link href="/" className="self-start rounded-full">
             <Logo />
           </Link>
           {navigation.map((section) => (
