@@ -58,7 +58,12 @@ function CaseStudies({
                 </div>
                 <div className="max-w-2xl">
                   <p className="type-display text-[clamp(2.25rem,3.6vw,3.25rem)]">
-                    <Link href={caseStudy.href}>{caseStudy.title}</Link>
+                    <Link
+                      href={caseStudy.href}
+                      className="transition hover:text-ember-deep"
+                    >
+                      {caseStudy.title}
+                    </Link>
                   </p>
                   <div className="mt-5 space-y-5 text-base/[1.6] text-warm-muted">
                     {caseStudy.summary.map((paragraph) => (

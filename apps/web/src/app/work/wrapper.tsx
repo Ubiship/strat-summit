@@ -61,9 +61,9 @@ export default async function CaseStudyLayout({
               </dl>
               <div className="mt-8 overflow-hidden rounded-[2.75rem] bg-sand">
                 <Image
-                  {...caseStudy.image}
                   alt=""
-                  sizes="(min-width: 1216px) 76rem, 100vw"
+                  {...caseStudy.image}
+                  sizes="(min-width: 75rem) 72rem, calc(100vw - 3rem)"
                   priority
                   className="w-full photo-warm"
                 />
