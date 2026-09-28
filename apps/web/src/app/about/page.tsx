@@ -128,11 +128,11 @@ export default function About() {
                     <Image
                       src={imageMeeting}
                       alt=""
-                      sizes="(min-width: 900px) 36rem, 100vw"
+                      sizes="(min-width: 1200px) 36rem, (min-width: 900px) 50vw, 100vw"
                       className="aspect-4/3 w-full object-cover photo-warm"
                     />
                     <div className="p-8">
-                      <p className="type-display text-4xl">{person.name}</p>
+                      <h3 className="type-display text-4xl">{person.name}</h3>
                       <p className="mt-2 text-base text-warm-muted">
                         {person.role}
                       </p>
