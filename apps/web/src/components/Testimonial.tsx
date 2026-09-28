@@ -16,7 +16,7 @@ export function Testimonial({
       <Container>
         <FadeIn>
           <figure className="mx-auto max-w-4xl">
-            <blockquote className="type-display text-[clamp(2.25rem,4.5vw,3.75rem)] text-balance">
+            <blockquote className="type-display text-[clamp(2.25rem,4.5vw,3.75rem)]/[1.02] text-balance">
               <p>
                 <span aria-hidden="true">“</span>
                 {children}

@@ -63,7 +63,6 @@ export default async function CaseStudyLayout({
                 <Image
                   {...caseStudy.image}
                   alt=""
-                  quality={90}
                   sizes="(min-width: 1216px) 76rem, 100vw"
                   priority
                   className="w-full photo-warm"
