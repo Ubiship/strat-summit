@@ -75,16 +75,33 @@ await mkdir(baselineDir, { recursive: true })
 
 let failures = 0
 for (let route of routes) {
+  let response
   let html
   try {
-    html = await (await fetch(new URL(route, baseUrl))).text()
+    response = await fetch(new URL(route, baseUrl))
+    html = await response.text()
   } catch {
     console.error(
       `Could not reach ${baseUrl}. Start the dev server first: pnpm --filter ./apps/web dev`,
     )
     process.exit(1)
   }
+
+  let expectedStatus = route === '/this-page-does-not-exist' ? 404 : 200
+  if (response.status !== expectedStatus) {
+    failures++
+    console.log(`FAIL  ${route}`)
+    console.log(`  expected HTTP ${expectedStatus}, got ${response.status}`)
+    continue
+  }
+
   let words = extractWords(html).join(' ')
+  if (words === '') {
+    failures++
+    console.log(`FAIL  ${route}`)
+    console.log('  no words found inside <main>/<body>')
+    continue
+  }
 
   if (update) {
     await writeFile(baselineFile(route), `${words}\n`)
@@ -111,6 +128,10 @@ for (let route of routes) {
 }
 
 if (failures > 0) {
-  console.error(`\n${failures} route(s) changed copy`)
+  console.error(
+    update
+      ? `\n${failures} route(s) not saved`
+      : `\n${failures} route(s) changed copy`,
+  )
   process.exit(1)
 }
