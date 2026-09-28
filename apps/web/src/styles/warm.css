@@ -41,6 +41,18 @@
       rgb(60 30 10 / 0.22) 45%,
       rgb(60 30 10 / 0) 72%
     );
+
+  /* Narrow screens run the heading across the whole photo, sky included. */
+  @media (width < 56.25rem) {
+    background:
+      linear-gradient(
+        180deg,
+        rgb(255 150 60 / 0.1) 0%,
+        rgb(40 22 10 / 0) 45%,
+        rgb(40 22 10 / 0.62) 100%
+      ),
+      linear-gradient(rgb(60 30 10 / 0.42), rgb(60 30 10 / 0.42));
+  }
 }
 
 @utility hero-glow {
@@ -66,8 +78,9 @@
 @utility tile-shade {
   background: linear-gradient(
     180deg,
-    rgb(42 24 10 / 0) 30%,
-    rgb(42 24 10 / 0.78) 100%
+    rgb(42 24 10 / 0.08) 0%,
+    rgb(42 24 10 / 0.5) 42%,
+    rgb(42 24 10 / 0.86) 100%
   );
 }
 
