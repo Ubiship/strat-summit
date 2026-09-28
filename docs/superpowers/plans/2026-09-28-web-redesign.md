@@ -24,6 +24,7 @@
 - Tailwind v4 notes used throughout: arbitrary values like `text-[1.1875rem]/[1.5]`, fractional spacing like `px-4.5`, `size-13`, opacity modifiers like `bg-warm-cream/8`, and the custom `split:` variant (≥ 900px) defined in Task 2.
 - Reduced motion (changed during Task 7): `MotionConfig reducedMotion="user"` lives in `apps/web/src/components/MotionProvider.tsx`, wrapped around `{children}` in `app/layout.tsx`, so it also covers the not-found page. `RootLayout` no longer renders `MotionConfig`, and `FadeIn` must not call `useReducedMotion` (it made server and client markup differ). Ignore the `MotionConfig` lines in the Task 4 `RootLayout` listing.
 - `PhotoBand` uses its own lighter `band-shade` utility; `hero-shade` is for heroes with text on them.
+- Contact (changed during Task 9): the form band is `apricot`, not `cream`, so the cream footer's rounded edge shows. The form sheet is `bg-warm-cream`, inputs and the radio box are white, and input and radio borders are `border-warm-ink/50` (WCAG 1.4.11 non-text contrast), with an ink centre dot on the checked radio.
 - Two small deviations from the spec's wording, required by the spec's own accessibility section, are applied to the spec in Task 2: kicker text on light bands uses a new darker `--color-ember-deep` (plain ember fails 4.5:1), and the About stats are ink numerals inside sun discs (sun numerals on sand fail 3:1).
 
 ## File structure
