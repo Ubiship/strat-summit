@@ -1,9 +1,11 @@
+import Image from 'next/image'
+
+import { Band } from '@/components/Band'
 import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
-import { GrayscaleTransitionImage } from '@/components/GrayscaleTransitionImage'
 import { MDXComponents } from '@/components/MDXComponents'
-import { PageIntro } from '@/components/PageIntro'
+import { PageHero } from '@/components/PageHero'
 import { PageLinks } from '@/components/PageLinks'
 import { RootLayout } from '@/components/RootLayout'
 import { type CaseStudy, type MDXEntry, loadCaseStudies } from '@/lib/mdx'
@@ -19,60 +21,60 @@ export default async function CaseStudyLayout({
   let moreCaseStudies = allCaseStudies
     .filter(({ metadata }) => metadata !== caseStudy)
     .slice(0, 2)
+  let year = caseStudy.date.split('-')[0]
 
   return (
     <RootLayout>
-      <article className="mt-24 sm:mt-32 lg:mt-40">
-        <header>
-          <PageIntro eyebrow="Case Study" title={caseStudy.title} centered>
-            <p>{caseStudy.description}</p>
-          </PageIntro>
+      <article>
+        <PageHero kicker="Case Study" title={caseStudy.title}>
+          <p>{caseStudy.description}</p>
+        </PageHero>
 
-          <FadeIn>
-            <div className="mt-24 border-t border-neutral-200 bg-white/50 sm:mt-32 lg:mt-40">
-              <Container>
-                <div className="mx-auto max-w-5xl">
-                  <dl className="-mx-6 grid grid-cols-1 text-sm text-neutral-950 sm:mx-0 sm:grid-cols-3">
-                    <div className="border-t border-neutral-200 px-6 py-4 first:border-t-0 sm:border-t-0 sm:border-l">
-                      <dt className="font-semibold">Client</dt>
-                      <dd>{caseStudy.client}</dd>
-                    </div>
-                    <div className="border-t border-neutral-200 px-6 py-4 first:border-t-0 sm:border-t-0 sm:border-l">
-                      <dt className="font-semibold">Year</dt>
-                      <dd>
-                        <time dateTime={caseStudy.date.split('-')[0]}>
-                          {caseStudy.date.split('-')[0]}
-                        </time>
-                      </dd>
-                    </div>
-                    <div className="border-t border-neutral-200 px-6 py-4 first:border-t-0 sm:border-t-0 sm:border-l">
-                      <dt className="font-semibold">Service</dt>
-                      <dd>{caseStudy.service}</dd>
-                    </div>
-                  </dl>
+        <Band tone="cream">
+          <Container>
+            <FadeIn>
+              <dl className="grid gap-3 split:grid-cols-3">
+                <div className="rounded-[2rem] bg-sand px-6 py-4">
+                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                    Client
+                  </dt>
+                  <dd className="mt-1 text-lg font-semibold">
+                    {caseStudy.client}
+                  </dd>
                 </div>
-              </Container>
-            </div>
-
-            <div className="border-y border-neutral-200 bg-neutral-100">
-              <div className="mx-auto -my-px max-w-304 bg-neutral-200">
-                <GrayscaleTransitionImage
+                <div className="rounded-[2rem] bg-sand px-6 py-4">
+                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                    Year
+                  </dt>
+                  <dd className="mt-1 text-lg font-semibold">
+                    <time dateTime={year}>{year}</time>
+                  </dd>
+                </div>
+                <div className="rounded-[2rem] bg-sand px-6 py-4">
+                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                    Service
+                  </dt>
+                  <dd className="mt-1 text-lg font-semibold">
+                    {caseStudy.service}
+                  </dd>
+                </div>
+              </dl>
+              <div className="mt-8 overflow-hidden rounded-[2.75rem] bg-sand">
+                <Image
                   {...caseStudy.image}
+                  alt=""
                   quality={90}
-                  className="w-full"
                   sizes="(min-width: 1216px) 76rem, 100vw"
                   priority
+                  className="w-full photo-warm"
                 />
               </div>
-            </div>
-          </FadeIn>
-        </header>
-
-        <Container className="mt-24 sm:mt-32 lg:mt-40">
-          <FadeIn>
-            <MDXComponents.wrapper>{children}</MDXComponents.wrapper>
-          </FadeIn>
-        </Container>
+            </FadeIn>
+            <FadeIn className="mt-20">
+              <MDXComponents.wrapper>{children}</MDXComponents.wrapper>
+            </FadeIn>
+          </Container>
+        </Band>
       </article>
 
       {moreCaseStudies.length > 0 && (
