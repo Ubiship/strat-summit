@@ -10,13 +10,17 @@ export function Container<T extends React.ElementType = 'div'>({
   as,
   className,
   children,
+  ...props
 }: Omit<React.ComponentPropsWithoutRef<T>, keyof ContainerProps<T>> &
   ContainerProps<T>) {
   let Component = as ?? 'div'
 
   return (
-    <Component className={clsx('mx-auto max-w-7xl px-6 lg:px-8', className)}>
-      <div className="mx-auto max-w-2xl lg:max-w-none">{children}</div>
+    <Component
+      className={clsx('mx-auto w-full max-w-[75rem] px-6', className)}
+      {...props}
+    >
+      {children}
     </Component>
   )
 }

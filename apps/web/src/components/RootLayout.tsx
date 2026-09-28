@@ -53,7 +53,7 @@ function Header({
           <Logo invert={invert} size="header" fillOnHover />
         </Link>
         <div className="flex items-center gap-x-8">
-          <Button href="/contact" invert={invert}>
+          <Button href="/contact" tone={invert ? 'cream' : 'sun'} size="sm">
             Get in touch
           </Button>
           <button
