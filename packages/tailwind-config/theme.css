@@ -57,4 +57,17 @@
   --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-display--font-variation-settings: normal;
   --font-display-length: 2;
+
+  /* Warm palette for the public site (additive; apps/admin does not use these) */
+  --color-warm-cream: #fdf5e8;
+  --color-sand: #f7e3c4;
+  --color-apricot: #f3c98f;
+  --color-sun: #f2a33a;
+  --color-sun-light: #f5b458;
+  --color-ember: #d9772f;
+  --color-ember-deep: #9a4a16;
+  --color-forest-warm: #1f4a35;
+  --color-forest-deep: #163826;
+  --color-warm-ink: #2a2118;
+  --color-warm-muted: #6a5646;
 }

@@ -1,10 +1,10 @@
 import Link from 'next/link'
 
+import { Band } from '@/components/Band'
 import { Container } from '@/components/Container'
-import { FadeIn } from '@/components/FadeIn'
 import { Logo } from '@/components/Logo'
-import { site } from '@/lib/site'
 import { socialMediaProfiles } from '@/components/SocialMedia'
+import { site } from '@/lib/site'
 
 const navigation = [
   {
@@ -27,48 +27,41 @@ const navigation = [
   },
 ]
 
-function Navigation() {
-  return (
-    <nav>
-      <ul role="list" className="grid grid-cols-2 gap-8 sm:grid-cols-3">
-        {navigation.map((section, sectionIndex) => (
-          <li key={sectionIndex}>
-            <div className="font-display text-sm font-semibold tracking-wider text-gold uppercase">
-              {section.title}
-            </div>
-            <ul role="list" className="mt-4 text-sm text-neutral-700">
-              {section.links.map((link, linkIndex) => (
-                <li key={linkIndex} className="mt-4">
-                  <Link
-                    href={link.href}
-                    className="transition hover:text-gold"
-                  >
-                    {link.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </li>
-        ))}
-      </ul>
-    </nav>
-  )
-}
-
 export function Footer() {
   return (
-    <Container as="footer" className="mt-24 w-full sm:mt-32 lg:mt-40">
-      <FadeIn>
-        <Navigation />
-        <div className="mt-24 mb-20 flex flex-wrap items-end justify-between gap-x-6 gap-y-4 border-t border-gold/20 pt-12">
-          <Link href="/" aria-label="Home" className="group/logo">
-            <Logo size="footer" fillOnHover />
+    <Band tone="cream" as="footer" last>
+      <Container>
+        <div className="grid gap-10 split:grid-cols-[1.3fr_repeat(3,1fr)]">
+          <Link href="/" className="self-start rounded-full">
+            <Logo />
           </Link>
-          <p className="text-sm text-neutral-700">
+          {navigation.map((section) => (
+            <nav key={section.title} aria-label={section.title}>
+              <h2 className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                {section.title}
+              </h2>
+              <ul role="list" className="mt-3.5 space-y-2.5">
+                {section.links.map((link) => (
+                  <li key={link.title}>
+                    <Link
+                      href={link.href}
+                      className="text-[1.0625rem] font-semibold transition hover:text-ember-deep"
+                    >
+                      {link.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ))}
+        </div>
+        <div className="mt-12 flex flex-wrap justify-between gap-x-6 gap-y-2 rounded-[2rem] bg-sand px-6 py-4.5 text-sm text-warm-muted split:rounded-full">
+          <p>
             © {site.shortName} {new Date().getFullYear()}
           </p>
+          <p>Mount Washington · Comox Valley</p>
         </div>
-      </FadeIn>
-    </Container>
+      </Container>
+    </Band>
   )
 }

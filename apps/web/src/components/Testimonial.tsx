@@ -1,50 +1,38 @@
 import Image, { type ImageProps } from 'next/image'
-import clsx from 'clsx'
 
+import { Band } from '@/components/Band'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
-import { GridPattern } from '@/components/GridPattern'
 
 export function Testimonial({
   children,
   client,
-  className,
 }: {
   children: React.ReactNode
   client: { logo?: ImageProps['src'] | null; name: string }
-  className?: string
 }) {
   return (
-    <div
-      className={clsx(
-        'relative isolate bg-neutral-50 py-16 sm:py-28 md:py-32',
-        className,
-      )}
-    >
-      <GridPattern
-        className="absolute inset-0 -z-10 h-full w-full mask-[linear-gradient(to_bottom_left,white_50%,transparent_60%)] fill-gold/5 stroke-gold/15"
-        yOffset={-256}
-      />
+    <Band tone="apricot">
       <Container>
         <FadeIn>
           <figure className="mx-auto max-w-4xl">
-            <blockquote className="relative font-display text-3xl font-medium tracking-tight text-neutral-950 sm:text-4xl">
-              <p className="before:text-gold after:text-gold before:content-['“'] after:content-['”'] sm:before:absolute sm:before:right-full">
+            <blockquote className="type-display text-[clamp(2.25rem,4.5vw,3.75rem)]/[1.02] text-balance">
+              <p>
+                <span aria-hidden="true">“</span>
                 {children}
+                <span aria-hidden="true">”</span>
               </p>
             </blockquote>
             <figcaption className="mt-10">
               {client.logo ? (
                 <Image src={client.logo} alt={client.name} unoptimized />
               ) : (
-                <p className="text-sm font-semibold text-neutral-950">
-                  — {client.name}
-                </p>
+                <p className="text-lg font-bold">— {client.name}</p>
               )}
             </figcaption>
           </figure>
         </FadeIn>
       </Container>
-    </div>
+    </Band>
   )
 }

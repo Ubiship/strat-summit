@@ -13,7 +13,6 @@ export const site = {
   },
   images: {
     hero: '/HeroImage.jpg',
-    propertyManagement: '/PropertyManagment.png',
     renovations: '/Renos.png',
   },
 } as const

@@ -1,30 +1,53 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 
+import { LogoMark } from '@/components/Logo'
 import { site } from '@/lib/site'
 
 const SPLASH_KEY = 'strathcona-splash-seen'
 
+function subscribe() {
+  return () => {}
+}
+
+function getSeenOnClient() {
+  try {
+    return sessionStorage.getItem(SPLASH_KEY) !== null
+  } catch {
+    return true
+  }
+}
+
+// The server never shows the splash, so hydration always starts hidden.
+function getSeenOnServer() {
+  return true
+}
+
 export function EntrySplash() {
   const shouldReduceMotion = useReducedMotion()
-  const [show, setShow] = useState<boolean | null>(null)
+  const alreadySeen = useSyncExternalStore(
+    subscribe,
+    getSeenOnClient,
+    getSeenOnServer,
+  )
+  const [dismissed, setDismissed] = useState(false)
+  const show = !alreadySeen && !dismissed
 
   useEffect(() => {
-    if (sessionStorage.getItem(SPLASH_KEY)) {
-      setShow(false)
+    if (alreadySeen) {
       return
     }
 
-    setShow(true)
     document.body.style.overflow = 'hidden'
 
     const timer = window.setTimeout(
       () => {
-        setShow(false)
-        sessionStorage.setItem(SPLASH_KEY, '1')
+        try {
+          sessionStorage.setItem(SPLASH_KEY, '1')
+        } catch {}
+        setDismissed(true)
         document.body.style.overflow = ''
       },
       shouldReduceMotion ? 600 : 2800,
@@ -34,14 +57,14 @@ export function EntrySplash() {
       window.clearTimeout(timer)
       document.body.style.overflow = ''
     }
-  }, [shouldReduceMotion])
+  }, [alreadySeen, shouldReduceMotion])
 
   return (
     <AnimatePresence>
       {show ? (
         <motion.div
           key="entry-splash"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-white px-6"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-warm-cream px-6 text-warm-ink"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{
@@ -50,20 +73,19 @@ export function EntrySplash() {
           }}
         >
           <motion.div
-            initial={
-              shouldReduceMotion ? false : { opacity: 0, scale: 0.88 }
-            }
+            initial={shouldReduceMotion ? false : { opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-            className="w-[min(94vw,72rem)]"
+            className="flex flex-col items-center text-center"
           >
-            <Image
-              src={site.logos.full}
-              alt={site.name}
-              width={1200}
-              height={675}
-              priority
-              className="h-auto w-full object-contain"
+            <LogoMark className="size-28" />
+            <p className="mt-6 type-display text-5xl">{site.shortName}</p>
+            <p className="mt-4 text-xs font-bold tracking-[0.16em] text-warm-muted uppercase">
+              {site.tagline}
+            </p>
+            <span
+              aria-hidden="true"
+              className="mt-6 h-1.5 w-12 rounded-full bg-sun"
             />
           </motion.div>
         </motion.div>

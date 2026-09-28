@@ -4,10 +4,7 @@ import { useActionState, useId } from 'react'
 
 import { Button } from '@/components/Button'
 import { FadeIn } from '@/components/FadeIn'
-import {
-  submitContactForm,
-  type ContactFormState,
-} from '@/lib/actions'
+import { submitContactForm, type ContactFormState } from '@/lib/actions'
 
 const initialState: ContactFormState = {
   success: false,
@@ -25,22 +22,22 @@ function TextInput({
   let id = useId()
 
   return (
-    <div className="group relative z-0 transition-all focus-within:z-10">
+    <div className="relative">
       <input
         type="text"
         id={id}
         required={required}
         {...props}
         placeholder=" "
-        className="peer block w-full border border-neutral-300 bg-transparent px-6 pt-12 pb-4 text-base/6 text-neutral-950 ring-4 ring-transparent transition group-first:rounded-t-2xl group-last:rounded-b-2xl focus:border-gold focus:ring-gold/20 focus:outline-hidden"
+        className="peer block w-full rounded-full border-2 border-warm-ink/50 bg-white px-6 pt-7 pb-2.5 text-base/6 text-warm-ink transition focus:border-warm-ink focus:ring-2 focus:ring-warm-ink focus:outline-hidden"
       />
       <label
         htmlFor={id}
-        className="pointer-events-none absolute top-1/2 left-6 -mt-3 origin-left text-base/6 text-neutral-500 transition-all duration-200 peer-not-placeholder-shown:-translate-y-4 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-semibold peer-not-placeholder-shown:text-neutral-950 peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:font-semibold peer-focus:text-gold"
+        className="pointer-events-none absolute top-1/2 left-6 -mt-3 origin-left text-base/6 text-warm-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-semibold peer-not-placeholder-shown:text-warm-ink peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:font-semibold peer-focus:text-warm-ink"
       >
         {label}
         {required ? (
-          <span className="text-gold" aria-hidden="true">
+          <span className="text-ember-deep" aria-hidden="true">
             {' '}
             *
           </span>
@@ -59,9 +56,9 @@ function RadioInput({
       <input
         type="radio"
         {...props}
-        className="h-6 w-6 flex-none appearance-none rounded-full border border-neutral-950/20 outline-hidden checked:border-[0.5rem] checked:border-gold focus-visible:ring-1 focus-visible:ring-gold focus-visible:ring-offset-2"
+        className="size-6 flex-none appearance-none rounded-full border-2 border-warm-ink/50 bg-white checked:border-[0.45rem] checked:border-sun checked:bg-warm-ink"
       />
-      <span className="text-base/6 text-neutral-950">{label}</span>
+      <span className="text-base/6 text-warm-ink">{label}</span>
     </label>
   )
 }
@@ -73,22 +70,18 @@ export function ContactForm() {
   )
 
   return (
-    <FadeIn className="lg:order-last">
+    <FadeIn className="rounded-[2.5rem] bg-warm-cream p-7 shadow-[0_24px_60px_rgb(42_24_10/0.08)] split:p-10">
       <form action={formAction}>
-        <h2 className="font-display text-base font-semibold text-neutral-950">
-          Send us a message
-        </h2>
-        <p className="mt-2 text-sm text-neutral-600">
+        <h2 className="type-display text-4xl">Send us a message</h2>
+        <p className="mt-3 text-base text-warm-muted">
           We typically respond within one business day.
         </p>
 
         {state.message ? (
           <p
             role="status"
-            className={`mt-4 rounded-2xl px-4 py-3 text-sm ${
-              state.success
-                ? 'bg-neutral-100 text-neutral-800'
-                : 'bg-red-50 text-red-800'
+            className={`mt-5 rounded-2xl px-4 py-3 text-sm ${
+              state.success ? 'bg-sand text-warm-ink' : 'bg-red-50 text-red-800'
             }`}
           >
             {state.message}
@@ -96,7 +89,7 @@ export function ContactForm() {
         ) : null}
 
         <div
-          className={`isolate mt-6 -space-y-px rounded-2xl bg-white/50 ${
+          className={`mt-7 grid gap-3 ${
             pending || state.success ? 'pointer-events-none opacity-60' : ''
           }`}
         >
@@ -111,12 +104,12 @@ export function ContactForm() {
           <TextInput label="Phone" type="tel" name="phone" autoComplete="tel" />
           <TextInput label="Property location" name="location" />
           <TextInput label="Message" name="message" required />
-          <div className="border border-neutral-300 px-6 py-8 first:rounded-t-2xl last:rounded-b-2xl">
+          <div className="rounded-[2rem] border-2 border-sand bg-white px-6 py-6">
             <fieldset>
-              <legend className="text-base/6 text-neutral-500">
+              <legend className="text-base/6 font-semibold text-warm-ink">
                 What can we help with?
               </legend>
-              <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <RadioInput
                   label="Property management / cleaning"
                   name="service"
@@ -135,7 +128,12 @@ export function ContactForm() {
           </div>
         </div>
 
-        <Button type="submit" className="mt-10" disabled={pending || state.success}>
+        <Button
+          type="submit"
+          arrow
+          className="mt-8"
+          disabled={pending || state.success}
+        >
           {pending ? 'Sending…' : 'Send message'}
         </Button>
       </form>
