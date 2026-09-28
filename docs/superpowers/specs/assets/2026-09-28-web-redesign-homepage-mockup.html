@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Full bleed, bubbly, warm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,SOFT,WONK,wght@9..144,0..100,0..1,500..800&family=Outfit:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #fdf5e8;
+      --sand: #f7e3c4;
+      --apricot: #f3c98f;
+      --sun: #f2a33a;
+      --ember: #d9772f;
+      --forest: #1f4a35;
+      --forest-deep: #163826;
+      --ink: #2a2118;
+      --muted: #6a5646;
+      --r: 64px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: var(--forest-deep);
+      color: var(--ink);
+      font-family: Outfit, sans-serif;
+      font-weight: 500;
+      -webkit-font-smoothing: antialiased;
+    }
+    img { display: block; }
+    a { color: inherit; text-decoration: none; }
+    .display {
+      font-family: Fraunces, Georgia, serif;
+      font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 144, "wght" 680;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
+    }
+    .inner { width: min(1200px, calc(100% - 48px)); margin: 0 auto; }
+
+    /* Each band is full bleed with rounded top corners, stacked over the one above */
+    .band {
+      position: relative;
+      z-index: 1;
+      border-radius: var(--r) var(--r) 0 0;
+      margin-top: calc(var(--r) * -1);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      z-index: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      color: var(--cream);
+      overflow: hidden;
+    }
+    .hero > img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 42%;
+      filter: sepia(0.38) saturate(1.5) hue-rotate(-12deg) brightness(1.08) contrast(1.06);
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(255, 150, 60, 0.10) 0%, rgba(40, 22, 10, 0) 45%, rgba(40, 22, 10, 0.62) 100%),
+        linear-gradient(90deg, rgba(60, 30, 10, 0.52) 0%, rgba(60, 30, 10, 0.22) 45%, rgba(60, 30, 10, 0) 72%);
+      z-index: 1;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(40% 45% at 88% 6%, rgba(255, 200, 110, 0.75), rgba(255, 170, 80, 0.22) 45%, rgba(255, 170, 80, 0) 75%);
+      mix-blend-mode: screen;
+      z-index: 1;
+    }
+    .hero > *:not(img) { position: relative; z-index: 2; }
+    .hero > img { z-index: 0; }
+
+    .nav {
+      margin: 20px auto 0;
+      width: min(1200px, calc(100% - 32px));
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(253, 245, 232, 0.94);
+      color: var(--ink);
+      border-radius: 999px;
+      padding: 10px 10px 10px 12px;
+      box-shadow: 0 18px 40px rgba(42, 24, 10, 0.18);
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand .logo {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #fff;
+      overflow: hidden;
+      flex: none;
+      box-shadow: inset 0 0 0 2px rgba(242, 163, 58, 0.35);
+    }
+    .brand .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(2.7) translateY(1px);
+    }
+    .brand span { font-size: 20px; }
+    .links { display: flex; align-items: center; gap: 4px; }
+    .links a {
+      padding: 12px 16px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 15px;
+    }
+    .links a:hover { background: var(--sand); }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border-radius: 999px;
+      padding: 16px 24px;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .pill.sun { background: var(--sun); color: var(--ink); }
+    .pill.cream { background: var(--cream); color: var(--ink); }
+    .pill.glass { background: rgba(253, 245, 232, 0.16); color: var(--cream); box-shadow: inset 0 0 0 2px rgba(253, 245, 232, 0.6); }
+    .pill.forest { background: var(--forest); color: var(--cream); }
+    .pill .arrow {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(42, 33, 24, 0.12);
+      font-size: 14px;
+    }
+
+    .hero-copy {
+      margin-top: auto;
+      padding: 0 0 calc(var(--r) + 72px);
+    }
+    .bubble {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(42, 24, 10, 0.42);
+      backdrop-filter: blur(10px);
+      color: var(--cream);
+      border-radius: 999px;
+      padding: 10px 18px 10px 10px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+    }
+    .bubble i {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--sun);
+      box-shadow: 0 0 0 6px rgba(242, 163, 58, 0.3);
+    }
+    .hero h1 {
+      margin: 22px 0 0;
+      font-size: clamp(64px, 9vw, 136px);
+      max-width: 11ch;
+      text-shadow: 0 4px 30px rgba(42, 24, 10, 0.25);
+    }
+    .hero-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 32px;
+      margin-top: 30px;
+    }
+    .hero .lede {
+      margin: 0;
+      max-width: 44ch;
+      font-size: 19px;
+      line-height: 1.5;
+      color: #fbeedd;
+    }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    /* Services — warm sand */
+    .services { background: var(--sand); padding: 96px 0 calc(var(--r) + 96px); }
+    .sun-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember);
+    }
+    .sun-tag::before {
+      content: "";
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--sun);
+    }
+    .head {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 40px;
+      align-items: end;
+    }
+    h2 { margin: 16px 0 0; font-size: clamp(52px, 6vw, 88px); }
+    .deck { margin: 0; font-size: 19px; line-height: 1.5; color: var(--muted); max-width: 38ch; }
+    .tiles {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: 1.25fr 1fr 1fr;
+      gap: 18px;
+    }
+    .tile {
+      position: relative;
+      border-radius: 44px;
+      overflow: hidden;
+      min-height: 460px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 28px;
+      color: var(--cream);
+      background: var(--forest);
+    }
+    .tile img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: sepia(0.38) saturate(1.5) hue-rotate(-12deg) brightness(1.06);
+    }
+    .tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(42, 24, 10, 0) 30%, rgba(42, 24, 10, 0.78) 100%);
+    }
+    .tile > *:not(img) { position: relative; z-index: 1; }
+    .tile.sun-tile { background: var(--sun); color: var(--ink); }
+    .tile.sun-tile::after, .tile.cream-tile::after { display: none; }
+    .tile.cream-tile { background: var(--cream); color: var(--ink); }
+    .tile .num {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--cream);
+      color: var(--ink);
+      font-weight: 800;
+      z-index: 1;
+    }
+    .tile.sun-tile .num, .tile.cream-tile .num { background: var(--ink); color: var(--cream); }
+    .tile h3 { margin: 0; font-size: clamp(34px, 3.2vw, 46px); }
+    .tile p { margin: 12px 0 20px; font-size: 16px; line-height: 1.45; opacity: 0.9; }
+    .tile .pill { align-self: flex-start; padding: 12px 18px; font-size: 15px; }
+
+    /* Why — forest */
+    .why {
+      background: var(--forest);
+      color: var(--cream);
+      padding: 104px 0 calc(var(--r) + 104px);
+      overflow: hidden;
+    }
+    .why::before {
+      content: "";
+      position: absolute;
+      width: 520px;
+      height: 520px;
+      right: -140px;
+      top: -160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(242, 163, 58, 0.55), rgba(242, 163, 58, 0) 68%);
+    }
+    .why .inner { position: relative; }
+    .why .sun-tag { color: var(--apricot); }
+    .why h2 { max-width: 13ch; }
+    .why .deck { color: #f1dfc6; }
+    .reasons {
+      margin-top: 56px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .reason {
+      background: rgba(253, 245, 232, 0.08);
+      border-radius: 40px;
+      padding: 32px;
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+    }
+    .reason .orb {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffd58a, var(--sun) 60%, var(--ember));
+      box-shadow: 0 14px 30px rgba(242, 163, 58, 0.3);
+    }
+    .reason h3 { margin: 48px 0 10px; font-size: 34px; }
+    .reason p { margin: 0; color: #f1dfc6; font-size: 16px; line-height: 1.5; }
+
+    /* Close — sun */
+    .close {
+      background: var(--sun);
+      color: var(--ink);
+      padding: 104px 0 calc(var(--r) + 96px);
+    }
+    .close-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 40px;
+      align-items: end;
+    }
+    .close h2 { max-width: 12ch; }
+    .close .deck { color: #4a2f14; margin-top: 20px; }
+    .close .actions { margin-top: 32px; }
+    .area {
+      background: var(--cream);
+      border-radius: 40px;
+      padding: 30px;
+    }
+    .area .sun-tag { color: var(--ember); }
+    .area strong { display: block; margin: 16px 0 8px; font-size: 30px; }
+    .area p { margin: 0; color: var(--muted); line-height: 1.5; }
+
+    /* Footer — cream */
+    footer.band {
+      background: var(--cream);
+      padding: 72px 0 40px;
+    }
+    .foot-grid {
+      display: grid;
+      grid-template-columns: 1.3fr repeat(3, 1fr);
+      gap: 32px;
+    }
+    .foot-grid .brand span { font-size: 24px; }
+    .foot-grid h4 {
+      margin: 0 0 14px;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ember);
+    }
+    .foot-grid a { display: block; margin-bottom: 10px; font-size: 17px; font-weight: 600; }
+    .legal {
+      margin-top: 48px;
+      padding: 18px 24px;
+      border-radius: 999px;
+      background: var(--sand);
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      :root { --r: 40px; }
+      .links a:not(.pill) { display: none; }
+      .head, .tiles, .reasons, .close-grid, .foot-grid, .hero-foot { grid-template-columns: 1fr; display: grid; }
+      .tile { min-height: 360px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <img src="../../../../apps/web/public/HeroImage.jpg" alt="Mount Washington alpine landscape">
+    <nav class="nav">
+      <a class="brand" href="/">
+        <span class="logo"><img src="../../../../apps/web/public/STRATLOGO-ICON.png" alt=""></span>
+        <span class="display">Strathcona Summit</span>
+      </a>
+      <div class="links">
+        <a href="/property-management">Property Management</a>
+        <a href="/renovations">Renovations</a>
+        <a href="/about">About Us</a>
+        <a class="pill sun" href="/contact">Get in touch</a>
+      </div>
+    </nav>
+    <div class="inner hero-copy">
+      <span class="bubble"><i></i>Mount Washington</span>
+      <h1 class="display">Property management from a team that lives here.</h1>
+      <div class="hero-foot">
+        <p class="lede">We built Strathcona Summit Solutions to give homeowners and vacation rental hosts a dependable local partner for property management. Backed by in-house cleaning, maintenance, and renovation services, we help owners maximize revenue, protect their investment, and deliver exceptional guest experiences.</p>
+        <div class="actions">
+          <a class="pill sun" href="/contact">Get in touch <span class="arrow">→</span></a>
+          <a class="pill glass" href="/property-management">View services</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band services">
+    <div class="inner">
+      <div class="head">
+        <div>
+          <span class="sun-tag">How we support property owners</span>
+          <h2 class="display">One local team. Complete property care.</h2>
+        </div>
+        <p class="deck">Owning a mountain property comes with unique responsibilities. We help owners simplify the process through professional management, dependable local support, and thoughtful property improvements.</p>
+      </div>
+      <div class="tiles">
+        <article class="tile">
+          <img src="../../../../apps/web/public/HeroImage.jpg" alt="">
+          <span class="num">01</span>
+          <h3 class="display">Property Management</h3>
+          <p>Full-service vacation rental management, including guest communication, revenue optimization, booking management, and property oversight.</p>
+          <a class="pill sun" href="/property-management">Learn more</a>
+        </article>
+        <article class="tile sun-tile">
+          <span class="num">02</span>
+          <h3 class="display">Property Support Services</h3>
+          <p>Cleaning, laundry, inspections, maintenance, and guest-ready support for self-managed properties.</p>
+          <a class="pill cream" href="/contact">Learn more</a>
+        </article>
+        <article class="tile">
+          <img src="../../../../apps/web/public/Renos.png" alt="">
+          <span class="num">03</span>
+          <h3 class="display">Renovations &amp; Improvements</h3>
+          <p>Repairs, upgrades, and renovation projects that enhance your property's value, functionality, and guest experience.</p>
+          <a class="pill sun" href="/renovations">Learn more</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band why">
+    <div class="inner">
+      <div class="head">
+        <div>
+          <span class="sun-tag">Why owners choose us</span>
+          <h2 class="display">Local expertise. Hospitality standards. One trusted team.</h2>
+        </div>
+        <p class="deck">We bring together professional property management, luxury hospitality experience, and hands-on local support to help owners maximize value and deliver exceptional guest experiences.</p>
+      </div>
+      <div class="reasons">
+        <article class="reason">
+          <span class="orb"></span>
+          <h3 class="display">Local expertise</h3>
+          <p>Based on Mount Washington, we provide responsive support and year-round oversight.</p>
+        </article>
+        <article class="reason">
+          <span class="orb"></span>
+          <h3 class="display">Hospitality standards</h3>
+          <p>Our background in luxury hospitality influences every aspect of the guest and owner experience.</p>
+        </article>
+        <article class="reason">
+          <span class="orb"></span>
+          <h3 class="display">One trusted team</h3>
+          <p>Property management, support services, and renovations—all coordinated through one trusted team.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="band close">
+    <div class="inner close-grid">
+      <div>
+        <h2 class="display">Ready to simplify property ownership?</h2>
+        <p class="deck">Whether you're looking for property management, local property support, or renovation services, we'd love to learn more about your property and how we can help.</p>
+        <div class="actions">
+          <a class="pill forest" href="/contact">Contact us <span class="arrow" style="background:rgba(253,245,232,0.16)">→</span></a>
+        </div>
+      </div>
+      <div class="area">
+        <span class="sun-tag">Service area</span>
+        <strong class="display">Mount Washington</strong>
+        <p>Serving Mount Washington properties and the surrounding Comox Valley.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="band">
+    <div class="inner">
+      <div class="foot-grid">
+        <div class="brand">
+          <span class="logo"><img src="../../../../apps/web/public/STRATLOGO-ICON.png" alt=""></span>
+          <span class="display">Strathcona Summit</span>
+        </div>
+        <div>
+          <h4>Services</h4>
+          <a href="/property-management">Property Management</a>
+          <a href="/renovations">Renovations</a>
+        </div>
+        <div>
+          <h4>Company</h4>
+          <a href="/about">About</a>
+          <a href="/contact">Contact</a>
+        </div>
+        <div>
+          <h4>Connect</h4>
+          <a href="https://facebook.com">Facebook</a>
+          <a href="https://instagram.com">Instagram</a>
+        </div>
+      </div>
+      <div class="legal">
+        <span>© Strathcona Summit 2026</span>
+        <span>Mount Washington · Comox Valley</span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
