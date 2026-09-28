@@ -34,7 +34,7 @@ export function Logo({
   return (
     <span className={clsx('inline-flex items-center gap-3', className)}>
       <LogoMark className={markClassName} />
-      <span className="type-display text-xl">{site.shortName}</span>
+      <span className="type-display text-xl/[1.05]">{site.shortName}</span>
     </span>
   )
 }

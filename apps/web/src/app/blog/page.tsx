@@ -37,7 +37,12 @@ export default async function Blog() {
               <FadeIn key={article.href}>
                 <article className="rounded-[2.5rem] bg-warm-cream p-8 split:p-10">
                   <h2 className="type-display text-[clamp(2rem,3.5vw,3rem)]">
-                    <Link href={article.href}>{article.title}</Link>
+                    <Link
+                      href={article.href}
+                      className="transition hover:text-ember-deep"
+                    >
+                      {article.title}
+                    </Link>
                   </h2>
                   <dl className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-warm-muted">
                     <dt className="sr-only">Published</dt>
@@ -51,6 +56,7 @@ export default async function Blog() {
                       <Image
                         alt=""
                         {...article.author.image}
+                        sizes="2.75rem"
                         className="size-11 rounded-full object-cover photo-warm"
                       />
                       <span>
