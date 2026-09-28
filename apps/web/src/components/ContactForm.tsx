@@ -29,7 +29,7 @@ function TextInput({
         required={required}
         {...props}
         placeholder=" "
-        className="peer block w-full rounded-full border-2 border-sand bg-white px-6 pt-7 pb-2.5 text-base/6 text-warm-ink transition focus:border-warm-ink focus:outline-hidden"
+        className="peer block w-full rounded-full border-2 border-warm-ink/50 bg-white px-6 pt-7 pb-2.5 text-base/6 text-warm-ink transition focus:border-warm-ink focus:ring-2 focus:ring-warm-ink focus:outline-hidden"
       />
       <label
         htmlFor={id}
@@ -56,7 +56,7 @@ function RadioInput({
       <input
         type="radio"
         {...props}
-        className="size-6 flex-none appearance-none rounded-full border-2 border-warm-ink/25 bg-white checked:border-[0.45rem] checked:border-sun"
+        className="size-6 flex-none appearance-none rounded-full border-2 border-warm-ink/50 bg-white checked:border-[0.45rem] checked:border-sun checked:bg-warm-ink"
       />
       <span className="text-base/6 text-warm-ink">{label}</span>
     </label>
