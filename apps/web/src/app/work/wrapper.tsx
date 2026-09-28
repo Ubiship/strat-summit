@@ -76,11 +76,7 @@ export default async function CaseStudyLayout({
       </article>
 
       {moreCaseStudies.length > 0 && (
-        <PageLinks
-          className="mt-24 sm:mt-32 lg:mt-40"
-          title="More case studies"
-          pages={moreCaseStudies}
-        />
+        <PageLinks title="More case studies" pages={moreCaseStudies} />
       )}
 
       <ContactSection />

@@ -47,11 +47,7 @@ export default async function BlogArticleWrapper({
       </Container>
 
       {moreArticles.length > 0 && (
-        <PageLinks
-          className="mt-24 sm:mt-32 lg:mt-40"
-          title="More articles"
-          pages={moreArticles}
-        />
+        <PageLinks title="More articles" pages={moreArticles} />
       )}
 
       <ContactSection />

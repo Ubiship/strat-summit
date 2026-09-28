@@ -1,8 +1,8 @@
+import Image, { type ImageProps } from 'next/image'
 import clsx from 'clsx'
 
 import { Blockquote } from '@/components/Blockquote'
 import { Border } from '@/components/Border'
-import { GrayscaleTransitionImage } from '@/components/GrayscaleTransitionImage'
 import { StatList, StatListItem } from '@/components/StatList'
 import { TagList, TagListItem } from '@/components/TagList'
 
@@ -15,19 +15,21 @@ export const MDXComponents = {
   },
   img: function Img({
     className,
+    alt = '',
     ...props
-  }: React.ComponentPropsWithoutRef<typeof GrayscaleTransitionImage>) {
+  }: Omit<ImageProps, 'alt'> & { alt?: string }) {
     return (
       <div
         className={clsx(
-          'group isolate my-10 overflow-hidden rounded-4xl bg-neutral-100 max-sm:-mx-6',
+          'my-10 overflow-hidden rounded-[2.75rem] bg-sand max-sm:-mx-6',
           className,
         )}
       >
-        <GrayscaleTransitionImage
+        <Image
+          alt={alt}
           {...props}
           sizes="(min-width: 768px) 42rem, 100vw"
-          className="aspect-16/10 w-full object-cover"
+          className="aspect-16/10 w-full object-cover photo-warm"
         />
       </div>
     )
@@ -74,7 +76,7 @@ export const MDXComponents = {
   }) {
     return (
       <Border position="left" className={clsx('my-10 pl-8', className)}>
-        <p className="font-display text-sm font-bold tracking-widest text-neutral-950 uppercase">
+        <p className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
           Top tip
         </p>
         <div className="mt-4">{children}</div>

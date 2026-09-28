@@ -23,8 +23,8 @@ export function Border<T extends React.ElementType = 'div'>({
         className,
         'relative before:absolute after:absolute',
         invert
-          ? 'before:bg-gold-light after:bg-white/10'
-          : 'before:bg-gold after:bg-neutral-950/10',
+          ? 'before:bg-sun after:bg-warm-cream/15'
+          : 'before:bg-sun after:bg-warm-ink/10',
         position === 'top' &&
           'before:top-0 before:left-0 before:h-px before:w-6 after:top-0 after:right-0 after:left-8 after:h-px',
         position === 'left' &&
