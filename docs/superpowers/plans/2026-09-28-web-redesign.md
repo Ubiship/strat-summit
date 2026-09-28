@@ -4055,7 +4055,7 @@ In the browser devtools colour picker (or any contrast checker), check these pai
 | Cream hero lede `#fbeedd` | the lightest pixel behind it on `/` and `/renovations` | 4.5:1 |
 | Cream hero headline | the lightest pixel behind it on `/`, `/renovations`, `/about` | 3:1 |
 
-If a hero pair fails, strengthen the left stop of `hero-shade` in `apps/web/src/styles/warm.css` (currently `0.66`; for example raise it to `0.72`) and re-check.
+If a hero pair fails, strengthen the left stop of `hero-shade` in `apps/web/src/styles/warm.css` (raised to `0.72`/`0.56` during Task 15, with the narrow-screen tint at `0.58`; raise further if needed) and re-check.
 
 - [ ] **Step 6: Keyboard and motion**
 
