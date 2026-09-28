@@ -44,7 +44,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       lang="en"
       className={`${fraunces.variable} ${outfit.variable} h-full bg-forest-deep text-base antialiased`}
     >
-      <body className="flex min-h-full flex-col bg-forest-deep font-sans text-warm-ink">
+      <body className="flex min-h-full flex-col bg-forest-deep font-sans font-medium text-warm-ink">
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

@@ -60,7 +60,7 @@ function SiteHeader({
             onClick={onOpenMenu}
             aria-expanded={menuOpen}
             aria-controls={panelId}
-            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold ring-2 ring-warm-ink ring-inset split:hidden"
+            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold ring-2 ring-warm-ink ring-inset transition hover:bg-sand split:hidden"
           >
             Menu
           </button>

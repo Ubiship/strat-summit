@@ -160,7 +160,7 @@ export default function Renovations() {
               src={site.images.renovations}
               alt=""
               fill
-              sizes="(min-width: 900px) 40vw, 100vw"
+              sizes="(min-width: 75rem) 27.25rem, (min-width: 56.25rem) 36vw, 100vw"
               className="object-cover photo-warm"
             />
           </FadeIn>

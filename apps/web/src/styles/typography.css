@@ -64,16 +64,13 @@
     color: var(--color-ember);
   }
 
-  :where(ol > li)::marker {
-    color: var(--color-ember-deep);
-  }
-
   :where(li > *),
   :where(li li) {
     margin-top: --spacing(4);
   }
 
   :where(ol > li)::marker {
+    color: var(--color-ember-deep);
     font-size: var(--text-base);
     font-weight: var(--font-weight-semibold);
   }

@@ -54,16 +54,14 @@ function PageLink({ page }: { page: Page }) {
 export function PageLinks({
   title,
   pages,
-  intro,
 }: {
   title: string
   pages: Array<Page>
-  intro?: string
 }) {
   return (
     <Band tone="sand">
       <Container>
-        <SectionHead title={title}>{intro && <p>{intro}</p>}</SectionHead>
+        <SectionHead title={title} />
         <FadeInStagger className="mt-12 grid gap-4.5 split:grid-cols-2">
           {pages.map((page) => (
             <FadeIn key={page.href}>

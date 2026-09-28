@@ -24,16 +24,10 @@ export function LogoMark({ className }: { className?: string }) {
   )
 }
 
-export function Logo({
-  className,
-  markClassName,
-}: {
-  className?: string
-  markClassName?: string
-}) {
+export function Logo({ className }: { className?: string }) {
   return (
     <span className={clsx('inline-flex items-center gap-3', className)}>
-      <LogoMark className={markClassName} />
+      <LogoMark />
       <span className="type-display text-xl/[1.05]">{site.shortName}</span>
     </span>
   )

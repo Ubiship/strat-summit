@@ -6,12 +6,11 @@ import clsx from 'clsx'
 const tones = {
   sun: 'bg-sun text-warm-ink hover:bg-sun-light focus-visible:-outline-offset-4',
   forest:
-    'bg-forest-warm text-warm-cream hover:bg-forest focus-visible:-outline-offset-4',
+    'bg-forest-warm text-warm-cream hover:bg-forest-deep focus-visible:-outline-offset-4',
   cream:
     'bg-warm-cream text-warm-ink hover:bg-white focus-visible:-outline-offset-4',
   glass:
     'bg-warm-cream/15 text-warm-cream ring-2 ring-warm-cream/60 ring-inset hover:bg-warm-cream/25',
-  outline: 'text-warm-ink ring-2 ring-warm-ink ring-inset hover:bg-warm-ink/5',
 }
 
 const sizes = {
