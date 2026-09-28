@@ -38,3 +38,5 @@ backend/server
 
 # local git worktrees
 .worktrees
+services/booking-api/dist/
+services/booking-api/.env

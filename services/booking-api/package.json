@@ -1,0 +1,29 @@
+{
+  "name": "@repo/booking-api",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit",
+    "db:migrate": "tsx src/migrate.ts"
+  },
+  "dependencies": {
+    "@clerk/backend": "^3.20.1",
+    "@hono/node-server": "^2.1.1",
+    "drizzle-orm": "^0.45.3",
+    "hono": "^4.13.10",
+    "ioredis": "^6.0.0",
+    "postgres": "^3.4.9"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.8.3",
+    "vitest": "^5.0.2"
+  }
+}
