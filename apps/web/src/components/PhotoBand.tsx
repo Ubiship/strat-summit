@@ -10,7 +10,7 @@ export function PhotoBand({ src, alt }: { src: string; alt: string }) {
         sizes="100vw"
         className="-z-20 object-cover photo-warm"
       />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 hero-shade" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 band-shade" />
       <div aria-hidden="true" className="absolute inset-0 -z-10 hero-glow" />
     </section>
   )

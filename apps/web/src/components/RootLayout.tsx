@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { AnimatePresence, motion, MotionConfig } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
@@ -174,7 +174,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
   }, [open])
 
   return (
-    <MotionConfig reducedMotion="user">
+    <>
       <div
         inert={open ? true : undefined}
         className="relative flex min-h-full flex-auto flex-col"
@@ -197,7 +197,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
           />
         )}
       </AnimatePresence>
-    </MotionConfig>
+    </>
   )
 }
 

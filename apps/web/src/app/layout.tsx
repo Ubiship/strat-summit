@@ -1,6 +1,7 @@
 import { type Metadata } from 'next'
 import { Fraunces, Outfit } from 'next/font/google'
 
+import { MotionProvider } from '@/components/MotionProvider'
 import { site } from '@/lib/site'
 import '@/styles/tailwind.css'
 
@@ -44,7 +45,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       className={`${fraunces.variable} ${outfit.variable} h-full bg-forest-deep text-base antialiased`}
     >
       <body className="flex min-h-full flex-col bg-forest-deep font-sans text-warm-ink">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
       </body>
     </html>
   )

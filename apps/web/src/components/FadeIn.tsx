@@ -7,7 +7,7 @@ const FadeInStaggerContext = createContext(false)
 
 const viewport = { once: true, margin: '0px 0px -200px' }
 
-// Reduced motion is handled by RootLayout's MotionConfig, which skips the
+// Reduced motion is handled by the app-level MotionProvider, which skips the
 // slide. Branching on it here would make server and client markup differ.
 export function FadeIn(
   props: React.ComponentPropsWithoutRef<typeof motion.div>,
