@@ -56,7 +56,7 @@ function BlockquoteWithoutImage({
   return (
     <Border position="left" className={clsx('pl-8', className)}>
       <figure className="text-base">
-        <blockquote className="text-warm-muted *:relative *:first:before:absolute *:first:before:right-full *:first:before:content-['“'] *:last:after:content-['”']">
+        <blockquote className="text-warm-muted *:relative *:first:before:absolute *:first:before:right-full *:first:before:content-['“'_/_''] *:last:after:content-['”'_/_'']">
           {typeof children === 'string' ? <p>{children}</p> : children}
         </blockquote>
         <figcaption className="mt-5 font-bold text-ember-deep">

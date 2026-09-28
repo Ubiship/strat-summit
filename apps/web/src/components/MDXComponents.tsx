@@ -28,7 +28,7 @@ export const MDXComponents = {
         <Image
           alt={alt}
           {...props}
-          sizes="(min-width: 768px) 42rem, 100vw"
+          sizes="(min-width: 768px) 48rem, 100vw"
           className="aspect-16/10 w-full object-cover photo-warm"
         />
       </div>
