@@ -38,6 +38,9 @@ func (s *Service) HandleHostawayReservationCreated(ctx context.Context, reservat
 	}
 
 	// Parse check-in and check-out dates
+	// Note: Hostaway provides dates as YYYY-MM-DD strings without timezone info.
+	// We parse these as UTC midnight, treating them as local dates for the property.
+	// TODO: Consider adding timezone field to properties for more accurate date handling.
 	checkIn, err := time.Parse("2006-01-02", reservation.CheckInDate)
 	if err != nil {
 		return fmt.Errorf("parsing check_in date: %w", err)
@@ -123,6 +126,8 @@ func (s *Service) HandleHostawayReservationUpdated(ctx context.Context, reservat
 	}
 
 	// Parse updated dates
+	// Note: Hostaway provides dates as YYYY-MM-DD strings without timezone info.
+	// We parse these as UTC midnight, treating them as local dates for the property.
 	checkIn, err := time.Parse("2006-01-02", reservation.CheckInDate)
 	if err != nil {
 		return fmt.Errorf("parsing check_in date: %w", err)
@@ -140,7 +145,15 @@ func (s *Service) HandleHostawayReservationUpdated(ctx context.Context, reservat
 	booking.CheckOut = checkOut
 	booking.NightlyRate = &reservation.TotalPrice
 
-	if err := s.repo.UpdateBookingStatus(ctx, booking.ID, fmt.Sprintf("Updated from Hostaway: %s", reservation.Status)); err != nil {
+	// Append update note to existing notes
+	if booking.Notes == nil {
+		note := fmt.Sprintf("Updated from Hostaway: %s", reservation.Status)
+		booking.Notes = &note
+	} else {
+		*booking.Notes = *booking.Notes + fmt.Sprintf(" | Updated from Hostaway: %s", reservation.Status)
+	}
+
+	if err := s.repo.UpdateBooking(ctx, booking); err != nil {
 		return fmt.Errorf("updating booking: %w", err)
 	}
 

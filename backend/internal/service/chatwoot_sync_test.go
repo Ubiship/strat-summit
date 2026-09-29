@@ -211,6 +211,10 @@ func (m *mockRepository) GetBookingByExternalUID(ctx context.Context, uid string
 	return nil, errors.New("not implemented")
 }
 
+func (m *mockRepository) UpdateBooking(ctx context.Context, b *domain.Booking) error {
+	return nil
+}
+
 // Cleaning job methods
 func (m *mockRepository) CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error {
 	return nil

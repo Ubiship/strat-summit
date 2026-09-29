@@ -62,6 +62,7 @@ type Repository interface {
 	SetBookingChatwootConversation(ctx context.Context, bookingID uuid.UUID, conversationID int64) error
 	FindBookingByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Booking, error)
 	UpdateBookingStatus(ctx context.Context, bookingID uuid.UUID, notes string) error
+	UpdateBooking(ctx context.Context, b *domain.Booking) error
 	GetBookingByExternalUID(ctx context.Context, uid string) (*domain.Booking, error)
 
 	// Cleaning job methods

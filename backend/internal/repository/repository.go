@@ -1094,6 +1094,31 @@ func (r *Repository) UpdateBookingStatus(ctx context.Context, bookingID uuid.UUI
 	return nil
 }
 
+// UpdateBooking updates all fields of a booking.
+func (r *Repository) UpdateBooking(ctx context.Context, b *domain.Booking) error {
+	query := `
+		UPDATE bookings SET
+			property_id = $2, source = $3, tax_treatment = $4, external_uid = $5, guest_name = $6,
+			guest_email = $7, guest_phone = $8, check_in = $9, check_out = $10, nightly_rate = $11,
+			nightly_rate_weekend = $12, nightly_rate_holiday = $13, revenue_incl_cleaning_fee = $14,
+			revenue_excl_cleaning_fee = $15, cleaning_fee_charged = $16, gst = $17, pst = $18, mrdt = $19,
+			notes = $20, updated_at = NOW()
+		WHERE id = $1
+		RETURNING updated_at`
+
+	err := r.db.QueryRow(ctx, query,
+		b.ID, b.PropertyID, b.Source, b.TaxTreatment, b.ExternalUID, b.GuestName,
+		b.GuestEmail, b.GuestPhone, b.CheckIn, b.CheckOut, b.NightlyRate,
+		b.NightlyRateWeekend, b.NightlyRateHoliday, b.RevenueInclCleaningFee,
+		b.RevenueExclCleaningFee, b.CleaningFeeCharged, b.GST, b.PST, b.MRDT,
+		b.Notes,
+	).Scan(&b.UpdatedAt)
+	if err != nil {
+		return fmt.Errorf("updating booking: %w", err)
+	}
+	return nil
+}
+
 // SetProjectConversationResolved marks a project conversation as resolved.
 func (r *Repository) SetProjectConversationResolved(ctx context.Context, projectID uuid.UUID, resolved bool) error {
 	note := "[Chatwoot conversation resolved]"

@@ -109,6 +109,20 @@ func (h *hostawayTestHelper) UpdateBookingStatus(ctx context.Context, bookingID 
 	return repository.ErrNotFound
 }
 
+func (h *hostawayTestHelper) UpdateBooking(ctx context.Context, b *domain.Booking) error {
+	if h.shouldError {
+		return fmt.Errorf("mock error")
+	}
+	for _, booking := range h.bookingsByExtID {
+		if booking.ID == b.ID {
+			*booking = *b
+			booking.UpdatedAt = time.Now()
+			return nil
+		}
+	}
+	return repository.ErrNotFound
+}
+
 // Test: HandleHostawayReservationCreated creates booking and job
 func TestHandleHostawayReservationCreated_CreatesBookingAndJob(t *testing.T) {
 	ctx := context.Background()
