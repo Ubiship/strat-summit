@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
+    "test": "vitest",
     "check:copy": "node scripts/check-copy.mjs",
     "check:copy:update": "node scripts/check-copy.mjs --update"
   },
@@ -51,7 +52,8 @@
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "sharp": "0.34.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^1.6.0"
   },
   "overrides": {
     "@types/react": "19.2.14",

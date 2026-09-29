@@ -74,6 +74,11 @@ function getApiKey(): string {
   return key
 }
 
+/**
+ * Get the Hostaway account ID from environment variables.
+ * Currently not used in direct booking flow, but may be required for future
+ * API endpoints (e.g., account management, advanced reporting).
+ */
 function getAccountId(): string {
   const id = process.env.HOSTAWAY_ACCOUNT_ID
   if (!id) {
@@ -145,7 +150,10 @@ export async function getProperties(): Promise<HostawayProperty[]> {
 }
 
 /**
- * Fetch a single property by ID from Hostaway
+ * Fetch a single property by ID from Hostaway.
+ * @param id - The Hostaway listing ID
+ * @returns The property object, or null if not found or an error occurs.
+ *          Null returns from API errors are logged to console.error for debugging.
  */
 export async function getProperty(id: string): Promise<HostawayProperty | null> {
   try {
@@ -191,7 +199,13 @@ export async function getAvailability(
 }
 
 /**
- * Get pricing quote for a property
+ * Get pricing quote for a property.
+ * @param listingId - The Hostaway listing ID
+ * @param checkIn - Check-in date (YYYY-MM-DD format)
+ * @param checkOut - Check-out date (YYYY-MM-DD format)
+ * @param guests - Number of guests
+ * @returns The pricing quote with breakdown, or null if not found or an error occurs.
+ *          Null returns from API errors are logged to console.error for debugging.
  */
 export async function getPricing(
   listingId: string,
