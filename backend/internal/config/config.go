@@ -38,6 +38,17 @@ type Config struct {
 	ChatwootAccountID     int
 	ChatwootInboxID       int
 	ChatwootWebhookSecret string
+
+	// Hostaway
+	HostawayBaseURL       string
+	HostawayAPIKey        string
+	HostawayAccountID     string
+	HostawayWebhookSecret string
+
+	// Anthropic AI
+	AnthropicAPIKey   string
+	AnthropicModel    string
+	AIResponseEnabled bool
 }
 
 func Load() (*Config, error) {
@@ -49,6 +60,7 @@ func Load() (*Config, error) {
 	maxBodySize, _ := strconv.ParseInt(getEnv("MAX_REQUEST_BODY_SIZE", "1048576"), 10, 64) // 1MB default
 	chatwootAccountID, _ := strconv.Atoi(getEnv("CHATWOOT_ACCOUNT_ID", "1"))
 	chatwootInboxID, _ := strconv.Atoi(getEnv("CHATWOOT_INBOX_ID", "1"))
+	aiResponseEnabled, _ := strconv.ParseBool(getEnv("AI_RESPONSE_ENABLED", "false"))
 
 	// Parse CORS origins (comma-separated)
 	corsOrigins := parseCSV(getEnv("CORS_ALLOWED_ORIGINS", "http://localhost:3000"))
@@ -79,6 +91,15 @@ func Load() (*Config, error) {
 		ChatwootAccountID:     chatwootAccountID,
 		ChatwootInboxID:       chatwootInboxID,
 		ChatwootWebhookSecret: os.Getenv("CHATWOOT_WEBHOOK_SECRET"),
+
+		HostawayBaseURL:       os.Getenv("HOSTAWAY_BASE_URL"),
+		HostawayAPIKey:        os.Getenv("HOSTAWAY_API_KEY"),
+		HostawayAccountID:     os.Getenv("HOSTAWAY_ACCOUNT_ID"),
+		HostawayWebhookSecret: os.Getenv("HOSTAWAY_WEBHOOK_SECRET"),
+
+		AnthropicAPIKey:   os.Getenv("ANTHROPIC_API_KEY"),
+		AnthropicModel:    getEnv("ANTHROPIC_MODEL", "claude-sonnet-4-20250514"),
+		AIResponseEnabled: aiResponseEnabled,
 	}, nil
 }
 
