@@ -475,6 +475,32 @@ func (r *Repository) OwnerHasProperty(ctx context.Context, contactID, propertyID
 	return exists, nil
 }
 
+// GetPropertyByHostawayID retrieves a property by its Hostaway ID
+func (r *Repository) GetPropertyByHostawayID(ctx context.Context, hostawayID string) (*domain.Property, error) {
+	query := `
+		SELECT id, name, address, tier, commission_rate, cleaning_fee,
+			   cleaning_fee_commissionable, airbnb_ical_url, vrbo_ical_url,
+			   wifi_password, access_codes, hot_tub, hot_tub_temp_f, notes,
+			   supply_list, checklist_template_id, active, created_at, updated_at
+		FROM properties
+		WHERE hostaway_id = $1`
+
+	var p domain.Property
+	err := r.db.QueryRow(ctx, query, hostawayID).Scan(
+		&p.ID, &p.Name, &p.Address, &p.Tier, &p.CommissionRate, &p.CleaningFee,
+		&p.CleaningFeeCommissionable, &p.AirbnbIcalURL, &p.VRBOIcalURL,
+		&p.WifiPassword, &p.AccessCodes, &p.HotTub, &p.HotTubTempF, &p.Notes,
+		&p.SupplyList, &p.ChecklistTemplateID, &p.Active, &p.CreatedAt, &p.UpdatedAt,
+	)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, ErrNotFound
+		}
+		return nil, fmt.Errorf("querying property by hostaway id: %w", err)
+	}
+	return &p, nil
+}
+
 // ============================================================================
 // Booking Repository
 // ============================================================================

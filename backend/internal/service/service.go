@@ -52,6 +52,7 @@ type Repository interface {
 	GetPropertiesByOwner(ctx context.Context, contactID uuid.UUID) ([]*domain.Property, error)
 	OwnerHasProperty(ctx context.Context, contactID, propertyID uuid.UUID) (bool, error)
 	UpdateProperty(ctx context.Context, p *domain.Property) error
+	GetPropertyByHostawayID(ctx context.Context, hostawayID string) (*domain.Property, error)
 
 	// Booking methods
 	CreateBooking(ctx context.Context, b *domain.Booking) error
@@ -61,6 +62,7 @@ type Repository interface {
 	SetBookingChatwootConversation(ctx context.Context, bookingID uuid.UUID, conversationID int64) error
 	FindBookingByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Booking, error)
 	UpdateBookingStatus(ctx context.Context, bookingID uuid.UUID, notes string) error
+	GetBookingByExternalUID(ctx context.Context, uid string) (*domain.Booking, error)
 
 	// Cleaning job methods
 	CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error

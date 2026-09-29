@@ -53,12 +53,13 @@ const (
 	BookingSourceDirect   BookingSource = "direct"
 	BookingSourceOwnerUse BookingSource = "owner_use"
 	BookingSourcePlatform BookingSource = "platform"
+	BookingSourceHostaway BookingSource = "hostaway"
 )
 
 // IsValid checks if the booking source is a valid value
 func (s BookingSource) IsValid() bool {
 	switch s {
-	case BookingSourceAirbnb, BookingSourceVRBO, BookingSourceDirect, BookingSourceOwnerUse, BookingSourcePlatform:
+	case BookingSourceAirbnb, BookingSourceVRBO, BookingSourceDirect, BookingSourceOwnerUse, BookingSourcePlatform, BookingSourceHostaway:
 		return true
 	default:
 		return false
