@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import clsx from 'clsx'
 import type { HostawayPhoto } from '@/lib/hostaway'
@@ -41,6 +41,20 @@ export function PhotoGallery({ photos, propertyName }: PhotoGalleryProps) {
   const prevPhoto = () => {
     setCurrentPhotoIndex((prev) => (prev - 1 + photos.length) % photos.length)
   }
+
+  // Close lightbox on Escape key
+  useEffect(() => {
+    if (!lightboxOpen) return
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeLightbox()
+      }
+    }
+
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [lightboxOpen])
 
   return (
     <>

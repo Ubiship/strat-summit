@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import clsx from 'clsx'
 import { Button } from '@/components/Button'
-import { buildCheckoutUrl, getPricing, type HostawayPriceQuote } from '@/lib/hostaway'
+import { buildCheckoutUrl, type HostawayPriceQuote } from '@/lib/hostaway'
 
 type BookingCardProps = {
   listingId: string
@@ -32,8 +32,23 @@ export function BookingCard({
   useEffect(() => {
     if (checkIn && checkOut && guests > 0) {
       setLoadingPricing(true)
-      getPricing(listingId, checkIn, checkOut, guests)
-        .then((quote) => {
+
+      // Call API route instead of server function
+      const params = new URLSearchParams({
+        listingId,
+        checkIn,
+        checkOut,
+        guests: guests.toString(),
+      })
+
+      fetch(`/api/pricing?${params.toString()}`)
+        .then(async (response) => {
+          if (!response.ok) {
+            throw new Error(`Failed to fetch pricing: ${response.status}`)
+          }
+          return response.json()
+        })
+        .then((quote: HostawayPriceQuote) => {
           setPricing(quote)
         })
         .catch((error) => {
