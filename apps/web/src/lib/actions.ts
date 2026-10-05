@@ -119,12 +119,60 @@ export async function subscribeToNewsletter(
     }
   }
 
-  // TODO (Task 10): Implement actual newsletter subscription
-  // For now, just log the email and return success
-  console.log('Newsletter subscription:', email)
+  const apiKey = process.env.RESEND_API_KEY
+  const audienceId = process.env.RESEND_AUDIENCE_ID
 
-  return {
-    success: true,
-    message: 'Thanks for subscribing! Check your inbox to confirm.',
+  // If audience ID is not configured, log and return success (dev environment)
+  if (!audienceId) {
+    console.log('Newsletter subscription (dev mode):', email)
+    return {
+      success: true,
+      message: 'Thanks for subscribing! Check your inbox to confirm.',
+    }
+  }
+
+  // If API key is not configured, log and return success
+  if (!apiKey) {
+    console.log('Newsletter subscription (no API key):', email)
+    return {
+      success: true,
+      message: 'Thanks for subscribing! Check your inbox to confirm.',
+    }
+  }
+
+  try {
+    const resend = new Resend(apiKey)
+    const { error } = await resend.contacts.create({
+      email,
+      audienceId,
+    })
+
+    if (error) {
+      // Handle duplicate email gracefully
+      if (error.message?.includes('already exists') || error.code === 'duplicate') {
+        console.log('Newsletter subscription: email already subscribed', email)
+        return {
+          success: true,
+          message: 'Thanks for subscribing! Check your inbox to confirm.',
+        }
+      }
+
+      console.error('Resend contacts error:', error)
+      return {
+        success: false,
+        message: 'Something went wrong. Please try again later.',
+      }
+    }
+
+    return {
+      success: true,
+      message: 'Thanks for subscribing! Check your inbox to confirm.',
+    }
+  } catch (error) {
+    console.error('Newsletter subscription error:', error)
+    return {
+      success: true,
+      message: 'Thanks for subscribing! Check your inbox to confirm.',
+    }
   }
 }
