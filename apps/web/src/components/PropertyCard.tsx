@@ -23,18 +23,20 @@ export function PropertyCard({
   const displayPrice = price || property.basePrice
 
   // Build detail page URL with search params
-  const detailUrl = new URL(`/stays/${property.id}`, 'http://localhost')
-  if (searchParams?.checkIn) detailUrl.searchParams.set('checkIn', searchParams.checkIn)
-  if (searchParams?.checkOut) detailUrl.searchParams.set('checkOut', searchParams.checkOut)
-  if (searchParams?.guests) detailUrl.searchParams.set('guests', searchParams.guests)
+  const params = new URLSearchParams()
+  if (searchParams?.checkIn) params.set('checkIn', searchParams.checkIn)
+  if (searchParams?.checkOut) params.set('checkOut', searchParams.checkOut)
+  if (searchParams?.guests) params.set('guests', searchParams.guests)
+  const queryString = params.toString()
+  const detailHref = `/stays/${property.id}${queryString ? `?${queryString}` : ''}`
 
   // Format key amenities (first 4)
-  const keyAmenities = property.amenities.slice(0, 4)
+  const keyAmenities = property.amenities?.slice(0, 4) ?? []
 
   return (
     <article className="flex flex-col rounded-[2.75rem] bg-white shadow-[0_8px_24px_rgb(42_24_10/0.08)] transition hover:shadow-[0_12px_32px_rgb(42_24_10/0.12)]">
       <Link
-        href={detailUrl.pathname + detailUrl.search}
+        href={detailHref}
         className="group relative aspect-[4/3] overflow-hidden rounded-t-[2.75rem]"
       >
         {coverPhoto && (
@@ -58,7 +60,7 @@ export function PropertyCard({
       </Link>
 
       <div className="flex flex-auto flex-col p-6">
-        <Link href={detailUrl.pathname + detailUrl.search}>
+        <Link href={detailHref}>
           <h3 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink transition hover:text-forest-warm">
             {property.name}
           </h3>
@@ -102,7 +104,7 @@ export function PropertyCard({
             </p>
           </div>
           <Button
-            href={detailUrl.pathname + detailUrl.search}
+            href={detailHref}
             tone="forest"
             size="sm"
             arrow

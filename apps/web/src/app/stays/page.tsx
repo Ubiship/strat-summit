@@ -57,7 +57,7 @@ async function filterAndEnrichProperties(
   if (filters.amenities) {
     const requiredAmenities = filters.amenities.split(',')
     filtered = filtered.filter((p) =>
-      requiredAmenities.every((amenity) => p.amenities.includes(amenity)),
+      requiredAmenities.every((amenity) => p.amenities?.includes(amenity)),
     )
   }
 
@@ -73,37 +73,47 @@ async function filterAndEnrichProperties(
   if (filters.checkIn && filters.checkOut) {
     const enrichedProperties = await Promise.all(
       filtered.map(async (property) => {
-        const guests = parseInt(filters.guests || '2')
+        try {
+          const guests = parseInt(filters.guests || '2')
 
-        // Check availability
-        const availability = await getAvailability(
-          property.id.toString(),
-          filters.checkIn!,
-          filters.checkOut!,
-        )
+          // Check availability
+          const availability = await getAvailability(
+            property.id.toString(),
+            filters.checkIn!,
+            filters.checkOut!,
+          )
 
-        const isAvailable = availability.every((day) => day.available)
+          const isAvailable = availability.every((day) => day.available)
 
-        if (!isAvailable) {
-          return null
-        }
+          if (!isAvailable) {
+            return null
+          }
 
-        // Get pricing if available
-        const pricing = await getPricing(
-          property.id.toString(),
-          filters.checkIn!,
-          filters.checkOut!,
-          guests,
-        )
+          // Get pricing if available
+          const pricing = await getPricing(
+            property.id.toString(),
+            filters.checkIn!,
+            filters.checkOut!,
+            guests,
+          )
 
-        return {
-          property,
-          price: pricing?.total,
+          return {
+            property,
+            price: pricing?.total,
+          }
+        } catch (error) {
+          // Log error but don't fail the entire request
+          console.error(`Error fetching availability/pricing for property ${property.id}:`, error)
+          // Return property without pricing on error - still show it to users
+          return {
+            property,
+            price: undefined,
+          }
         }
       }),
     )
 
-    // Filter out unavailable properties
+    // Filter out unavailable properties (null means unavailable, not error)
     return enrichedProperties.filter((p) => p !== null) as {
       property: HostawayProperty
       price?: number
