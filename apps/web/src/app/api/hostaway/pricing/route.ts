@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getPricing } from '@/lib/hostaway'
 
 /**
- * GET /api/pricing
+ * GET /api/hostaway/pricing
  *
  * Fetch pricing quote from Hostaway API.
  * This route wraps the server-side getPricing function so client components
@@ -34,6 +34,25 @@ export async function GET(request: NextRequest) {
     if (isNaN(guests) || guests < 1) {
       return NextResponse.json(
         { error: 'Invalid guests parameter: must be a positive number' },
+        { status: 400 }
+      )
+    }
+
+    // Basic date format validation (YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/
+    if (!dateRegex.test(checkIn) || !dateRegex.test(checkOut)) {
+      return NextResponse.json(
+        { error: 'Invalid date format: dates must be in YYYY-MM-DD format' },
+        { status: 400 }
+      )
+    }
+
+    // Validate date range
+    const start = new Date(checkIn)
+    const end = new Date(checkOut)
+    if (start >= end) {
+      return NextResponse.json(
+        { error: 'Invalid date range: checkIn must be before checkOut' },
         { status: 400 }
       )
     }
