@@ -280,6 +280,7 @@ type Property struct {
 	CleaningFeeCommissionable bool         `json:"cleaning_fee_commissionable" db:"cleaning_fee_commissionable"`
 	AirbnbIcalURL             *string      `json:"airbnb_ical_url,omitempty" db:"airbnb_ical_url"`
 	VRBOIcalURL               *string      `json:"vrbo_ical_url,omitempty" db:"vrbo_ical_url"`
+	HostawayID                *string      `json:"hostaway_id,omitempty" db:"hostaway_id"`
 	WifiPassword              *string      `json:"wifi_password,omitempty" db:"wifi_password"`
 	AccessCodes               JSONB        `json:"access_codes,omitempty" db:"access_codes"`
 	HotTub                    bool         `json:"hot_tub" db:"hot_tub"`
@@ -317,6 +318,7 @@ type Booking struct {
 	Source                  BookingSource `json:"source" db:"source"`
 	TaxTreatment            TaxTreatment  `json:"tax_treatment" db:"tax_treatment"`
 	ExternalUID             *string       `json:"external_uid,omitempty" db:"external_uid"`
+	ExternalID              *string       `json:"external_id,omitempty" db:"external_id"`
 	GuestName               *string       `json:"guest_name,omitempty" db:"guest_name"`
 	GuestEmail              *string       `json:"guest_email,omitempty" db:"guest_email"`
 	GuestPhone              *string       `json:"guest_phone,omitempty" db:"guest_phone"`
