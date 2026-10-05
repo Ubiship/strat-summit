@@ -1,0 +1,10 @@
+# Mount Washington Content
+
+This directory contains MDX guide files for the Mount Washington content hub.
+
+Each guide file should have frontmatter with:
+- title: Guide title
+- description: Brief description
+- category: skiing | summer | families | getting-here | first-time-visitors
+- publishedAt: Publication date (YYYY-MM-DD)
+- author: Author name
