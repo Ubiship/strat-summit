@@ -108,6 +108,7 @@ export type NewsletterState = {
 }
 
 export async function subscribeToNewsletter(
+  _prevState: NewsletterState,
   formData: FormData,
 ): Promise<NewsletterState> {
   const email = String(formData.get('email') ?? '').trim()
@@ -171,8 +172,8 @@ export async function subscribeToNewsletter(
   } catch (error) {
     console.error('Newsletter subscription error:', error)
     return {
-      success: true,
-      message: 'Thanks for subscribing! Check your inbox to confirm.',
+      success: false,
+      message: 'Something went wrong. Please try again later.',
     }
   }
 }

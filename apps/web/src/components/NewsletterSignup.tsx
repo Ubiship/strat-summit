@@ -1,36 +1,20 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState } from 'react'
 import clsx from 'clsx'
 import { Button } from '@/components/Button'
-import { subscribeToNewsletter } from '@/lib/actions'
+import { subscribeToNewsletter, type NewsletterState } from '@/lib/actions'
+
+const initialState: NewsletterState = {
+  success: false,
+  message: '',
+}
 
 export function NewsletterSignup() {
-  const [email, setEmail] = useState('')
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>(
-    'idle'
+  const [state, formAction, pending] = useActionState(
+    subscribeToNewsletter,
+    initialState,
   )
-  const [message, setMessage] = useState('')
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setStatus('loading')
-    setMessage('')
-
-    const formData = new FormData()
-    formData.append('email', email)
-
-    const result = await subscribeToNewsletter(formData)
-
-    if (result.success) {
-      setStatus('success')
-      setMessage(result.message)
-      setEmail('')
-    } else {
-      setStatus('error')
-      setMessage(result.message)
-    }
-  }
 
   return (
     <div className="rounded-[2.75rem] bg-apricot p-8 text-warm-ink shadow-[0_12px_32px_rgb(42_24_10/0.08)] split:p-12">
@@ -43,16 +27,14 @@ export function NewsletterSignup() {
           news from Mount Washington.
         </p>
 
-        <form onSubmit={handleSubmit} className="mt-8">
+        <form action={formAction} className="mt-8">
           <div className="flex flex-col gap-4 split:flex-row split:items-start">
             <input
               type="email"
               name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               required
-              disabled={status === 'loading' || status === 'success'}
+              disabled={pending || state.success}
               className={clsx(
                 'flex-auto rounded-2xl border-2 border-warm-ink/10 bg-white px-6 py-4 text-base font-medium text-warm-ink transition placeholder:text-warm-ink/40 focus:border-sun focus:outline-none disabled:opacity-50',
                 'split:min-w-0'
@@ -62,25 +44,25 @@ export function NewsletterSignup() {
               type="submit"
               tone="forest"
               size="md"
-              disabled={status === 'loading' || status === 'success'}
+              disabled={pending || state.success}
               className="split:flex-none"
             >
-              {status === 'loading'
+              {pending
                 ? 'Subscribing...'
-                : status === 'success'
+                : state.success
                   ? 'Subscribed!'
                   : 'Subscribe'}
             </Button>
           </div>
 
-          {message && (
+          {state.message && (
             <p
               className={clsx(
                 'mt-4 text-sm font-semibold',
-                status === 'success' ? 'text-forest-warm' : 'text-red-700'
+                state.success ? 'text-forest-warm' : 'text-red-700'
               )}
             >
-              {message}
+              {state.message}
             </p>
           )}
         </form>
