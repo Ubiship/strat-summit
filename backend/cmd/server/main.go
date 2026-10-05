@@ -12,7 +12,9 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/handler"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/anthropic"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/chatwoot"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/hostaway"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/novu"
 	"github.com/ubiship/strat-summit/backend/internal/jobs"
 	"github.com/ubiship/strat-summit/backend/internal/repository"
@@ -71,9 +73,37 @@ func main() {
 		logger.Warn("chatwoot not configured, contact sync disabled")
 	}
 
+	// Initialize Anthropic client for AI responses
+	var anthropicClient *anthropic.Client
+	if cfg.AnthropicAPIKey != "" && cfg.AIResponseEnabled {
+		anthropicClient = anthropic.New(anthropic.Config{
+			APIKey: cfg.AnthropicAPIKey,
+			Model:  cfg.AnthropicModel,
+		})
+		logger.Info("anthropic client initialized", "model", cfg.AnthropicModel)
+	} else if cfg.AnthropicAPIKey != "" {
+		logger.Info("anthropic configured but AI responses disabled")
+	} else {
+		logger.Info("anthropic not configured, AI responses disabled")
+	}
+
+	// Initialize Hostaway client
+	var hostawayClient *hostaway.Client
+	if cfg.HostawayBaseURL != "" && cfg.HostawayAPIKey != "" {
+		hostawayClient = hostaway.New(hostaway.Config{
+			BaseURL:       cfg.HostawayBaseURL,
+			APIKey:        cfg.HostawayAPIKey,
+			AccountID:     cfg.HostawayAccountID,
+			WebhookSecret: cfg.HostawayWebhookSecret,
+		})
+		logger.Info("hostaway client initialized")
+	} else {
+		logger.Warn("hostaway not configured, property sync disabled")
+	}
+
 	// Initialize layers
 	repo := repository.New(dbpool)
-	svc := service.New(cfg, repo, novuClient, chatwootClient)
+	svc := service.New(cfg, repo, novuClient, chatwootClient, hostawayClient, anthropicClient)
 	h := handler.New(cfg, svc)
 
 	// Initialize and start cron scheduler

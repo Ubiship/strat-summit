@@ -167,6 +167,10 @@ func (m *mockRepository) UpdateProperty(ctx context.Context, p *domain.Property)
 	return nil
 }
 
+func (m *mockRepository) GetPropertyByHostawayID(ctx context.Context, hostawayID string) (*domain.Property, error) {
+	return nil, errors.New("not implemented")
+}
+
 // Booking methods
 func (m *mockRepository) CreateBooking(ctx context.Context, b *domain.Booking) error {
 	return nil
@@ -200,6 +204,14 @@ func (m *mockRepository) UpdateBookingStatus(ctx context.Context, bookingID uuid
 	}
 	m.updatedBookingID = bookingID
 	m.updatedBookingNotes = notes
+	return nil
+}
+
+func (m *mockRepository) GetBookingByExternalUID(ctx context.Context, uid string) (*domain.Booking, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (m *mockRepository) UpdateBooking(ctx context.Context, b *domain.Booking) error {
 	return nil
 }
 

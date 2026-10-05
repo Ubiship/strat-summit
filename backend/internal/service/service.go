@@ -11,7 +11,9 @@ import (
 	"github.com/ubiship/strat-summit/backend/internal/auth"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/domain"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/anthropic"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/chatwoot"
+	"github.com/ubiship/strat-summit/backend/internal/integrations/hostaway"
 	"github.com/ubiship/strat-summit/backend/internal/integrations/novu"
 	"github.com/ubiship/strat-summit/backend/internal/repository"
 )
@@ -50,6 +52,7 @@ type Repository interface {
 	GetPropertiesByOwner(ctx context.Context, contactID uuid.UUID) ([]*domain.Property, error)
 	OwnerHasProperty(ctx context.Context, contactID, propertyID uuid.UUID) (bool, error)
 	UpdateProperty(ctx context.Context, p *domain.Property) error
+	GetPropertyByHostawayID(ctx context.Context, hostawayID string) (*domain.Property, error)
 
 	// Booking methods
 	CreateBooking(ctx context.Context, b *domain.Booking) error
@@ -59,6 +62,8 @@ type Repository interface {
 	SetBookingChatwootConversation(ctx context.Context, bookingID uuid.UUID, conversationID int64) error
 	FindBookingByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Booking, error)
 	UpdateBookingStatus(ctx context.Context, bookingID uuid.UUID, notes string) error
+	UpdateBooking(ctx context.Context, b *domain.Booking) error
+	GetBookingByExternalUID(ctx context.Context, uid string) (*domain.Booking, error)
 
 	// Cleaning job methods
 	CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error
@@ -88,19 +93,23 @@ type Repository interface {
 
 // Service handles business logic
 type Service struct {
-	cfg      *config.Config
-	repo     Repository
-	novu     *novu.Client
-	chatwoot *chatwoot.Client
+	cfg       *config.Config
+	repo      Repository
+	novu      *novu.Client
+	chatwoot  *chatwoot.Client
+	hostaway  *hostaway.Client
+	anthropic *anthropic.Client
 }
 
 // New creates a new Service instance
-func New(cfg *config.Config, repo *repository.Repository, novuClient *novu.Client, chatwootClient *chatwoot.Client) *Service {
+func New(cfg *config.Config, repo *repository.Repository, novuClient *novu.Client, chatwootClient *chatwoot.Client, hostawayClient *hostaway.Client, anthropicClient *anthropic.Client) *Service {
 	return &Service{
-		cfg:      cfg,
-		repo:     repo,
-		novu:     novuClient,
-		chatwoot: chatwootClient,
+		cfg:       cfg,
+		repo:      repo,
+		novu:      novuClient,
+		chatwoot:  chatwootClient,
+		hostaway:  hostawayClient,
+		anthropic: anthropicClient,
 	}
 }
 
@@ -114,6 +123,17 @@ func (s *Service) Novu() *novu.Client {
 // Returns nil if Chatwoot is not configured.
 func (s *Service) Chatwoot() *chatwoot.Client {
 	return s.chatwoot
+}
+
+// Hostaway returns the Hostaway client for property management integration.
+// Returns nil if Hostaway is not configured.
+func (s *Service) Hostaway() *hostaway.Client {
+	return s.hostaway
+}
+
+// AIEnabled returns true if AI responses are enabled.
+func (s *Service) AIEnabled() bool {
+	return s.cfg != nil && s.cfg.AIResponseEnabled && s.anthropic != nil
 }
 
 // ============================================================================

@@ -10,6 +10,8 @@ const navigation = [
   {
     title: 'Services',
     links: [
+      { title: 'Stays', href: '/stays' },
+      { title: 'Cleaning', href: '/cleaning' },
       { title: 'Property Management', href: '/property-management' },
       { title: 'Renovations', href: '/renovations' },
     ],
@@ -18,6 +20,7 @@ const navigation = [
     title: 'Company',
     links: [
       { title: 'About', href: '/about' },
+      { title: 'Mount Washington', href: '/mount-washington' },
       { title: 'Contact', href: '/contact' },
     ],
   },
