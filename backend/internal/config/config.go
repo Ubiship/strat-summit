@@ -92,7 +92,7 @@ func Load() (*Config, error) {
 		ChatwootInboxID:       chatwootInboxID,
 		ChatwootWebhookSecret: os.Getenv("CHATWOOT_WEBHOOK_SECRET"),
 
-		HostawayBaseURL:       os.Getenv("HOSTAWAY_BASE_URL"),
+		HostawayBaseURL:       getEnv("HOSTAWAY_BASE_URL", "https://api.hostaway.com/v1"),
 		HostawayAPIKey:        os.Getenv("HOSTAWAY_API_KEY"),
 		HostawayAccountID:     os.Getenv("HOSTAWAY_ACCOUNT_ID"),
 		HostawayWebhookSecret: os.Getenv("HOSTAWAY_WEBHOOK_SECRET"),
