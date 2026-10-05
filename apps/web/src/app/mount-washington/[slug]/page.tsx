@@ -96,6 +96,11 @@ export default async function GuidePage(props: Props) {
 
   const categoryMeta = categoryMetadata[guide.category]
 
+  if (!categoryMeta) {
+    console.error(`Category metadata not found for category: ${guide.category}`)
+    notFound()
+  }
+
   return (
     <RootLayout>
       {/* Header */}
@@ -122,10 +127,14 @@ export default async function GuidePage(props: Props) {
                 {guide.title}
               </h1>
               <div className="mt-6 flex flex-wrap items-center gap-4 text-[0.9375rem] text-[#f1dfc6]">
-                <time dateTime={guide.publishedAt}>
-                  {formatDate(guide.publishedAt)}
-                </time>
-                <span aria-hidden="true">·</span>
+                {guide.publishedAt && (
+                  <>
+                    <time dateTime={guide.publishedAt}>
+                      {formatDate(guide.publishedAt)}
+                    </time>
+                    <span aria-hidden="true">·</span>
+                  </>
+                )}
                 <span>{guide.author}</span>
               </div>
             </div>

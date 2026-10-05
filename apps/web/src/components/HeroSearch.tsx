@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import Image from 'next/image'
 import { SearchBar } from '@/components/SearchBar'
 import { FadeIn } from '@/components/FadeIn'
@@ -32,7 +33,9 @@ export function HeroSearch() {
         </FadeIn>
 
         <div className="mt-12">
-          <SearchBar />
+          <Suspense fallback={<div className="h-[200px]" />}>
+            <SearchBar />
+          </Suspense>
         </div>
       </div>
     </div>

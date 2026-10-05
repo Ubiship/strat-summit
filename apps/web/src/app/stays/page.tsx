@@ -1,4 +1,5 @@
 import { type Metadata } from 'next'
+import { Suspense } from 'react'
 import { unstable_cache } from 'next/cache'
 
 import { Band } from '@/components/Band'
@@ -155,11 +156,15 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
       <Band tone="cream">
         <Container>
           <FadeIn>
-            <SearchBar />
+            <Suspense fallback={<div className="h-[200px]" />}>
+              <SearchBar />
+            </Suspense>
           </FadeIn>
 
           <FadeIn className="mt-8">
-            <PropertyFilters />
+            <Suspense fallback={<div className="h-[300px]" />}>
+              <PropertyFilters />
+            </Suspense>
           </FadeIn>
 
           {propertiesWithPricing.length === 0 ? (
