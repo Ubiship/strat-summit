@@ -320,7 +320,14 @@ describe('getReviews', () => {
   })
 
   it('should fetch all reviews when no listingId provided', async () => {
-    const mockReviews = []
+    const mockReviews: Array<{
+      id: number
+      listingId: number
+      guestName: string
+      rating: number
+      comment: string
+      createdAt: string
+    }> = []
 
     global.fetch = vi.fn(() =>
       Promise.resolve({

@@ -41,7 +41,7 @@ export function BookingCard({
         guests: guests.toString(),
       })
 
-      fetch(`/api/pricing?${params.toString()}`)
+      fetch(`/api/hostaway/pricing?${params.toString()}`)
         .then(async (response) => {
           if (!response.ok) {
             throw new Error(`Failed to fetch pricing: ${response.status}`)
