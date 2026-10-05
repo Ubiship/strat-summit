@@ -1,166 +1,83 @@
 import { type Metadata } from 'next'
-import Image from 'next/image'
-import clsx from 'clsx'
+import Link from 'next/link'
 
 import { Band } from '@/components/Band'
-import { Button } from '@/components/Button'
-import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { EntrySplash } from '@/components/EntrySplash'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
-import { NumberBadge } from '@/components/NumberBadge'
-import { PageHero } from '@/components/PageHero'
+import { HeroSearch } from '@/components/HeroSearch'
+import { NewsletterSignup } from '@/components/NewsletterSignup'
+import { PropertyShowcase } from '@/components/PropertyShowcase'
+import { ReviewCarousel } from '@/components/ReviewCarousel'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
-import { ValueCards } from '@/components/ValueCards'
+import { WhyBookDirect } from '@/components/WhyBookDirect'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
-  description: site.description,
+  description:
+    'Book vacation rentals on Mount Washington directly with us. Best rates guaranteed, local hosts, and exceptional mountain experiences.',
 }
 
-type Service = {
-  title: string
-  href: string
-  description: string
-  image: string | null
-}
-
-const services: Array<Service> = [
+const contentCategories = [
   {
-    title: 'Property Management',
-    href: '/property-management',
+    title: 'Activities',
+    href: '/mount-washington/activities',
     description:
-      'Full-service vacation rental management, including guest communication, revenue optimization, booking management, and property oversight.',
-    image: site.images.hero,
+      'Skiing, snowboarding, hiking, and mountain biking—discover year-round adventures on Mount Washington.',
   },
   {
-    title: 'Property Support Services',
-    href: '/contact',
+    title: 'Planning',
+    href: '/mount-washington/planning',
     description:
-      'Cleaning, laundry, inspections, maintenance, and guest-ready support for self-managed properties.',
-    image: null,
+      'Weather guides, packing lists, and local tips to help you plan the perfect mountain getaway.',
   },
   {
-    title: 'Renovations & Improvements',
-    href: '/renovations',
+    title: 'Dining',
+    href: '/mount-washington/dining',
     description:
-      "Repairs, upgrades, and renovation projects that enhance your property's value, functionality, and guest experience.",
-    image: site.images.renovations,
+      'Find the best restaurants, cafes, and mountain dining experiences near your rental property.',
   },
 ]
 
-const reasons = [
-  {
-    title: 'Local expertise',
-    description:
-      'Based on Mount Washington, we provide responsive support and year-round oversight.',
-  },
-  {
-    title: 'Hospitality standards',
-    description:
-      'Our background in luxury hospitality influences every aspect of the guest and owner experience.',
-  },
-  {
-    title: 'One trusted team',
-    description:
-      'Property management, support services, and renovations—all coordinated through one trusted team.',
-  },
-]
-
-function ServiceTile({ service, index }: { service: Service; index: number }) {
-  let photo = service.image !== null
-
-  return (
-    <FadeIn
-      className={clsx(
-        'relative isolate flex min-h-[26rem] flex-col justify-end overflow-hidden rounded-[2.75rem] p-7 split:min-h-[29rem]',
-        photo ? 'bg-forest-warm text-warm-cream' : 'bg-sun text-warm-ink',
-      )}
-    >
-      {service.image !== null && (
-        <>
-          <Image
-            src={service.image}
-            alt=""
-            fill
-            sizes="(min-width: 75rem) 27rem, (min-width: 900px) 38vw, 100vw"
-            className="-z-20 object-cover photo-warm"
-          />
-          <div
-            aria-hidden="true"
-            className="absolute inset-0 -z-10 tile-shade"
-          />
-        </>
-      )}
-      <NumberBadge
-        value={index + 1}
-        tone={photo ? 'cream' : 'ink'}
-        className="absolute top-6 left-6"
-      />
-      <h3 className="type-display text-[clamp(2.125rem,3.2vw,2.875rem)]">
-        {service.title}
-      </h3>
-      <p className="mt-3 mb-5 text-base/[1.45] opacity-90">
-        {service.description}
-      </p>
-      <Button
-        href={service.href}
-        tone={photo ? 'sun' : 'cream'}
-        size="sm"
-        aria-label={`Learn more about ${service.title}`}
-        className="self-start"
-      >
-        Learn more
-      </Button>
-    </FadeIn>
-  )
-}
-
-function Services() {
+function ContentHub() {
   return (
     <Band tone="sand">
       <Container>
         <SectionHead
-          kicker="How we support property owners"
-          title="One local team. Complete property care."
+          kicker="Explore Mount Washington"
+          title="Your guide to the mountain."
         >
           <p>
-            Owning a mountain property comes with unique responsibilities. We
-            help owners simplify the process through professional management,
-            dependable local support, and thoughtful property improvements.
+            Beyond booking, we&apos;re here to help you make the most of your Mount
+            Washington experience. Explore our local guides and insider tips.
           </p>
         </SectionHead>
-        <FadeInStagger className="mt-12 grid gap-4.5 split:grid-cols-[1.25fr_1fr_1fr]">
-          {services.map((service, index) => (
-            <ServiceTile key={service.title} service={service} index={index} />
+
+        <FadeInStagger className="mt-12 grid gap-6 split:grid-cols-3">
+          {contentCategories.map((category) => (
+            <FadeIn
+              key={category.title}
+              className="flex flex-col rounded-[2.75rem] bg-white p-8 shadow-[0_8px_24px_rgb(42_24_10/0.06)] transition hover:shadow-[0_12px_32px_rgb(42_24_10/0.12)]"
+            >
+              <h3 className="type-display text-[clamp(2rem,3vw,2.5rem)] text-warm-ink">
+                {category.title}
+              </h3>
+              <p className="mt-3 flex-auto text-base/[1.5] text-warm-muted">
+                {category.description}
+              </p>
+              <Link
+                href={category.href}
+                className="mt-6 inline-flex items-center gap-2 text-[0.9375rem] font-bold text-forest-warm transition hover:text-forest-deep"
+              >
+                Explore {category.title.toLowerCase()}
+                <span aria-hidden="true" className="text-base">
+                  →
+                </span>
+              </Link>
+            </FadeIn>
           ))}
         </FadeInStagger>
-      </Container>
-    </Band>
-  )
-}
-
-function WhyUs() {
-  return (
-    <Band tone="forest" className="overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-40 -right-36 size-[32.5rem] rounded-full sun-glow"
-      />
-      <Container className="relative">
-        <SectionHead
-          tone="dark"
-          kicker="Why owners choose us"
-          title="Local expertise. Hospitality standards. One trusted team."
-        >
-          <p>
-            We bring together professional property management, luxury
-            hospitality experience, and hands-on local support to help owners
-            maximize value and deliver exceptional guest experiences.
-          </p>
-        </SectionHead>
-        <ValueCards items={reasons} />
       </Container>
     </Band>
   )
@@ -171,36 +88,16 @@ export default function Home() {
     <>
       <EntrySplash />
       <RootLayout>
-        <PageHero
-          size="full"
-          kicker="Mount Washington"
-          title="Property management from a team that lives here."
-          image={{
-            src: site.images.hero,
-            alt: 'Mount Washington alpine landscape',
-          }}
-          actions={
-            <>
-              <Button href="/contact" arrow>
-                Get in touch
-              </Button>
-              <Button href="/property-management" tone="glass">
-                View services
-              </Button>
-            </>
-          }
-        >
-          <p>
-            We built {site.name} to give homeowners and vacation rental hosts a
-            dependable local partner for property management. Backed by in-house
-            cleaning, maintenance, and renovation services, we help owners
-            maximize revenue, protect their investment, and deliver exceptional
-            guest experiences.
-          </p>
-        </PageHero>
-        <Services />
-        <WhyUs />
-        <ContactSection />
+        <HeroSearch />
+        <PropertyShowcase />
+        <WhyBookDirect />
+        <ReviewCarousel />
+        <ContentHub />
+        <Band tone="apricot" last>
+          <Container>
+            <NewsletterSignup />
+          </Container>
+        </Band>
       </RootLayout>
     </>
   )

@@ -101,3 +101,30 @@ export async function submitContactForm(
     message: 'Thanks — we received your message and will get back to you soon.',
   }
 }
+
+export type NewsletterState = {
+  success: boolean
+  message: string
+}
+
+export async function subscribeToNewsletter(
+  formData: FormData,
+): Promise<NewsletterState> {
+  const email = String(formData.get('email') ?? '').trim()
+
+  if (!email || !isValidEmail(email)) {
+    return {
+      success: false,
+      message: 'Please enter a valid email address.',
+    }
+  }
+
+  // TODO (Task 10): Implement actual newsletter subscription
+  // For now, just log the email and return success
+  console.log('Newsletter subscription:', email)
+
+  return {
+    success: true,
+    message: 'Thanks for subscribing! Check your inbox to confirm.',
+  }
+}

@@ -15,6 +15,8 @@ import { Offices } from '@/components/Offices'
 import { SocialMedia } from '@/components/SocialMedia'
 
 const headerLinks = [
+  { href: '/stays', label: 'Stays' },
+  { href: '/mount-washington', label: 'Mount Washington' },
   { href: '/property-management', label: 'Property Management' },
   { href: '/renovations', label: 'Renovations' },
   { href: '/about', label: 'About Us' },
