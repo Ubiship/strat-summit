@@ -289,6 +289,17 @@ func (c *Client) ResolveConversation(ctx context.Context, conversationID int64) 
 	return nil
 }
 
+// SendPrivateNote sends a private note (internal message visible only to agents) to a conversation.
+func (c *Client) SendPrivateNote(ctx context.Context, conversationID int64, content string) error {
+	msg := Message{
+		Content:     content,
+		MessageType: "outgoing",
+		Private:     true,
+	}
+
+	return c.SendMessage(ctx, conversationID, msg)
+}
+
 // UpdateContact updates an existing contact in Chatwoot.
 func (c *Client) UpdateContact(ctx context.Context, id int64, contact Contact) error {
 	body, err := json.Marshal(contact)

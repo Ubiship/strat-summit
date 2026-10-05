@@ -280,8 +280,17 @@ func (s *Service) HandleMessageCreated(ctx context.Context, msg *chatwoot.Messag
 		return fmt.Errorf("finding booking by conversation: %w", err)
 	}
 	if booking != nil {
-		// TODO: Trigger notification for new message on booking
 		log.Printf("new message on booking %s: %s", booking.ID, msg.Content)
+
+		// Generate AI response if enabled
+		if s.AIEnabled() {
+			property, err := s.repo.GetPropertyByID(ctx, booking.PropertyID)
+			if err != nil {
+				log.Printf("failed to get property for AI response: %v", err)
+			} else if err := s.GeneratePropertyResponse(ctx, convID, msg.Content, booking, property); err != nil {
+				log.Printf("failed to generate AI response for booking %s: %v", booking.ID, err)
+			}
+		}
 		return nil
 	}
 
@@ -291,13 +300,24 @@ func (s *Service) HandleMessageCreated(ctx context.Context, msg *chatwoot.Messag
 		return fmt.Errorf("finding project by conversation: %w", err)
 	}
 	if project != nil {
-		// TODO: Trigger notification for new message on project
 		log.Printf("new message on project %s: %s", project.ID, msg.Content)
+
+		// Generate AI response if enabled
+		if s.AIEnabled() {
+			if err := s.GenerateRenovationResponse(ctx, convID, msg.Content, project); err != nil {
+				log.Printf("failed to generate AI response for project %s: %v", project.ID, err)
+			}
+		}
 		return nil
 	}
 
-	// Unlinked conversation - just log
+	// Unlinked conversation - generate general response if AI is enabled
 	log.Printf("message on unlinked conversation %d: %s", convID, msg.Content)
+	if s.AIEnabled() {
+		if err := s.GenerateGeneralResponse(ctx, convID, msg.Content); err != nil {
+			log.Printf("failed to generate AI response for conversation %d: %v", convID, err)
+		}
+	}
 	return nil
 }
 
