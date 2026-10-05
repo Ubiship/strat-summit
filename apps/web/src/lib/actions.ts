@@ -150,7 +150,7 @@ export async function subscribeToNewsletter(
 
     if (error) {
       // Handle duplicate email gracefully
-      if (error.message?.includes('already exists') || error.code === 'duplicate') {
+      if (error.message?.includes('already exists') || (error as any).code === 'duplicate') {
         console.log('Newsletter subscription: email already subscribed', email)
         return {
           success: true,
