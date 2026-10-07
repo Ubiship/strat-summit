@@ -205,3 +205,120 @@ func (h *Handler) UpdateProperty(w http.ResponseWriter, r *http.Request) {
 
 	respondJSON(w, http.StatusOK, existing)
 }
+
+// UpdatePropertyCategoryRequest represents the request to update a property's category
+type UpdatePropertyCategoryRequest struct {
+	Category string `json:"category"`
+}
+
+// UpdatePropertyCategory updates only the category of a property
+func (h *Handler) UpdatePropertyCategory(w http.ResponseWriter, r *http.Request) {
+	authCtx := auth.AuthFromContext(r.Context())
+	if authCtx == nil {
+		respondError(w, http.StatusUnauthorized, "unauthorized", "UNAUTHORIZED")
+		return
+	}
+
+	// Only admin can update category
+	if authCtx.Role != domain.RoleAdmin {
+		respondError(w, http.StatusForbidden, "access denied", "FORBIDDEN")
+		return
+	}
+
+	id, err := parseUUID(chi.URLParam(r, "id"))
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid property id", "INVALID_ID")
+		return
+	}
+
+	var req UpdatePropertyCategoryRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		respondError(w, http.StatusBadRequest, "invalid request body", "INVALID_REQUEST")
+		return
+	}
+
+	// Validate category
+	category := domain.PropertyCategory(req.Category)
+	if category != domain.PropertyCategoryCondo &&
+		category != domain.PropertyCategoryChalet &&
+		category != domain.PropertyCategoryAlpineVillage {
+		respondError(w, http.StatusBadRequest, "invalid category (must be condo, chalet, or alpine_village)", "INVALID_CATEGORY")
+		return
+	}
+
+	if err := h.repo.UpdatePropertyCategory(r.Context(), id, category); err != nil {
+		respondError(w, http.StatusInternalServerError, "failed to update property category", "UPDATE_ERROR")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]string{"status": "updated"})
+}
+
+// CompleteAssessmentRequest represents the request to complete a property assessment
+type CompleteAssessmentRequest struct {
+	AnnualRate *float64 `json:"annual_rate,omitempty"`
+	SummerRate *float64 `json:"summer_rate,omitempty"`
+	WinterRate *float64 `json:"winter_rate,omitempty"`
+}
+
+// CompletePropertyAssessment marks a property's assessment as complete and sets rates
+func (h *Handler) CompletePropertyAssessment(w http.ResponseWriter, r *http.Request) {
+	authCtx := auth.AuthFromContext(r.Context())
+	if authCtx == nil {
+		respondError(w, http.StatusUnauthorized, "unauthorized", "UNAUTHORIZED")
+		return
+	}
+
+	// Only admin can complete assessments
+	if authCtx.Role != domain.RoleAdmin {
+		respondError(w, http.StatusForbidden, "access denied", "FORBIDDEN")
+		return
+	}
+
+	id, err := parseUUID(chi.URLParam(r, "id"))
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid property id", "INVALID_ID")
+		return
+	}
+
+	// Get the property to check its category
+	property, err := h.svc.GetProperty(r.Context(), authCtx.ToDomainAuthContext(), id)
+	if err != nil {
+		if errors.Is(err, repository.ErrNotFound) {
+			respondError(w, http.StatusNotFound, "property not found", "NOT_FOUND")
+			return
+		}
+		respondError(w, http.StatusInternalServerError, "failed to get property", "GET_ERROR")
+		return
+	}
+
+	var req CompleteAssessmentRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		respondError(w, http.StatusBadRequest, "invalid request body", "INVALID_REQUEST")
+		return
+	}
+
+	// Validate rates based on category
+	switch property.Category {
+	case domain.PropertyCategoryCondo:
+		if req.AnnualRate == nil {
+			respondError(w, http.StatusBadRequest, "annual_rate is required for condo properties", "MISSING_RATE")
+			return
+		}
+	case domain.PropertyCategoryChalet, domain.PropertyCategoryAlpineVillage:
+		if req.SummerRate == nil || req.WinterRate == nil {
+			respondError(w, http.StatusBadRequest, "summer_rate and winter_rate are required for chalet and alpine village properties", "MISSING_RATE")
+			return
+		}
+	default:
+		respondError(w, http.StatusBadRequest, "property category must be set before completing assessment", "MISSING_CATEGORY")
+		return
+	}
+
+	if err := h.repo.CompletePropertyAssessment(r.Context(), id, req.AnnualRate, req.SummerRate, req.WinterRate); err != nil {
+		respondError(w, http.StatusInternalServerError, "failed to complete assessment", "UPDATE_ERROR")
+		return
+	}
+
+	respondJSON(w, http.StatusOK, map[string]string{"status": "assessment complete"})
+}

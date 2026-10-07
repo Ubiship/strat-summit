@@ -9,16 +9,18 @@ import (
 	"github.com/ubiship/strat-summit/backend/internal/auth"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/domain"
+	"github.com/ubiship/strat-summit/backend/internal/repository"
 	"github.com/ubiship/strat-summit/backend/internal/service"
 )
 
 type Handler struct {
-	cfg *config.Config
-	svc *service.Service
+	cfg  *config.Config
+	svc  *service.Service
+	repo *repository.Repository
 }
 
-func New(cfg *config.Config, svc *service.Service) *Handler {
-	return &Handler{cfg: cfg, svc: svc}
+func New(cfg *config.Config, svc *service.Service, repo *repository.Repository) *Handler {
+	return &Handler{cfg: cfg, svc: svc, repo: repo}
 }
 
 func (h *Handler) Router() chi.Router {
@@ -57,6 +59,8 @@ func (h *Handler) Router() chi.Router {
 				r.Post("/", h.CreateProperty)
 				r.Get("/{id}", h.GetProperty)
 				r.Put("/{id}", h.UpdateProperty)
+				r.Put("/{id}/category", h.UpdatePropertyCategory)
+				r.Put("/{id}/assessment/complete", h.CompletePropertyAssessment)
 			})
 
 			// Bookings
