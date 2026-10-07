@@ -336,6 +336,39 @@ func (m *mockRepository) MarkPendingContactReviewed(ctx context.Context, id, rev
 	return nil
 }
 
+// Linen methods
+func (m *mockRepository) GetPropertyLinens(ctx context.Context, propertyID uuid.UUID) ([]*domain.PropertyLinen, error) {
+	return nil, nil
+}
+
+func (m *mockRepository) CreatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error {
+	return nil
+}
+
+func (m *mockRepository) UpdatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error {
+	return nil
+}
+
+func (m *mockRepository) DeletePropertyLinen(ctx context.Context, id uuid.UUID) error {
+	return nil
+}
+
+func (m *mockRepository) IncrementLinenTurnovers(ctx context.Context, propertyID uuid.UUID) error {
+	return nil
+}
+
+func (m *mockRepository) ResetLinenTurnovers(ctx context.Context, linenID uuid.UUID) error {
+	return nil
+}
+
+func (m *mockRepository) CreateLinenRotationLog(ctx context.Context, log *domain.LinenRotationLog) error {
+	return nil
+}
+
+func (m *mockRepository) GetLinensNeedingLaundry(ctx context.Context, threshold int) ([]*domain.LinenAlert, error) {
+	return nil, nil
+}
+
 // ============================================================================
 // Tests
 // ============================================================================

@@ -92,6 +92,16 @@ type Repository interface {
 	GetPendingContactByChatwootID(ctx context.Context, chatwootID int64) (*domain.PendingContact, error)
 	CreatePendingContact(ctx context.Context, pc *domain.PendingContact) error
 	MarkPendingContactReviewed(ctx context.Context, id, reviewerID uuid.UUID, action string, mergedWithID *uuid.UUID) error
+
+	// Linen methods
+	GetPropertyLinens(ctx context.Context, propertyID uuid.UUID) ([]*domain.PropertyLinen, error)
+	CreatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error
+	UpdatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error
+	DeletePropertyLinen(ctx context.Context, id uuid.UUID) error
+	IncrementLinenTurnovers(ctx context.Context, propertyID uuid.UUID) error
+	ResetLinenTurnovers(ctx context.Context, linenID uuid.UUID) error
+	CreateLinenRotationLog(ctx context.Context, log *domain.LinenRotationLog) error
+	GetLinensNeedingLaundry(ctx context.Context, threshold int) ([]*domain.LinenAlert, error)
 }
 
 // Service handles business logic
