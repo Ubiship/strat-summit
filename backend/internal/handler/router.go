@@ -70,6 +70,16 @@ func (h *Handler) Router() chi.Router {
 				r.Put("/{service_type}", h.UpdateServiceRate)
 			})
 
+			// Consumables
+			r.Route("/consumables", func(r chi.Router) {
+				r.Get("/", h.ListConsumables)
+				r.Get("/standard", h.ListStandardConsumables)
+			})
+
+			// Property consumables (nested under properties)
+			r.Get("/properties/{property_id}/consumables", h.GetPropertyConsumables)
+			r.Put("/properties/{property_id}/consumables", h.SetPropertyConsumable)
+
 			// Bookings
 			r.Route("/bookings", func(r chi.Router) {
 				r.Get("/", h.ListBookings)
@@ -85,6 +95,7 @@ func (h *Handler) Router() chi.Router {
 				r.Post("/{id}/clock-out", h.ClockOutJob)
 				r.Put("/{id}/status", h.UpdateJobStatus)
 				r.Post("/{id}/assign", h.AssignStaffToJob)
+				r.Get("/{id}/consumables", h.GetJobConsumables)
 			})
 
 			// Contacts (admin only)
