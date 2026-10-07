@@ -215,6 +215,10 @@ func (m *mockRepository) UpdateBooking(ctx context.Context, b *domain.Booking) e
 	return nil
 }
 
+func (m *mockRepository) ListAllBookings(ctx context.Context, opts domain.ListOptions) ([]*domain.Booking, error) {
+	return nil, nil
+}
+
 // Cleaning job methods
 func (m *mockRepository) CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error {
 	return nil
@@ -238,6 +242,14 @@ func (m *mockRepository) ClockOutCleaningJob(ctx context.Context, id uuid.UUID) 
 
 func (m *mockRepository) ListCleaningJobsByDate(ctx context.Context, date time.Time) ([]*domain.CleaningJob, error) {
 	return nil, nil
+}
+
+func (m *mockRepository) ListAllCleaningJobs(ctx context.Context, opts domain.ListOptions) ([]*domain.CleaningJob, error) {
+	return nil, nil
+}
+
+func (m *mockRepository) UpdateCleaningJobCancellation(ctx context.Context, j *domain.CleaningJob) error {
+	return nil
 }
 
 func (m *mockRepository) ListCleaningJobsByStaff(ctx context.Context, contactID uuid.UUID, date *time.Time, opts domain.ListOptions) ([]*domain.CleaningJob, error) {

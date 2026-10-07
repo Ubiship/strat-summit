@@ -879,6 +879,24 @@ func (r *Repository) ClockInCleaningJob(ctx context.Context, id uuid.UUID) error
 	return nil
 }
 
+// UpdateCleaningJobCancellation updates a job's cancellation fields
+func (r *Repository) UpdateCleaningJobCancellation(ctx context.Context, j *domain.CleaningJob) error {
+	query := `
+		UPDATE cleaning_jobs SET
+			status = $2, cancelled_at = $3, cancellation_fee = $4, cancellation_reason = $5,
+			updated_at = now()
+		WHERE id = $1
+		RETURNING updated_at`
+
+	err := r.db.QueryRow(ctx, query,
+		j.ID, j.Status, j.CancelledAt, j.CancellationFee, j.CancellationReason,
+	).Scan(&j.UpdatedAt)
+	if err != nil {
+		return fmt.Errorf("updating cleaning job cancellation: %w", err)
+	}
+	return nil
+}
+
 func (r *Repository) ClockOutCleaningJob(ctx context.Context, id uuid.UUID) error {
 	query := `
 		UPDATE cleaning_jobs SET

@@ -58,6 +58,7 @@ type Repository interface {
 	CreateBooking(ctx context.Context, b *domain.Booking) error
 	GetBookingByID(ctx context.Context, id uuid.UUID) (*domain.Booking, error)
 	ListBookingsByProperty(ctx context.Context, propertyID uuid.UUID, opts domain.ListOptions) ([]*domain.Booking, error)
+	ListAllBookings(ctx context.Context, opts domain.ListOptions) ([]*domain.Booking, error)
 	FindOpenBookingByOwner(ctx context.Context, ownerID uuid.UUID) (*domain.Booking, error)
 	SetBookingChatwootConversation(ctx context.Context, bookingID uuid.UUID, conversationID int64) error
 	FindBookingByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Booking, error)
@@ -69,9 +70,11 @@ type Repository interface {
 	CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error
 	GetCleaningJobByID(ctx context.Context, id uuid.UUID) (*domain.CleaningJob, error)
 	UpdateCleaningJobStatus(ctx context.Context, id uuid.UUID, status domain.JobStatus) error
+	UpdateCleaningJobCancellation(ctx context.Context, j *domain.CleaningJob) error
 	ClockInCleaningJob(ctx context.Context, id uuid.UUID) error
 	ClockOutCleaningJob(ctx context.Context, id uuid.UUID) error
 	ListCleaningJobsByDate(ctx context.Context, date time.Time) ([]*domain.CleaningJob, error)
+	ListAllCleaningJobs(ctx context.Context, opts domain.ListOptions) ([]*domain.CleaningJob, error)
 	ListCleaningJobsByStaff(ctx context.Context, contactID uuid.UUID, date *time.Time, opts domain.ListOptions) ([]*domain.CleaningJob, error)
 	IsStaffAssignedToJob(ctx context.Context, jobID, contactID uuid.UUID) (bool, error)
 	AssignStaffToJob(ctx context.Context, jobID, contactID uuid.UUID, hourlyRate float64) error
@@ -440,6 +443,15 @@ func (s *Service) ListBookingsByProperty(ctx context.Context, auth *domain.AuthC
 	return s.repo.ListBookingsByProperty(ctx, propertyID, opts)
 }
 
+func (s *Service) ListAllBookings(ctx context.Context, auth *domain.AuthContext, opts domain.ListOptions) ([]*domain.Booking, error) {
+	// Only admin and bookkeeper can list all bookings
+	if auth.Role != domain.RoleAdmin && auth.Role != domain.RoleBookkeeper {
+		return nil, ErrForbidden
+	}
+
+	return s.repo.ListAllBookings(ctx, opts)
+}
+
 // ============================================================================
 // Cleaning Job Service
 // ============================================================================
@@ -479,6 +491,15 @@ func (s *Service) ListCleaningJobsByDate(ctx context.Context, auth *domain.AuthC
 	default:
 		return nil, ErrForbidden
 	}
+}
+
+func (s *Service) ListAllCleaningJobs(ctx context.Context, auth *domain.AuthContext, opts domain.ListOptions) ([]*domain.CleaningJob, error) {
+	// Only admin can list all jobs
+	if auth.Role != domain.RoleAdmin {
+		return nil, ErrForbidden
+	}
+
+	return s.repo.ListAllCleaningJobs(ctx, opts)
 }
 
 func (s *Service) ClockInJob(ctx context.Context, auth *domain.AuthContext, id uuid.UUID) error {
