@@ -83,12 +83,13 @@ const (
 	JobStatusInProgress JobStatus = "in_progress"
 	JobStatusComplete   JobStatus = "complete"
 	JobStatusFlagged    JobStatus = "flagged"
+	JobStatusCancelled  JobStatus = "cancelled"
 )
 
 // IsValid checks if the job status is a valid value
 func (s JobStatus) IsValid() bool {
 	switch s {
-	case JobStatusAssigned, JobStatusInProgress, JobStatusComplete, JobStatusFlagged:
+	case JobStatusAssigned, JobStatusInProgress, JobStatusComplete, JobStatusFlagged, JobStatusCancelled:
 		return true
 	default:
 		return false
@@ -183,6 +184,52 @@ const (
 	ChangeOrderStatusRejected ChangeOrderStatus = "rejected"
 )
 
+// PropertyCategory represents the property type for pricing
+type PropertyCategory string
+
+const (
+	PropertyCategoryCondo         PropertyCategory = "condo"
+	PropertyCategoryChalet        PropertyCategory = "chalet"
+	PropertyCategoryAlpineVillage PropertyCategory = "alpine_village"
+)
+
+// IsValid checks if the property category is a valid value
+func (c PropertyCategory) IsValid() bool {
+	switch c {
+	case PropertyCategoryCondo, PropertyCategoryChalet, PropertyCategoryAlpineVillage:
+		return true
+	default:
+		return false
+	}
+}
+
+// LinenType represents types of linens tracked
+type LinenType string
+
+const (
+	LinenTypeSheetSet        LinenType = "sheet_set"
+	LinenTypeDuvetCover      LinenType = "duvet_cover"
+	LinenTypeDuvetInsert     LinenType = "duvet_insert"
+	LinenTypeMattressPad     LinenType = "mattress_pad"
+	LinenTypePillow          LinenType = "pillow"
+	LinenTypePillowProtector LinenType = "pillow_protector"
+	LinenTypeBodyTowel       LinenType = "body_towel"
+	LinenTypeHandTowel       LinenType = "hand_towel"
+	LinenTypeBathMat         LinenType = "bath_mat"
+	LinenTypeKitchenTowel    LinenType = "kitchen_towel"
+)
+
+// BedSize represents bed sizes for linen tracking
+type BedSize string
+
+const (
+	BedSizeTwin    BedSize = "twin"
+	BedSizeDouble  BedSize = "double"
+	BedSizeQueen   BedSize = "queen"
+	BedSizeKing    BedSize = "king"
+	BedSizeSofaBed BedSize = "sofa_bed"
+)
+
 // ============================================================================
 // Auth Context
 // ============================================================================
@@ -271,26 +318,40 @@ type ChecklistTemplate struct {
 
 // Property represents a managed vacation rental property
 type Property struct {
-	ID                        uuid.UUID    `json:"id" db:"id"`
-	Name                      string       `json:"name" db:"name"`
-	Address                   string       `json:"address" db:"address"`
-	Tier                      ServiceTier  `json:"tier" db:"tier"`
-	CommissionRate            float64      `json:"commission_rate" db:"commission_rate"`
-	CleaningFee               float64      `json:"cleaning_fee" db:"cleaning_fee"`
-	CleaningFeeCommissionable bool         `json:"cleaning_fee_commissionable" db:"cleaning_fee_commissionable"`
-	AirbnbIcalURL             *string      `json:"airbnb_ical_url,omitempty" db:"airbnb_ical_url"`
-	VRBOIcalURL               *string      `json:"vrbo_ical_url,omitempty" db:"vrbo_ical_url"`
-	HostawayID                *string      `json:"hostaway_id,omitempty" db:"hostaway_id"`
-	WifiPassword              *string      `json:"wifi_password,omitempty" db:"wifi_password"`
-	AccessCodes               JSONB        `json:"access_codes,omitempty" db:"access_codes"`
-	HotTub                    bool         `json:"hot_tub" db:"hot_tub"`
-	HotTubTempF               *int         `json:"hot_tub_temp_f,omitempty" db:"hot_tub_temp_f"`
-	Notes                     *string      `json:"notes,omitempty" db:"notes"`
-	SupplyList                JSONB        `json:"supply_list,omitempty" db:"supply_list"`
-	ChecklistTemplateID       *uuid.UUID   `json:"checklist_template_id,omitempty" db:"checklist_template_id"`
-	Active                    bool         `json:"active" db:"active"`
-	CreatedAt                 time.Time    `json:"created_at" db:"created_at"`
-	UpdatedAt                 time.Time    `json:"updated_at" db:"updated_at"`
+	ID                        uuid.UUID        `json:"id" db:"id"`
+	Name                      string           `json:"name" db:"name"`
+	Address                   string           `json:"address" db:"address"`
+	Tier                      ServiceTier      `json:"tier" db:"tier"`
+	CommissionRate            float64          `json:"commission_rate" db:"commission_rate"`
+	CleaningFee               float64          `json:"cleaning_fee" db:"cleaning_fee"`
+	CleaningFeeCommissionable bool             `json:"cleaning_fee_commissionable" db:"cleaning_fee_commissionable"`
+	AirbnbIcalURL             *string          `json:"airbnb_ical_url,omitempty" db:"airbnb_ical_url"`
+	VRBOIcalURL               *string          `json:"vrbo_ical_url,omitempty" db:"vrbo_ical_url"`
+	HostawayID                *string          `json:"hostaway_id,omitempty" db:"hostaway_id"`
+	WifiPassword              *string          `json:"wifi_password,omitempty" db:"wifi_password"`
+	AccessCodes               JSONB            `json:"access_codes,omitempty" db:"access_codes"`
+	HotTub                    bool             `json:"hot_tub" db:"hot_tub"`
+	HotTubTempF               *int             `json:"hot_tub_temp_f,omitempty" db:"hot_tub_temp_f"`
+	Notes                     *string          `json:"notes,omitempty" db:"notes"`
+	SupplyList                JSONB            `json:"supply_list,omitempty" db:"supply_list"`
+	ChecklistTemplateID       *uuid.UUID       `json:"checklist_template_id,omitempty" db:"checklist_template_id"`
+	Active                    bool             `json:"active" db:"active"`
+	CreatedAt                 time.Time        `json:"created_at" db:"created_at"`
+	UpdatedAt                 time.Time        `json:"updated_at" db:"updated_at"`
+
+	// Category & Pricing
+	Category                 PropertyCategory `json:"category" db:"category"`
+	AssessmentComplete       bool             `json:"assessment_complete" db:"assessment_complete"`
+	AssessmentTurnoverCount  int              `json:"assessment_turnover_count" db:"assessment_turnover_count"`
+	TurnoverRateAnnual       *float64         `json:"turnover_rate_annual,omitempty" db:"turnover_rate_annual"`
+	TurnoverRateSummer       *float64         `json:"turnover_rate_summer,omitempty" db:"turnover_rate_summer"`
+	TurnoverRateWinter       *float64         `json:"turnover_rate_winter,omitempty" db:"turnover_rate_winter"`
+	WinterAccessAllowanceMin int              `json:"winter_access_allowance_min" db:"winter_access_allowance_min"`
+
+	// Hot Tub Program
+	HotTubProgramEnrolled bool       `json:"hot_tub_program_enrolled" db:"hot_tub_program_enrolled"`
+	HotTubLastDrainDate   *time.Time `json:"hot_tub_last_drain_date,omitempty" db:"hot_tub_last_drain_date"`
+	HotTubNextDrainDate   *time.Time `json:"hot_tub_next_drain_date,omitempty" db:"hot_tub_next_drain_date"`
 
 	// Joined fields
 	Owners []*PropertyOwner `json:"owners,omitempty" db:"-"`
@@ -370,6 +431,11 @@ type CleaningJob struct {
 	ReminderSentAt         *time.Time `json:"reminder_sent_at,omitempty" db:"reminder_sent_at"`
 	CreatedAt              time.Time  `json:"created_at" db:"created_at"`
 	UpdatedAt              time.Time  `json:"updated_at" db:"updated_at"`
+
+	// Cancellation fields
+	CancelledAt        *time.Time `json:"cancelled_at,omitempty" db:"cancelled_at"`
+	CancellationFee    *float64   `json:"cancellation_fee,omitempty" db:"cancellation_fee"`
+	CancellationReason *string    `json:"cancellation_reason,omitempty" db:"cancellation_reason"`
 
 	// Joined fields
 	Property *Property           `json:"property,omitempty" db:"-"`
@@ -680,4 +746,104 @@ type Consultation struct {
 type ListOptions struct {
 	Limit  int
 	Offset int
+}
+
+// ============================================================================
+// Service Rates Domain
+// ============================================================================
+
+// ServiceRate represents a configurable service rate
+type ServiceRate struct {
+	ID            uuid.UUID  `json:"id" db:"id"`
+	ServiceType   string     `json:"service_type" db:"service_type"`
+	Description   string     `json:"description" db:"description"`
+	Rate          float64    `json:"rate" db:"rate"`
+	RateUnit      string     `json:"rate_unit" db:"rate_unit"`
+	MinCharge     *float64   `json:"min_charge,omitempty" db:"min_charge"`
+	EffectiveDate time.Time  `json:"effective_date" db:"effective_date"`
+	ExpiryDate    *time.Time `json:"expiry_date,omitempty" db:"expiry_date"`
+	CreatedAt     time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt     time.Time  `json:"updated_at" db:"updated_at"`
+}
+
+// ============================================================================
+// Consumables Domain
+// ============================================================================
+
+// Consumable represents an item in the consumables catalog
+type Consumable struct {
+	ID         uuid.UUID `json:"id" db:"id"`
+	Name       string    `json:"name" db:"name"`
+	Category   string    `json:"category" db:"category"`
+	IsStandard bool      `json:"is_standard" db:"is_standard"`
+	Unit       *string   `json:"unit,omitempty" db:"unit"`
+	CreatedAt  time.Time `json:"created_at" db:"created_at"`
+}
+
+// PropertyConsumable represents a consumable preference for a property
+type PropertyConsumable struct {
+	ID           uuid.UUID  `json:"id" db:"id"`
+	PropertyID   uuid.UUID  `json:"property_id" db:"property_id"`
+	ConsumableID uuid.UUID  `json:"consumable_id" db:"consumable_id"`
+	Enabled      bool       `json:"enabled" db:"enabled"`
+	ParLevel     *int       `json:"par_level,omitempty" db:"par_level"`
+	Notes        *string    `json:"notes,omitempty" db:"notes"`
+	CreatedAt    time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt    time.Time  `json:"updated_at" db:"updated_at"`
+
+	// Joined fields
+	Consumable *Consumable `json:"consumable,omitempty" db:"-"`
+}
+
+// JobConsumable represents consumable usage on a cleaning job
+type JobConsumable struct {
+	ID                uuid.UUID `json:"id" db:"id"`
+	JobID             uuid.UUID `json:"job_id" db:"job_id"`
+	ConsumableID      uuid.UUID `json:"consumable_id" db:"consumable_id"`
+	QuantityUsed      int       `json:"quantity_used" db:"quantity_used"`
+	QuantityRemaining *int      `json:"quantity_remaining,omitempty" db:"quantity_remaining"`
+	NeedsRestock      bool      `json:"needs_restock" db:"needs_restock"`
+	Notes             *string   `json:"notes,omitempty" db:"notes"`
+	CreatedAt         time.Time `json:"created_at" db:"created_at"`
+
+	// Joined fields
+	Consumable *Consumable `json:"consumable,omitempty" db:"-"`
+}
+
+// ============================================================================
+// Linens Domain
+// ============================================================================
+
+// PropertyLinen represents a linen item in a property's inventory
+type PropertyLinen struct {
+	ID                    uuid.UUID  `json:"id" db:"id"`
+	PropertyID            uuid.UUID  `json:"property_id" db:"property_id"`
+	LinenType             LinenType  `json:"linen_type" db:"linen_type"`
+	BedSize               *BedSize   `json:"bed_size,omitempty" db:"bed_size"`
+	Location              *string    `json:"location,omitempty" db:"location"`
+	Quantity              int        `json:"quantity" db:"quantity"`
+	RequiredSets          int        `json:"required_sets" db:"required_sets"`
+	Condition             string     `json:"condition" db:"condition"`
+	LastDeepClean         *time.Time `json:"last_deep_clean,omitempty" db:"last_deep_clean"`
+	TurnoversSinceLaunder int        `json:"turnovers_since_launder" db:"turnovers_since_launder"`
+	Notes                 *string    `json:"notes,omitempty" db:"notes"`
+	CreatedAt             time.Time  `json:"created_at" db:"created_at"`
+	UpdatedAt             time.Time  `json:"updated_at" db:"updated_at"`
+}
+
+// LinenRotationLog represents a linen rotation or laundering event
+type LinenRotationLog struct {
+	ID              uuid.UUID  `json:"id" db:"id"`
+	PropertyLinenID uuid.UUID  `json:"property_linen_id" db:"property_linen_id"`
+	JobID           *uuid.UUID `json:"job_id,omitempty" db:"job_id"`
+	Action          string     `json:"action" db:"action"`
+	Notes           *string    `json:"notes,omitempty" db:"notes"`
+	CreatedAt       time.Time  `json:"created_at" db:"created_at"`
+}
+
+// LinenAlert represents an alert for linen rotation
+type LinenAlert struct {
+	LinenID  uuid.UUID `json:"linen_id"`
+	Location string    `json:"location"`
+	Message  string    `json:"message"`
 }
