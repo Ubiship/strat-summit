@@ -25,11 +25,27 @@ type AssignStaffRequest struct {
 	HourlyRate float64 `json:"hourly_rate"`
 }
 
-// ListJobs returns cleaning jobs filtered by date
+// ListJobs returns cleaning jobs filtered by date (or all jobs if all=true)
 func (h *Handler) ListJobs(w http.ResponseWriter, r *http.Request) {
 	authCtx := auth.AuthFromContext(r.Context())
 	if authCtx == nil {
 		respondError(w, http.StatusUnauthorized, "unauthorized", "UNAUTHORIZED")
+		return
+	}
+
+	// Check if all jobs requested
+	if r.URL.Query().Get("all") == "true" {
+		opts := parseListOptions(r)
+		jobs, err := h.svc.ListAllCleaningJobs(r.Context(), authCtx.ToDomainAuthContext(), opts)
+		if err != nil {
+			if errors.Is(err, service.ErrForbidden) {
+				respondError(w, http.StatusForbidden, "access denied", "FORBIDDEN")
+				return
+			}
+			respondError(w, http.StatusInternalServerError, "failed to list jobs", "LIST_ERROR")
+			return
+		}
+		respondJSON(w, http.StatusOK, jobs)
 		return
 	}
 
@@ -227,4 +243,61 @@ func (h *Handler) AssignStaffToJob(w http.ResponseWriter, r *http.Request) {
 	}
 
 	respondJSON(w, http.StatusOK, map[string]bool{"success": true})
+}
+
+// CancelJobRequest represents the request to cancel a job
+type CancelJobRequest struct {
+	Reason string `json:"reason"`
+}
+
+// CancelJobResponse represents the response from canceling a job
+type CancelJobResponse struct {
+	Job             *domain.CleaningJob `json:"job"`
+	CancellationFee float64             `json:"cancellation_fee"`
+}
+
+// CancelJob cancels a cleaning job and calculates any applicable cancellation fee
+func (h *Handler) CancelJob(w http.ResponseWriter, r *http.Request) {
+	authCtx := auth.AuthFromContext(r.Context())
+	if authCtx == nil {
+		respondError(w, http.StatusUnauthorized, "unauthorized", "UNAUTHORIZED")
+		return
+	}
+
+	jobID, err := parseUUID(chi.URLParam(r, "id"))
+	if err != nil {
+		respondError(w, http.StatusBadRequest, "invalid job id", "INVALID_ID")
+		return
+	}
+
+	var req CancelJobRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		// Reason is optional
+		req = CancelJobRequest{}
+	}
+
+	job, err := h.svc.CancelCleaningJob(r.Context(), authCtx.ToDomainAuthContext(), jobID, req.Reason)
+	if err != nil {
+		if errors.Is(err, service.ErrForbidden) {
+			respondError(w, http.StatusForbidden, "access denied", "FORBIDDEN")
+			return
+		}
+		if errors.Is(err, repository.ErrNotFound) {
+			respondError(w, http.StatusNotFound, "job not found", "NOT_FOUND")
+			return
+		}
+		respondError(w, http.StatusInternalServerError, "failed to cancel job", "CANCEL_ERROR")
+		return
+	}
+
+	// Extract the fee from the job (service already calculated and stored it)
+	fee := 0.0
+	if job.CancellationFee != nil {
+		fee = *job.CancellationFee
+	}
+
+	respondJSON(w, http.StatusOK, CancelJobResponse{
+		Job:             job,
+		CancellationFee: fee,
+	})
 }

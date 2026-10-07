@@ -106,6 +106,7 @@ func (h *Handler) Router() chi.Router {
 				r.Put("/{id}/status", h.UpdateJobStatus)
 				r.Post("/{id}/assign", h.AssignStaffToJob)
 				r.Get("/{id}/consumables", h.GetJobConsumables)
+				r.Post("/{id}/cancel", h.CancelJob)
 			})
 
 			// Contacts (admin only)
