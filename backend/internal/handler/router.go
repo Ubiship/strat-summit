@@ -63,6 +63,13 @@ func (h *Handler) Router() chi.Router {
 				r.Put("/{id}/assessment/complete", h.CompletePropertyAssessment)
 			})
 
+			// Service Rates
+			r.Route("/service-rates", func(r chi.Router) {
+				r.Get("/", h.ListServiceRates)
+				r.Get("/{service_type}", h.GetServiceRate)
+				r.Put("/{service_type}", h.UpdateServiceRate)
+			})
+
 			// Bookings
 			r.Route("/bookings", func(r chi.Router) {
 				r.Get("/", h.ListBookings)
