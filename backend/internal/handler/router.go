@@ -80,6 +80,16 @@ func (h *Handler) Router() chi.Router {
 			r.Get("/properties/{property_id}/consumables", h.GetPropertyConsumables)
 			r.Put("/properties/{property_id}/consumables", h.SetPropertyConsumable)
 
+			// Property linens (nested under properties)
+			r.Route("/properties/{id}/linens", func(r chi.Router) {
+				r.Get("/", h.ListPropertyLinens)
+				r.Post("/", h.CreatePropertyLinen)
+				r.Get("/alerts", h.GetPropertyLinenAlerts)
+				r.Put("/{linen_id}", h.UpdatePropertyLinen)
+				r.Delete("/{linen_id}", h.DeletePropertyLinen)
+				r.Post("/{linen_id}/launder", h.RecordLinenLaunder)
+			})
+
 			// Bookings
 			r.Route("/bookings", func(r chi.Router) {
 				r.Get("/", h.ListBookings)
