@@ -336,8 +336,17 @@ func (m *mockRepository) MarkPendingContactReviewed(ctx context.Context, id, rev
 	return nil
 }
 
+// Property assessment methods
+func (m *mockRepository) IncrementAssessmentTurnover(ctx context.Context, propertyID uuid.UUID) error {
+	return nil
+}
+
 // Linen methods
 func (m *mockRepository) GetPropertyLinens(ctx context.Context, propertyID uuid.UUID) ([]*domain.PropertyLinen, error) {
+	return nil, nil
+}
+
+func (m *mockRepository) GetPropertyLinenByID(ctx context.Context, id uuid.UUID) (*domain.PropertyLinen, error) {
 	return nil, nil
 }
 

@@ -93,8 +93,12 @@ type Repository interface {
 	CreatePendingContact(ctx context.Context, pc *domain.PendingContact) error
 	MarkPendingContactReviewed(ctx context.Context, id, reviewerID uuid.UUID, action string, mergedWithID *uuid.UUID) error
 
+	// Property assessment methods
+	IncrementAssessmentTurnover(ctx context.Context, propertyID uuid.UUID) error
+
 	// Linen methods
 	GetPropertyLinens(ctx context.Context, propertyID uuid.UUID) ([]*domain.PropertyLinen, error)
+	GetPropertyLinenByID(ctx context.Context, id uuid.UUID) (*domain.PropertyLinen, error)
 	CreatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error
 	UpdatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error
 	DeletePropertyLinen(ctx context.Context, id uuid.UUID) error
@@ -551,16 +555,32 @@ func (s *Service) ClockOutJob(ctx context.Context, auth *domain.AuthContext, id 
 		return fmt.Errorf("clocking out: %w", err)
 	}
 
-	// Notify admins of job completion
+	// Get job and property for post-completion processing
 	job, err := s.repo.GetCleaningJobByID(ctx, id)
 	if err != nil {
 		return nil
 	}
+
+	property, err := s.repo.GetPropertyByID(ctx, job.PropertyID)
+	if err != nil {
+		return nil
+	}
+
+	// If job is complete, update tracking counters
 	if job.Status == domain.JobStatusComplete {
-		property, err := s.repo.GetPropertyByID(ctx, job.PropertyID)
-		if err != nil {
-			return nil
+		// Increment duvet insert turnover counters for linen rotation tracking
+		if err := s.IncrementPropertyLinenTurnovers(ctx, property.ID); err != nil {
+			log.Printf("failed to increment linen turnovers for property %s: %v", property.ID, err)
 		}
+
+		// Increment assessment turnover count if property is in assessment period
+		if !property.AssessmentComplete {
+			if err := s.repo.IncrementAssessmentTurnover(ctx, property.ID); err != nil {
+				log.Printf("failed to increment assessment turnover for property %s: %v", property.ID, err)
+			}
+		}
+
+		// Notify admins of job completion
 		_ = s.NotifyJobCompleted(ctx, job, property)
 	}
 
