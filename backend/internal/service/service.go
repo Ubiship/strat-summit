@@ -58,6 +58,7 @@ type Repository interface {
 	CreateBooking(ctx context.Context, b *domain.Booking) error
 	GetBookingByID(ctx context.Context, id uuid.UUID) (*domain.Booking, error)
 	ListBookingsByProperty(ctx context.Context, propertyID uuid.UUID, opts domain.ListOptions) ([]*domain.Booking, error)
+	ListAllBookings(ctx context.Context, opts domain.ListOptions) ([]*domain.Booking, error)
 	FindOpenBookingByOwner(ctx context.Context, ownerID uuid.UUID) (*domain.Booking, error)
 	SetBookingChatwootConversation(ctx context.Context, bookingID uuid.UUID, conversationID int64) error
 	FindBookingByChatwootConversation(ctx context.Context, conversationID int64) (*domain.Booking, error)
@@ -69,9 +70,11 @@ type Repository interface {
 	CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error
 	GetCleaningJobByID(ctx context.Context, id uuid.UUID) (*domain.CleaningJob, error)
 	UpdateCleaningJobStatus(ctx context.Context, id uuid.UUID, status domain.JobStatus) error
+	UpdateCleaningJobCancellation(ctx context.Context, j *domain.CleaningJob) error
 	ClockInCleaningJob(ctx context.Context, id uuid.UUID) error
 	ClockOutCleaningJob(ctx context.Context, id uuid.UUID) error
 	ListCleaningJobsByDate(ctx context.Context, date time.Time) ([]*domain.CleaningJob, error)
+	ListAllCleaningJobs(ctx context.Context, opts domain.ListOptions) ([]*domain.CleaningJob, error)
 	ListCleaningJobsByStaff(ctx context.Context, contactID uuid.UUID, date *time.Time, opts domain.ListOptions) ([]*domain.CleaningJob, error)
 	IsStaffAssignedToJob(ctx context.Context, jobID, contactID uuid.UUID) (bool, error)
 	AssignStaffToJob(ctx context.Context, jobID, contactID uuid.UUID, hourlyRate float64) error
@@ -89,6 +92,20 @@ type Repository interface {
 	GetPendingContactByChatwootID(ctx context.Context, chatwootID int64) (*domain.PendingContact, error)
 	CreatePendingContact(ctx context.Context, pc *domain.PendingContact) error
 	MarkPendingContactReviewed(ctx context.Context, id, reviewerID uuid.UUID, action string, mergedWithID *uuid.UUID) error
+
+	// Property assessment methods
+	IncrementAssessmentTurnover(ctx context.Context, propertyID uuid.UUID) error
+
+	// Linen methods
+	GetPropertyLinens(ctx context.Context, propertyID uuid.UUID) ([]*domain.PropertyLinen, error)
+	GetPropertyLinenByID(ctx context.Context, id uuid.UUID) (*domain.PropertyLinen, error)
+	CreatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error
+	UpdatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error
+	DeletePropertyLinen(ctx context.Context, id uuid.UUID) error
+	IncrementLinenTurnovers(ctx context.Context, propertyID uuid.UUID) error
+	ResetLinenTurnovers(ctx context.Context, linenID uuid.UUID) error
+	CreateLinenRotationLog(ctx context.Context, log *domain.LinenRotationLog) error
+	GetLinensNeedingLaundry(ctx context.Context, threshold int) ([]*domain.LinenAlert, error)
 }
 
 // Service handles business logic
@@ -440,6 +457,15 @@ func (s *Service) ListBookingsByProperty(ctx context.Context, auth *domain.AuthC
 	return s.repo.ListBookingsByProperty(ctx, propertyID, opts)
 }
 
+func (s *Service) ListAllBookings(ctx context.Context, auth *domain.AuthContext, opts domain.ListOptions) ([]*domain.Booking, error) {
+	// Only admin and bookkeeper can list all bookings
+	if auth.Role != domain.RoleAdmin && auth.Role != domain.RoleBookkeeper {
+		return nil, ErrForbidden
+	}
+
+	return s.repo.ListAllBookings(ctx, opts)
+}
+
 // ============================================================================
 // Cleaning Job Service
 // ============================================================================
@@ -481,6 +507,15 @@ func (s *Service) ListCleaningJobsByDate(ctx context.Context, auth *domain.AuthC
 	}
 }
 
+func (s *Service) ListAllCleaningJobs(ctx context.Context, auth *domain.AuthContext, opts domain.ListOptions) ([]*domain.CleaningJob, error) {
+	// Only admin can list all jobs
+	if auth.Role != domain.RoleAdmin {
+		return nil, ErrForbidden
+	}
+
+	return s.repo.ListAllCleaningJobs(ctx, opts)
+}
+
 func (s *Service) ClockInJob(ctx context.Context, auth *domain.AuthContext, id uuid.UUID) error {
 	if auth.Role != domain.RoleCleaner && auth.Role != domain.RoleAdmin {
 		return ErrForbidden
@@ -520,16 +555,32 @@ func (s *Service) ClockOutJob(ctx context.Context, auth *domain.AuthContext, id 
 		return fmt.Errorf("clocking out: %w", err)
 	}
 
-	// Notify admins of job completion
+	// Get job and property for post-completion processing
 	job, err := s.repo.GetCleaningJobByID(ctx, id)
 	if err != nil {
 		return nil
 	}
+
+	property, err := s.repo.GetPropertyByID(ctx, job.PropertyID)
+	if err != nil {
+		return nil
+	}
+
+	// If job is complete, update tracking counters
 	if job.Status == domain.JobStatusComplete {
-		property, err := s.repo.GetPropertyByID(ctx, job.PropertyID)
-		if err != nil {
-			return nil
+		// Increment duvet insert turnover counters for linen rotation tracking
+		if err := s.IncrementPropertyLinenTurnovers(ctx, property.ID); err != nil {
+			log.Printf("failed to increment linen turnovers for property %s: %v", property.ID, err)
 		}
+
+		// Increment assessment turnover count if property is in assessment period
+		if !property.AssessmentComplete {
+			if err := s.repo.IncrementAssessmentTurnover(ctx, property.ID); err != nil {
+				log.Printf("failed to increment assessment turnover for property %s: %v", property.ID, err)
+			}
+		}
+
+		// Notify admins of job completion
 		_ = s.NotifyJobCompleted(ctx, job, property)
 	}
 

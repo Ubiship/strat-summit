@@ -104,7 +104,7 @@ func main() {
 	// Initialize layers
 	repo := repository.New(dbpool)
 	svc := service.New(cfg, repo, novuClient, chatwootClient, hostawayClient, anthropicClient)
-	h := handler.New(cfg, svc)
+	h := handler.New(cfg, svc, repo)
 
 	// Initialize and start cron scheduler
 	scheduler := jobs.NewScheduler(repo, svc, logger)

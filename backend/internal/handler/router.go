@@ -9,16 +9,18 @@ import (
 	"github.com/ubiship/strat-summit/backend/internal/auth"
 	"github.com/ubiship/strat-summit/backend/internal/config"
 	"github.com/ubiship/strat-summit/backend/internal/domain"
+	"github.com/ubiship/strat-summit/backend/internal/repository"
 	"github.com/ubiship/strat-summit/backend/internal/service"
 )
 
 type Handler struct {
-	cfg *config.Config
-	svc *service.Service
+	cfg  *config.Config
+	svc  *service.Service
+	repo *repository.Repository
 }
 
-func New(cfg *config.Config, svc *service.Service) *Handler {
-	return &Handler{cfg: cfg, svc: svc}
+func New(cfg *config.Config, svc *service.Service, repo *repository.Repository) *Handler {
+	return &Handler{cfg: cfg, svc: svc, repo: repo}
 }
 
 func (h *Handler) Router() chi.Router {
@@ -57,6 +59,35 @@ func (h *Handler) Router() chi.Router {
 				r.Post("/", h.CreateProperty)
 				r.Get("/{id}", h.GetProperty)
 				r.Put("/{id}", h.UpdateProperty)
+				r.Put("/{id}/category", h.UpdatePropertyCategory)
+				r.Put("/{id}/assessment/complete", h.CompletePropertyAssessment)
+			})
+
+			// Service Rates
+			r.Route("/service-rates", func(r chi.Router) {
+				r.Get("/", h.ListServiceRates)
+				r.Get("/{service_type}", h.GetServiceRate)
+				r.Put("/{service_type}", h.UpdateServiceRate)
+			})
+
+			// Consumables
+			r.Route("/consumables", func(r chi.Router) {
+				r.Get("/", h.ListConsumables)
+				r.Get("/standard", h.ListStandardConsumables)
+			})
+
+			// Property consumables (nested under properties)
+			r.Get("/properties/{property_id}/consumables", h.GetPropertyConsumables)
+			r.Put("/properties/{property_id}/consumables", h.SetPropertyConsumable)
+
+			// Property linens (nested under properties)
+			r.Route("/properties/{id}/linens", func(r chi.Router) {
+				r.Get("/", h.ListPropertyLinens)
+				r.Post("/", h.CreatePropertyLinen)
+				r.Get("/alerts", h.GetPropertyLinenAlerts)
+				r.Put("/{linen_id}", h.UpdatePropertyLinen)
+				r.Delete("/{linen_id}", h.DeletePropertyLinen)
+				r.Post("/{linen_id}/launder", h.RecordLinenLaunder)
 			})
 
 			// Bookings
@@ -74,6 +105,8 @@ func (h *Handler) Router() chi.Router {
 				r.Post("/{id}/clock-out", h.ClockOutJob)
 				r.Put("/{id}/status", h.UpdateJobStatus)
 				r.Post("/{id}/assign", h.AssignStaffToJob)
+				r.Get("/{id}/consumables", h.GetJobConsumables)
+				r.Post("/{id}/cancel", h.CancelJob)
 			})
 
 			// Contacts (admin only)

@@ -215,6 +215,10 @@ func (m *mockRepository) UpdateBooking(ctx context.Context, b *domain.Booking) e
 	return nil
 }
 
+func (m *mockRepository) ListAllBookings(ctx context.Context, opts domain.ListOptions) ([]*domain.Booking, error) {
+	return nil, nil
+}
+
 // Cleaning job methods
 func (m *mockRepository) CreateCleaningJob(ctx context.Context, j *domain.CleaningJob) error {
 	return nil
@@ -238,6 +242,14 @@ func (m *mockRepository) ClockOutCleaningJob(ctx context.Context, id uuid.UUID) 
 
 func (m *mockRepository) ListCleaningJobsByDate(ctx context.Context, date time.Time) ([]*domain.CleaningJob, error) {
 	return nil, nil
+}
+
+func (m *mockRepository) ListAllCleaningJobs(ctx context.Context, opts domain.ListOptions) ([]*domain.CleaningJob, error) {
+	return nil, nil
+}
+
+func (m *mockRepository) UpdateCleaningJobCancellation(ctx context.Context, j *domain.CleaningJob) error {
+	return nil
 }
 
 func (m *mockRepository) ListCleaningJobsByStaff(ctx context.Context, contactID uuid.UUID, date *time.Time, opts domain.ListOptions) ([]*domain.CleaningJob, error) {
@@ -322,6 +334,48 @@ func (m *mockRepository) MarkPendingContactReviewed(ctx context.Context, id, rev
 	m.reviewedAction = action
 	m.reviewedMergedWith = mergedWithID
 	return nil
+}
+
+// Property assessment methods
+func (m *mockRepository) IncrementAssessmentTurnover(ctx context.Context, propertyID uuid.UUID) error {
+	return nil
+}
+
+// Linen methods
+func (m *mockRepository) GetPropertyLinens(ctx context.Context, propertyID uuid.UUID) ([]*domain.PropertyLinen, error) {
+	return nil, nil
+}
+
+func (m *mockRepository) GetPropertyLinenByID(ctx context.Context, id uuid.UUID) (*domain.PropertyLinen, error) {
+	return nil, nil
+}
+
+func (m *mockRepository) CreatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error {
+	return nil
+}
+
+func (m *mockRepository) UpdatePropertyLinen(ctx context.Context, linen *domain.PropertyLinen) error {
+	return nil
+}
+
+func (m *mockRepository) DeletePropertyLinen(ctx context.Context, id uuid.UUID) error {
+	return nil
+}
+
+func (m *mockRepository) IncrementLinenTurnovers(ctx context.Context, propertyID uuid.UUID) error {
+	return nil
+}
+
+func (m *mockRepository) ResetLinenTurnovers(ctx context.Context, linenID uuid.UUID) error {
+	return nil
+}
+
+func (m *mockRepository) CreateLinenRotationLog(ctx context.Context, log *domain.LinenRotationLog) error {
+	return nil
+}
+
+func (m *mockRepository) GetLinensNeedingLaundry(ctx context.Context, threshold int) ([]*domain.LinenAlert, error) {
+	return nil, nil
 }
 
 // ============================================================================

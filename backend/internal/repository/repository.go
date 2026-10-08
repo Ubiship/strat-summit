@@ -319,9 +319,14 @@ func (r *Repository) CreateProperty(ctx context.Context, p *domain.Property) err
 			name, address, tier, commission_rate, cleaning_fee,
 			cleaning_fee_commissionable, airbnb_ical_url, vrbo_ical_url,
 			wifi_password, access_codes, hot_tub, hot_tub_temp_f, notes,
-			supply_list, checklist_template_id, active
+			supply_list, checklist_template_id, active,
+			category, assessment_complete, assessment_turnover_count,
+			turnover_rate_annual, turnover_rate_summer, turnover_rate_winter,
+			winter_access_allowance_min, hot_tub_program_enrolled,
+			hot_tub_last_drain_date, hot_tub_next_drain_date
 		)
-		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16)
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16,
+		        $17, $18, $19, $20, $21, $22, $23, $24, $25, $26)
 		RETURNING id, created_at, updated_at`
 
 	err := r.db.QueryRow(ctx, query,
@@ -329,6 +334,10 @@ func (r *Repository) CreateProperty(ctx context.Context, p *domain.Property) err
 		p.CleaningFeeCommissionable, p.AirbnbIcalURL, p.VRBOIcalURL,
 		p.WifiPassword, p.AccessCodes, p.HotTub, p.HotTubTempF, p.Notes,
 		p.SupplyList, p.ChecklistTemplateID, p.Active,
+		p.Category, p.AssessmentComplete, p.AssessmentTurnoverCount,
+		p.TurnoverRateAnnual, p.TurnoverRateSummer, p.TurnoverRateWinter,
+		p.WinterAccessAllowanceMin, p.HotTubProgramEnrolled,
+		p.HotTubLastDrainDate, p.HotTubNextDrainDate,
 	).Scan(&p.ID, &p.CreatedAt, &p.UpdatedAt)
 	if err != nil {
 		return fmt.Errorf("creating property: %w", err)
@@ -341,7 +350,12 @@ func (r *Repository) GetPropertyByID(ctx context.Context, id uuid.UUID) (*domain
 		SELECT id, name, address, tier, commission_rate, cleaning_fee,
 			   cleaning_fee_commissionable, airbnb_ical_url, vrbo_ical_url,
 			   wifi_password, access_codes, hot_tub, hot_tub_temp_f, notes,
-			   supply_list, checklist_template_id, active, created_at, updated_at
+			   supply_list, checklist_template_id, active,
+			   category, assessment_complete, assessment_turnover_count,
+			   turnover_rate_annual, turnover_rate_summer, turnover_rate_winter,
+			   winter_access_allowance_min, hot_tub_program_enrolled,
+			   hot_tub_last_drain_date, hot_tub_next_drain_date,
+			   created_at, updated_at
 		FROM properties
 		WHERE id = $1`
 
@@ -350,7 +364,12 @@ func (r *Repository) GetPropertyByID(ctx context.Context, id uuid.UUID) (*domain
 		&p.ID, &p.Name, &p.Address, &p.Tier, &p.CommissionRate, &p.CleaningFee,
 		&p.CleaningFeeCommissionable, &p.AirbnbIcalURL, &p.VRBOIcalURL,
 		&p.WifiPassword, &p.AccessCodes, &p.HotTub, &p.HotTubTempF, &p.Notes,
-		&p.SupplyList, &p.ChecklistTemplateID, &p.Active, &p.CreatedAt, &p.UpdatedAt,
+		&p.SupplyList, &p.ChecklistTemplateID, &p.Active,
+		&p.Category, &p.AssessmentComplete, &p.AssessmentTurnoverCount,
+		&p.TurnoverRateAnnual, &p.TurnoverRateSummer, &p.TurnoverRateWinter,
+		&p.WinterAccessAllowanceMin, &p.HotTubProgramEnrolled,
+		&p.HotTubLastDrainDate, &p.HotTubNextDrainDate,
+		&p.CreatedAt, &p.UpdatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -366,7 +385,12 @@ func (r *Repository) ListProperties(ctx context.Context, opts domain.ListOptions
 		SELECT id, name, address, tier, commission_rate, cleaning_fee,
 			   cleaning_fee_commissionable, airbnb_ical_url, vrbo_ical_url,
 			   wifi_password, access_codes, hot_tub, hot_tub_temp_f, notes,
-			   supply_list, checklist_template_id, active, created_at, updated_at
+			   supply_list, checklist_template_id, active,
+			   category, assessment_complete, assessment_turnover_count,
+			   turnover_rate_annual, turnover_rate_summer, turnover_rate_winter,
+			   winter_access_allowance_min, hot_tub_program_enrolled,
+			   hot_tub_last_drain_date, hot_tub_next_drain_date,
+			   created_at, updated_at
 		FROM properties
 		WHERE active = true
 		ORDER BY name
@@ -390,7 +414,12 @@ func (r *Repository) ListProperties(ctx context.Context, opts domain.ListOptions
 			&p.ID, &p.Name, &p.Address, &p.Tier, &p.CommissionRate, &p.CleaningFee,
 			&p.CleaningFeeCommissionable, &p.AirbnbIcalURL, &p.VRBOIcalURL,
 			&p.WifiPassword, &p.AccessCodes, &p.HotTub, &p.HotTubTempF, &p.Notes,
-			&p.SupplyList, &p.ChecklistTemplateID, &p.Active, &p.CreatedAt, &p.UpdatedAt,
+			&p.SupplyList, &p.ChecklistTemplateID, &p.Active,
+			&p.Category, &p.AssessmentComplete, &p.AssessmentTurnoverCount,
+			&p.TurnoverRateAnnual, &p.TurnoverRateSummer, &p.TurnoverRateWinter,
+			&p.WinterAccessAllowanceMin, &p.HotTubProgramEnrolled,
+			&p.HotTubLastDrainDate, &p.HotTubNextDrainDate,
+			&p.CreatedAt, &p.UpdatedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("scanning property: %w", err)
@@ -410,6 +439,10 @@ func (r *Repository) UpdateProperty(ctx context.Context, p *domain.Property) err
 			cleaning_fee_commissionable = $7, airbnb_ical_url = $8, vrbo_ical_url = $9,
 			wifi_password = $10, access_codes = $11, hot_tub = $12, hot_tub_temp_f = $13,
 			notes = $14, supply_list = $15, checklist_template_id = $16, active = $17,
+			category = $18, assessment_complete = $19, assessment_turnover_count = $20,
+			turnover_rate_annual = $21, turnover_rate_summer = $22, turnover_rate_winter = $23,
+			winter_access_allowance_min = $24, hot_tub_program_enrolled = $25,
+			hot_tub_last_drain_date = $26, hot_tub_next_drain_date = $27,
 			updated_at = now()
 		WHERE id = $1
 		RETURNING updated_at`
@@ -419,6 +452,10 @@ func (r *Repository) UpdateProperty(ctx context.Context, p *domain.Property) err
 		p.CleaningFeeCommissionable, p.AirbnbIcalURL, p.VRBOIcalURL,
 		p.WifiPassword, p.AccessCodes, p.HotTub, p.HotTubTempF, p.Notes,
 		p.SupplyList, p.ChecklistTemplateID, p.Active,
+		p.Category, p.AssessmentComplete, p.AssessmentTurnoverCount,
+		p.TurnoverRateAnnual, p.TurnoverRateSummer, p.TurnoverRateWinter,
+		p.WinterAccessAllowanceMin, p.HotTubProgramEnrolled,
+		p.HotTubLastDrainDate, p.HotTubNextDrainDate,
 	).Scan(&p.UpdatedAt)
 	if err != nil {
 		return fmt.Errorf("updating property: %w", err)
@@ -432,7 +469,12 @@ func (r *Repository) GetPropertiesByOwner(ctx context.Context, contactID uuid.UU
 		SELECT p.id, p.name, p.address, p.tier, p.commission_rate, p.cleaning_fee,
 			   p.cleaning_fee_commissionable, p.airbnb_ical_url, p.vrbo_ical_url,
 			   p.wifi_password, p.access_codes, p.hot_tub, p.hot_tub_temp_f, p.notes,
-			   p.supply_list, p.checklist_template_id, p.active, p.created_at, p.updated_at
+			   p.supply_list, p.checklist_template_id, p.active,
+			   p.category, p.assessment_complete, p.assessment_turnover_count,
+			   p.turnover_rate_annual, p.turnover_rate_summer, p.turnover_rate_winter,
+			   p.winter_access_allowance_min, p.hot_tub_program_enrolled,
+			   p.hot_tub_last_drain_date, p.hot_tub_next_drain_date,
+			   p.created_at, p.updated_at
 		FROM properties p
 		INNER JOIN property_owners po ON p.id = po.property_id
 		WHERE po.contact_id = $1 AND p.active = true
@@ -451,7 +493,12 @@ func (r *Repository) GetPropertiesByOwner(ctx context.Context, contactID uuid.UU
 			&p.ID, &p.Name, &p.Address, &p.Tier, &p.CommissionRate, &p.CleaningFee,
 			&p.CleaningFeeCommissionable, &p.AirbnbIcalURL, &p.VRBOIcalURL,
 			&p.WifiPassword, &p.AccessCodes, &p.HotTub, &p.HotTubTempF, &p.Notes,
-			&p.SupplyList, &p.ChecklistTemplateID, &p.Active, &p.CreatedAt, &p.UpdatedAt,
+			&p.SupplyList, &p.ChecklistTemplateID, &p.Active,
+			&p.Category, &p.AssessmentComplete, &p.AssessmentTurnoverCount,
+			&p.TurnoverRateAnnual, &p.TurnoverRateSummer, &p.TurnoverRateWinter,
+			&p.WinterAccessAllowanceMin, &p.HotTubProgramEnrolled,
+			&p.HotTubLastDrainDate, &p.HotTubNextDrainDate,
+			&p.CreatedAt, &p.UpdatedAt,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("scanning property: %w", err)
@@ -481,7 +528,12 @@ func (r *Repository) GetPropertyByHostawayID(ctx context.Context, hostawayID str
 		SELECT id, name, address, tier, commission_rate, cleaning_fee,
 			   cleaning_fee_commissionable, airbnb_ical_url, vrbo_ical_url,
 			   wifi_password, access_codes, hot_tub, hot_tub_temp_f, notes,
-			   supply_list, checklist_template_id, active, created_at, updated_at
+			   supply_list, checklist_template_id, active,
+			   category, assessment_complete, assessment_turnover_count,
+			   turnover_rate_annual, turnover_rate_summer, turnover_rate_winter,
+			   winter_access_allowance_min, hot_tub_program_enrolled,
+			   hot_tub_last_drain_date, hot_tub_next_drain_date,
+			   created_at, updated_at
 		FROM properties
 		WHERE hostaway_id = $1`
 
@@ -490,7 +542,12 @@ func (r *Repository) GetPropertyByHostawayID(ctx context.Context, hostawayID str
 		&p.ID, &p.Name, &p.Address, &p.Tier, &p.CommissionRate, &p.CleaningFee,
 		&p.CleaningFeeCommissionable, &p.AirbnbIcalURL, &p.VRBOIcalURL,
 		&p.WifiPassword, &p.AccessCodes, &p.HotTub, &p.HotTubTempF, &p.Notes,
-		&p.SupplyList, &p.ChecklistTemplateID, &p.Active, &p.CreatedAt, &p.UpdatedAt,
+		&p.SupplyList, &p.ChecklistTemplateID, &p.Active,
+		&p.Category, &p.AssessmentComplete, &p.AssessmentTurnoverCount,
+		&p.TurnoverRateAnnual, &p.TurnoverRateSummer, &p.TurnoverRateWinter,
+		&p.WinterAccessAllowanceMin, &p.HotTubProgramEnrolled,
+		&p.HotTubLastDrainDate, &p.HotTubNextDrainDate,
+		&p.CreatedAt, &p.UpdatedAt,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
@@ -499,6 +556,43 @@ func (r *Repository) GetPropertyByHostawayID(ctx context.Context, hostawayID str
 		return nil, fmt.Errorf("querying property by hostaway id: %w", err)
 	}
 	return &p, nil
+}
+
+// UpdatePropertyCategory updates only the category field of a property
+func (r *Repository) UpdatePropertyCategory(ctx context.Context, id uuid.UUID, category domain.PropertyCategory) error {
+	query := `UPDATE properties SET category = $2, updated_at = now() WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, id, category)
+	if err != nil {
+		return fmt.Errorf("updating property category: %w", err)
+	}
+	return nil
+}
+
+// CompletePropertyAssessment marks assessment as complete and sets the turnover rates
+func (r *Repository) CompletePropertyAssessment(ctx context.Context, id uuid.UUID, annualRate, summerRate, winterRate *float64) error {
+	query := `
+		UPDATE properties SET
+			assessment_complete = true,
+			turnover_rate_annual = $2,
+			turnover_rate_summer = $3,
+			turnover_rate_winter = $4,
+			updated_at = now()
+		WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, id, annualRate, summerRate, winterRate)
+	if err != nil {
+		return fmt.Errorf("completing property assessment: %w", err)
+	}
+	return nil
+}
+
+// IncrementAssessmentTurnover increments the assessment turnover count for a property
+func (r *Repository) IncrementAssessmentTurnover(ctx context.Context, id uuid.UUID) error {
+	query := `UPDATE properties SET assessment_turnover_count = assessment_turnover_count + 1, updated_at = now() WHERE id = $1`
+	_, err := r.db.Exec(ctx, query, id)
+	if err != nil {
+		return fmt.Errorf("incrementing assessment turnover: %w", err)
+	}
+	return nil
 }
 
 // ============================================================================
@@ -626,6 +720,55 @@ func (r *Repository) ListBookingsByProperty(ctx context.Context, propertyID uuid
 	return bookings, nil
 }
 
+func (r *Repository) ListAllBookings(ctx context.Context, opts domain.ListOptions) ([]*domain.Booking, error) {
+	query := `
+		SELECT b.id, b.property_id, b.source, b.tax_treatment, b.external_uid, b.guest_name,
+			   b.guest_email, b.guest_phone, b.check_in, b.check_out, b.nights, b.nightly_rate,
+			   b.nightly_rate_weekend, b.nightly_rate_holiday, b.revenue_incl_cleaning_fee,
+			   b.revenue_excl_cleaning_fee, b.cleaning_fee_charged, b.gst, b.pst, b.mrdt, b.notes,
+			   b.cleaning_job_id, b.statement_id, b.chatwoot_conversation_id, b.created_at, b.updated_at,
+			   p.name as property_name
+		FROM bookings b
+		JOIN properties p ON b.property_id = p.id
+		ORDER BY b.check_in DESC
+		LIMIT $1 OFFSET $2`
+
+	limit := opts.Limit
+	if limit <= 0 {
+		limit = 100
+	}
+
+	rows, err := r.db.Query(ctx, query, limit, opts.Offset)
+	if err != nil {
+		return nil, fmt.Errorf("listing all bookings: %w", err)
+	}
+	defer rows.Close()
+
+	var bookings []*domain.Booking
+	for rows.Next() {
+		var b domain.Booking
+		var propertyName string
+		err := rows.Scan(
+			&b.ID, &b.PropertyID, &b.Source, &b.TaxTreatment, &b.ExternalUID, &b.GuestName,
+			&b.GuestEmail, &b.GuestPhone, &b.CheckIn, &b.CheckOut, &b.Nights, &b.NightlyRate,
+			&b.NightlyRateWeekend, &b.NightlyRateHoliday, &b.RevenueInclCleaningFee,
+			&b.RevenueExclCleaningFee, &b.CleaningFeeCharged, &b.GST, &b.PST, &b.MRDT, &b.Notes,
+			&b.CleaningJobID, &b.StatementID, &b.ChatwootConversationID, &b.CreatedAt, &b.UpdatedAt,
+			&propertyName,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scanning booking: %w", err)
+		}
+		// Attach property info
+		b.Property = &domain.Property{ID: b.PropertyID, Name: propertyName}
+		bookings = append(bookings, &b)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterating bookings: %w", err)
+	}
+	return bookings, nil
+}
+
 // FindOpenBookingByOwner finds the most recent open booking for properties owned by a contact.
 func (r *Repository) FindOpenBookingByOwner(ctx context.Context, ownerID uuid.UUID) (*domain.Booking, error) {
 	query := `
@@ -736,6 +879,24 @@ func (r *Repository) ClockInCleaningJob(ctx context.Context, id uuid.UUID) error
 	return nil
 }
 
+// UpdateCleaningJobCancellation updates a job's cancellation fields
+func (r *Repository) UpdateCleaningJobCancellation(ctx context.Context, j *domain.CleaningJob) error {
+	query := `
+		UPDATE cleaning_jobs SET
+			status = $2, cancelled_at = $3, cancellation_fee = $4, cancellation_reason = $5,
+			updated_at = now()
+		WHERE id = $1
+		RETURNING updated_at`
+
+	err := r.db.QueryRow(ctx, query,
+		j.ID, j.Status, j.CancelledAt, j.CancellationFee, j.CancellationReason,
+	).Scan(&j.UpdatedAt)
+	if err != nil {
+		return fmt.Errorf("updating cleaning job cancellation: %w", err)
+	}
+	return nil
+}
+
 func (r *Repository) ClockOutCleaningJob(ctx context.Context, id uuid.UUID) error {
 	query := `
 		UPDATE cleaning_jobs SET
@@ -785,6 +946,54 @@ func (r *Repository) ListCleaningJobsByDate(ctx context.Context, date time.Time)
 	}
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("iterating cleaning jobs by date: %w", err)
+	}
+	return jobs, nil
+}
+
+func (r *Repository) ListAllCleaningJobs(ctx context.Context, opts domain.ListOptions) ([]*domain.CleaningJob, error) {
+	query := `
+		SELECT j.id, j.property_id, j.booking_id, j.scheduled_date, j.scheduled_time::text, j.status,
+			   j.comp_model, j.job_rate, j.duration_hours, j.arrived_at, j.completed_at,
+			   j.checklist_data, j.checklist_completion_pct, j.hot_tub_photo_required,
+			   j.hot_tub_status, j.damage_notes, j.restock_notes, j.internal_notes,
+			   j.dispatched_at, j.reminder_sent_at, j.created_at, j.updated_at,
+			   p.name as property_name
+		FROM cleaning_jobs j
+		JOIN properties p ON j.property_id = p.id
+		ORDER BY j.scheduled_date DESC, j.scheduled_time
+		LIMIT $1 OFFSET $2`
+
+	limit := opts.Limit
+	if limit <= 0 {
+		limit = 100
+	}
+
+	rows, err := r.db.Query(ctx, query, limit, opts.Offset)
+	if err != nil {
+		return nil, fmt.Errorf("listing all cleaning jobs: %w", err)
+	}
+	defer rows.Close()
+
+	var jobs []*domain.CleaningJob
+	for rows.Next() {
+		var j domain.CleaningJob
+		var propertyName string
+		err := rows.Scan(
+			&j.ID, &j.PropertyID, &j.BookingID, &j.ScheduledDate, &j.ScheduledTime, &j.Status,
+			&j.CompModel, &j.JobRate, &j.DurationHours, &j.ArrivedAt, &j.CompletedAt,
+			&j.ChecklistData, &j.ChecklistCompletionPct, &j.HotTubPhotoRequired,
+			&j.HotTubStatus, &j.DamageNotes, &j.RestockNotes, &j.InternalNotes,
+			&j.DispatchedAt, &j.ReminderSentAt, &j.CreatedAt, &j.UpdatedAt,
+			&propertyName,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scanning cleaning job: %w", err)
+		}
+		j.Property = &domain.Property{ID: j.PropertyID, Name: propertyName}
+		jobs = append(jobs, &j)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterating all cleaning jobs: %w", err)
 	}
 	return jobs, nil
 }
