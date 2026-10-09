@@ -10,6 +10,9 @@ import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
 import { ValueCards } from '@/components/ValueCards'
 import imageMeeting from '@/images/meeting.jpg'
+import iconLocalAccountability from '@/images/values/icon-local-accountability.png'
+import iconReliability from '@/images/values/icon-reliability.png'
+import iconTransparency from '@/images/values/icon-transparency.png'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -27,16 +30,19 @@ const stats = [
 const values = [
   {
     title: 'Reliability',
+    icon: iconReliability,
     description:
       'Turnovers happen on schedule. Renovation milestones are tracked. You hear from us when something needs a decision.',
   },
   {
     title: 'Transparency',
+    icon: iconTransparency,
     description:
       'Clear tiers, documented visits, and estimates that explain where your money goes.',
   },
   {
     title: 'Local accountability',
+    icon: iconLocalAccountability,
     description:
       'We are not a franchise or a distant management company — Joel and Amanda stay close to the work.',
   },
@@ -78,16 +84,16 @@ export default function About() {
       <Band tone="sand">
         <Container>
           <FadeInStagger>
-            <dl className="grid gap-12 split:grid-cols-3">
+            <dl className="grid gap-16 split:grid-cols-3">
               {stats.map((stat) => (
                 <FadeIn
                   key={stat.label}
                   className="flex flex-col-reverse items-center text-center"
                 >
-                  <dt className="mt-5 text-lg font-semibold text-warm-muted">
+                  <dt className="mt-6 text-lg font-semibold text-warm-muted">
                     {stat.label}
                   </dt>
-                  <dd className="grid size-40 place-items-center rounded-full bg-sun type-display text-[5.5rem] text-warm-ink shadow-[0_24px_50px_rgb(217_119_47/0.3)] split:size-48 split:text-[6.5rem]">
+                  <dd className="grid size-44 place-items-center rounded-full bg-sun type-display text-[5.75rem] text-warm-ink shadow-[0_24px_50px_rgb(217_119_47/0.3)] split:size-52 split:text-[6.75rem]">
                     {stat.value}
                   </dd>
                 </FadeIn>
@@ -117,11 +123,11 @@ export default function About() {
         <Container>
           <FadeInStagger>
             <FadeIn>
-              <h2 className="type-display text-[clamp(3.25rem,6vw,5.5rem)]">
+              <h2 className="type-display text-[clamp(3.5rem,6vw,5.75rem)]">
                 Leadership
               </h2>
             </FadeIn>
-            <ul role="list" className="mt-10 grid gap-4.5 split:grid-cols-2">
+            <ul role="list" className="mt-14 grid gap-6 split:grid-cols-2">
               {founders.map((person) => (
                 <li key={person.name}>
                   <FadeIn className="overflow-hidden rounded-[2.75rem] bg-sand">
@@ -131,9 +137,9 @@ export default function About() {
                       sizes="(min-width: 1200px) 36rem, (min-width: 900px) 50vw, 100vw"
                       className="aspect-4/3 w-full object-cover photo-warm"
                     />
-                    <div className="p-8">
-                      <h3 className="type-display text-4xl">{person.name}</h3>
-                      <p className="mt-2 text-base text-warm-muted">
+                    <div className="p-10">
+                      <h3 className="type-display text-[2.625rem]">{person.name}</h3>
+                      <p className="mt-3 text-[1.0625rem] text-warm-muted">
                         {person.role}
                       </p>
                     </div>
@@ -141,7 +147,7 @@ export default function About() {
                 </li>
               ))}
             </ul>
-            <p className="mt-8 text-sm text-warm-muted">
+            <p className="mt-10 text-sm text-warm-muted">
               Replace placeholder photos with Joel and Amanda headshots when
               available.
             </p>

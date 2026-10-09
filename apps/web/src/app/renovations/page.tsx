@@ -3,6 +3,7 @@ import Image from 'next/image'
 import clsx from 'clsx'
 
 import { Band } from '@/components/Band'
+import { CardIcon } from '@/components/CardIcon'
 import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
@@ -10,6 +11,10 @@ import { NumberBadge } from '@/components/NumberBadge'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
+import iconDecksExteriors from '@/images/icons/icon-decks-exteriors.png'
+import iconKitchensBathrooms from '@/images/icons/icon-kitchens-bathrooms.png'
+import iconSubtrades from '@/images/icons/icon-subtrades.png'
+import iconWholeHome from '@/images/icons/icon-whole-home.png'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -44,24 +49,28 @@ const steps = [
 const projectTypes = [
   {
     title: 'Kitchens & bathrooms',
+    icon: iconKitchensBathrooms,
     description:
       'Layout updates, cabinetry, tile, fixtures, and ventilation — the rooms guests and owners notice first.',
     tone: 'bg-warm-cream text-warm-ink',
   },
   {
     title: 'Decks & exteriors',
+    icon: iconDecksExteriors,
     description:
       'Weather-ready materials suited for coastal conditions and strata requirements where applicable.',
     tone: 'bg-sun text-warm-ink',
   },
   {
     title: 'Whole-home refresh',
+    icon: iconWholeHome,
     description:
       'Flooring, paint, trim, and lighting packages to reset a property between seasons or before sale.',
     tone: 'bg-forest-warm text-warm-cream',
   },
   {
     title: 'Subtrade coordination',
+    icon: iconSubtrades,
     description:
       'Licensed trades brought in as needed — one point of contact for the owner.',
     tone: 'bg-warm-cream text-warm-ink',
@@ -90,19 +99,17 @@ export default function Renovations() {
       <Band tone="cream">
         <Container>
           <FadeInStagger className="relative">
-            {/* Insets match the centres of the first and last columns
-                (three gap-6 gaps = 4.5rem) and the size-16 badge centre. */}
             <FadeIn
               aria-hidden="true"
-              className="absolute top-[calc(2rem-0.125rem)] right-[calc((100%-4.5rem)/8)] left-[calc((100%-4.5rem)/8)] hidden h-1 rounded-full bg-sun/40 split:block"
+              className="absolute top-[calc(2rem-0.125rem)] right-[calc((100%-6rem)/8)] left-[calc((100%-6rem)/8)] hidden h-1 rounded-full bg-sun/40 split:block"
             />
             <ol
               role="list"
-              className="relative grid gap-10 split:grid-cols-4 split:gap-6"
+              className="relative grid gap-12 split:grid-cols-4 split:gap-8"
             >
               {steps.map((step, index) => (
                 <li key={step.title}>
-                  <FadeIn className="flex gap-5 split:flex-col split:items-center split:text-center">
+                  <FadeIn className="flex gap-6 split:flex-col split:items-center split:text-center">
                     <NumberBadge
                       value={index + 1}
                       tone="sun"
@@ -110,8 +117,8 @@ export default function Renovations() {
                       className="relative"
                     />
                     <div>
-                      <h2 className="type-display text-4xl">{step.title}</h2>
-                      <p className="mt-3 text-base/[1.55] text-warm-muted">
+                      <h2 className="type-display text-[2.625rem]">{step.title}</h2>
+                      <p className="mt-4 text-[1.0625rem]/[1.6] text-warm-muted">
                         {step.description}
                       </p>
                     </div>
@@ -132,19 +139,20 @@ export default function Renovations() {
               Island properties.
             </p>
           </SectionHead>
-          <FadeInStagger className="mt-12 grid gap-4.5 split:grid-cols-2">
+          <FadeInStagger className="mt-16 grid gap-6 split:grid-cols-2">
             {projectTypes.map((project) => (
               <FadeIn
                 key={project.title}
                 className={clsx(
-                  'flex min-h-[16rem] flex-col justify-end rounded-[2.75rem] p-8',
+                  'flex min-h-[18rem] flex-col rounded-[2.75rem] p-10',
                   project.tone,
                 )}
               >
-                <h3 className="type-display text-[clamp(2.125rem,3.2vw,2.75rem)]">
+                <CardIcon src={project.icon} />
+                <h3 className="mt-auto pt-10 type-display text-[clamp(2.25rem,3.2vw,2.875rem)]">
                   {project.title}
                 </h3>
-                <p className="mt-3 text-base/[1.5] opacity-90">
+                <p className="mt-4 text-[1.0625rem]/[1.55] opacity-90">
                   {project.description}
                 </p>
               </FadeIn>
@@ -154,7 +162,7 @@ export default function Renovations() {
       </Band>
 
       <Band tone="apricot">
-        <Container className="grid items-center gap-10 split:grid-cols-[0.8fr_1.2fr] split:gap-16">
+        <Container className="grid items-center gap-12 split:grid-cols-[0.8fr_1.2fr] split:gap-20">
           <FadeIn className="relative aspect-4/5 overflow-hidden rounded-[2.75rem]">
             <Image
               src={site.images.renovations}
