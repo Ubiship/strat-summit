@@ -18,6 +18,7 @@ const headerLinks = [
   { href: '/stays', label: 'Stays' },
   { href: '/mount-washington', label: 'Mount Washington' },
   { href: '/property-management', label: 'Property Management' },
+  { href: '/cleaning', label: 'Cleaning' },
   { href: '/renovations', label: 'Renovations' },
   { href: '/about', label: 'About Us' },
 ]
