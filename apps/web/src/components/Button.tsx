@@ -14,6 +14,7 @@ const tones = {
 }
 
 const sizes = {
+  lg: 'px-10 py-5.5 text-[1.125rem]',
   md: 'px-6 py-4 text-base',
   sm: 'px-4.5 py-3 text-[0.9375rem]',
 }
@@ -38,7 +39,8 @@ export function Button({
   ...props
 }: ButtonProps) {
   className = clsx(
-    'inline-flex items-center gap-2.5 rounded-full font-bold transition disabled:cursor-not-allowed disabled:opacity-50',
+    'inline-flex items-center rounded-full font-bold transition disabled:cursor-not-allowed disabled:opacity-50',
+    size === 'lg' ? 'gap-3' : 'gap-2.5',
     tones[tone],
     sizes[size],
     className,
@@ -50,7 +52,10 @@ export function Button({
       {arrow && (
         <span
           aria-hidden="true"
-          className="grid size-7 place-items-center rounded-full bg-current/15 text-sm"
+          className={clsx(
+            'grid place-items-center rounded-full bg-current/15',
+            size === 'lg' ? 'size-8 text-base' : 'size-7 text-sm',
+          )}
         >
           →
         </span>

@@ -33,14 +33,14 @@ export function Kicker({
   return (
     <Component
       className={clsx(
-        'flex items-center gap-2.5 text-sm font-bold tracking-[0.08em] uppercase',
+        'flex items-center gap-3 text-sm font-bold tracking-[0.12em] uppercase',
         tone === 'dark' ? 'text-apricot' : 'text-ember-deep',
         className,
       )}
     >
       <span
         aria-hidden="true"
-        className="size-4 flex-none rounded-full bg-sun"
+        className="size-3.5 flex-none rounded-full bg-sun"
       />
       {children}
     </Component>

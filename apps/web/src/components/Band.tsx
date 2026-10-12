@@ -26,8 +26,8 @@ export function Band({
   return (
     <Component
       className={clsx(
-        'relative z-10 mt-[calc(var(--band-radius)*-1)] rounded-t-[var(--band-radius)] pt-24 split:pt-28',
-        last ? 'pb-10' : 'pb-[calc(var(--band-radius)+6rem)]',
+        'relative z-10 mt-[calc(var(--band-radius)*-1)] rounded-t-[var(--band-radius)] pt-28 split:pt-36',
+        last ? 'pb-20 split:pb-24' : 'pb-[calc(var(--band-radius)+7rem)]',
         tones[tone],
         className,
       )}

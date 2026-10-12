@@ -6,7 +6,8 @@ import { getReviews } from '@/lib/hostaway'
 
 export async function ReviewCarousel() {
   const reviews = await getReviews()
-  const featuredReviews = reviews.slice(0, 6)
+  // Show only 5-star reviews, up to 6
+  const featuredReviews = reviews.filter((r) => r.rating === 5).slice(0, 6)
 
   if (featuredReviews.length === 0) {
     return null
@@ -22,22 +23,22 @@ export async function ReviewCarousel() {
         <SectionHead
           tone="dark"
           kicker="Guest reviews"
-          title="Hear from our guests."
+          title="What our guests are saying."
         >
           <p>
-            Discover why travelers choose to book with us again and again. Real
-            experiences from real guests at our Mount Washington properties.
+            Real experiences from guests who&apos;ve stayed at our Mount
+            Washington properties.
           </p>
         </SectionHead>
 
-        <div className="mt-12 overflow-x-auto pb-6 -mx-4 px-4">
-          <div className="flex gap-6 min-w-min">
+        <div className="mt-16 overflow-x-auto pb-8 -mx-6 px-6 split:-mx-12 split:px-12">
+          <div className="flex gap-6 min-w-min split:gap-8">
             {featuredReviews.map((review) => (
               <FadeIn
                 key={review.id}
-                className="flex w-[min(26rem,85vw)] flex-none flex-col rounded-[2.5rem] bg-warm-cream/8 p-8"
+                className="flex w-[min(28rem,85vw)] flex-none flex-col rounded-[2.5rem] bg-warm-cream/8 p-8 split:p-10"
               >
-                <div className="flex items-center gap-1.5 text-sun">
+                <div className="flex items-center gap-2 text-lg text-sun">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <span
                       key={i}
@@ -47,18 +48,20 @@ export async function ReviewCarousel() {
                     </span>
                   ))}
                 </div>
-                <blockquote className="mt-6 flex-auto text-base/[1.6] text-warm-cream/95">
+                <blockquote className="mt-8 flex-auto text-[1.0625rem]/[1.7] text-warm-cream/95">
                   &ldquo;{review.comment}&rdquo;
                 </blockquote>
-                <p className="mt-6 font-bold text-warm-cream">
-                  {review.guestName}
-                </p>
-                <p className="mt-1 text-sm text-warm-cream/60">
-                  {new Date(review.createdAt).toLocaleDateString('en-US', {
-                    month: 'long',
-                    year: 'numeric',
-                  })}
-                </p>
+                <div className="mt-8 border-t border-warm-cream/10 pt-6">
+                  <p className="font-bold text-warm-cream">
+                    {review.guestName}
+                  </p>
+                  <p className="mt-1.5 text-sm text-warm-cream/50">
+                    {new Date(review.createdAt).toLocaleDateString('en-US', {
+                      month: 'long',
+                      year: 'numeric',
+                    })}
+                  </p>
+                </div>
               </FadeIn>
             ))}
           </div>

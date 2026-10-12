@@ -19,7 +19,7 @@ export function SectionHead({
   return (
     <FadeIn
       className={clsx(
-        'grid gap-6 split:grid-cols-[1.1fr_0.9fr] split:items-end split:gap-10',
+        'grid gap-8 split:grid-cols-[1.1fr_0.9fr] split:items-end split:gap-16',
         className,
       )}
     >
@@ -27,8 +27,8 @@ export function SectionHead({
         {kicker && <Kicker tone={tone}>{kicker}</Kicker>}
         <h2
           className={clsx(
-            'type-display text-[clamp(3.25rem,6vw,5.5rem)] text-balance',
-            kicker && 'mt-4',
+            'type-display text-[clamp(3rem,6vw,5rem)] text-balance',
+            kicker && 'mt-5',
           )}
         >
           {title}
@@ -37,7 +37,7 @@ export function SectionHead({
       {children && (
         <div
           className={clsx(
-            'max-w-[38ch] space-y-4 text-[1.1875rem]/[1.5]',
+            'max-w-[40ch] space-y-5 text-[1.1875rem]/[1.6]',
             tone === 'dark' ? 'text-[#f1dfc6]' : 'text-warm-muted',
           )}
         >

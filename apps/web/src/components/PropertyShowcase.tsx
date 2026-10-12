@@ -8,7 +8,8 @@ import { getProperties } from '@/lib/hostaway'
 
 export async function PropertyShowcase() {
   const allProperties = await getProperties()
-  const featuredProperties = allProperties.slice(0, 4)
+  // Show up to 6 featured properties (currently 2: Cozy Bear and Black Dog)
+  const featuredProperties = allProperties.slice(0, 6)
 
   if (featuredProperties.length === 0) {
     return null
@@ -18,17 +19,16 @@ export async function PropertyShowcase() {
     <Band tone="sand">
       <Container>
         <SectionHead
-          kicker="Featured properties"
-          title="Find your perfect mountain retreat."
+          kicker="Our properties"
+          title="Find your mountain stay."
         >
           <p>
-            From cozy alpine cabins to luxurious ski-in chalets, discover
-            hand-picked vacation rentals that make Mount Washington feel like
-            home.
+            Explore our collection of Mount Washington vacation rentals and find
+            the right fit for your getaway.
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-12 grid gap-6 split:grid-cols-2">
+        <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-2 split:gap-10">
           {featuredProperties.map((property) => (
             <FadeIn key={property.id}>
               <PropertyCard property={property} />
@@ -36,7 +36,7 @@ export async function PropertyShowcase() {
           ))}
         </FadeInStagger>
 
-        <FadeIn className="mt-12 text-center">
+        <FadeIn className="mt-16 text-center">
           <Button href="/stays" tone="forest" arrow>
             View all properties
           </Button>

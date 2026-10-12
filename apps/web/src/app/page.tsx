@@ -2,12 +2,14 @@ import { type Metadata } from 'next'
 import Link from 'next/link'
 
 import { Band } from '@/components/Band'
+import { BookingInvitation } from '@/components/BookingInvitation'
 import { CardIcon } from '@/components/CardIcon'
 import { Container } from '@/components/Container'
 import { EntrySplash } from '@/components/EntrySplash'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
+import { FAQ } from '@/components/FAQ'
 import { HeroWithSearch } from '@/components/HeroWithSearch'
-import { NewsletterSignup } from '@/components/NewsletterSignup'
+import { MeetYourHosts } from '@/components/MeetYourHosts'
 import { PropertyShowcase } from '@/components/PropertyShowcase'
 import { ReviewCarousel } from '@/components/ReviewCarousel'
 import { RootLayout } from '@/components/RootLayout'
@@ -60,22 +62,22 @@ function ContentHub() {
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-3">
+        <FadeInStagger className="mt-20 grid gap-8 split:grid-cols-3 split:gap-8">
           {contentCategories.map((category) => (
             <FadeIn
               key={category.title}
-              className="flex flex-col rounded-[2.75rem] bg-white p-10 shadow-[0_8px_24px_rgb(42_24_10/0.06)] transition hover:shadow-[0_12px_32px_rgb(42_24_10/0.12)]"
+              className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] transition hover:shadow-[0_16px_48px_rgb(42_24_10/0.1)] split:p-12"
             >
               <CardIcon src={category.icon} />
-              <h3 className="mt-8 type-display text-[clamp(2.125rem,3vw,2.625rem)] text-warm-ink">
+              <h3 className="mt-10 type-display text-[clamp(2rem,3vw,2.5rem)] text-warm-ink">
                 {category.title}
               </h3>
-              <p className="mt-4 flex-auto text-[1.0625rem]/[1.6] text-warm-muted">
+              <p className="mt-5 flex-auto text-[1.0625rem]/[1.7] text-warm-muted">
                 {category.description}
               </p>
               <Link
                 href={category.href}
-                className="mt-8 inline-flex items-center gap-2.5 text-base font-bold text-forest-warm transition hover:text-forest-deep"
+                className="mt-10 inline-flex items-center gap-3 text-base font-bold text-forest-warm transition hover:text-forest-deep"
               >
                 Explore {category.title.toLowerCase()}
                 <span aria-hidden="true" className="text-lg">
@@ -99,12 +101,10 @@ export default function Home() {
         <PropertyShowcase />
         <WhyBookDirect />
         <ReviewCarousel />
+        <MeetYourHosts />
         <ContentHub />
-        <Band tone="apricot" last>
-          <Container>
-            <NewsletterSignup />
-          </Container>
-        </Band>
+        <FAQ />
+        <BookingInvitation />
       </RootLayout>
     </>
   )

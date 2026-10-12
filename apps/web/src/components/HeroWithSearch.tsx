@@ -3,110 +3,9 @@
 import { Suspense, useId, useState } from 'react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { motion, useReducedMotion } from 'framer-motion'
 import { FadeIn } from '@/components/FadeIn'
 import { Button } from '@/components/Button'
 import clsx from 'clsx'
-
-// Partner platforms
-const PARTNERS = [
-  { name: 'Airbnb', color: '#FF5A5F' },
-  { name: 'VRBO', color: '#0052CC' },
-  { name: 'Booking.com', color: '#003580' },
-  { name: 'Hostaway', color: '#1f4a35' },
-  { name: 'Expedia', color: '#FFCC00' },
-  { name: 'TripAdvisor', color: '#34E0A1' },
-  { name: 'Google', color: '#4285F4' },
-]
-
-function ShimmerChip({ children }: { children: React.ReactNode }) {
-  const reduceMotion = useReducedMotion()
-
-  if (reduceMotion) {
-    return (
-      <span className="mx-1 inline-block rounded-full bg-white/20 px-3 py-1 font-bold text-warm-cream">
-        {children}
-      </span>
-    )
-  }
-
-  return (
-    <motion.span
-      className="mx-1 inline-block rounded-full bg-white/20 px-3 py-1 font-bold"
-      style={{
-        backgroundImage:
-          'linear-gradient(100deg, #fdf5e8 40%, #f2a33a 50%, #fdf5e8 60%)',
-        backgroundSize: '250% 100%',
-        WebkitBackgroundClip: 'text',
-        backgroundClip: 'text',
-        color: 'transparent',
-      }}
-      initial={{ backgroundPosition: '150% 0%' }}
-      animate={{ backgroundPosition: '-50% 0%' }}
-      transition={{ duration: 3.5, ease: 'easeInOut', repeat: Infinity }}
-    >
-      {children}
-    </motion.span>
-  )
-}
-
-function PartnerMarquee() {
-  const reduceMotion = useReducedMotion()
-
-  const LogoRow = ({ hidden }: { hidden?: boolean }) => (
-    <div
-      aria-hidden={hidden || undefined}
-      className="flex shrink-0 items-center gap-10 pr-10 split:gap-14 split:pr-14"
-    >
-      {PARTNERS.map(({ name, color }) => (
-        <div
-          key={name}
-          className="flex items-center gap-2.5 whitespace-nowrap text-base font-semibold text-warm-cream/80 split:text-lg"
-        >
-          <span
-            className="size-2.5 shrink-0 rounded-full split:size-3"
-            style={{ backgroundColor: color }}
-          />
-          {name}
-        </div>
-      ))}
-    </div>
-  )
-
-  return (
-    <div className="mt-auto w-full pb-8 pt-12">
-      <p className="text-center text-sm text-warm-cream/70">
-        Synced with <ShimmerChip>7+ platforms</ShimmerChip> so your calendar is
-        always up to date
-      </p>
-      <div
-        className="relative mt-6 w-full overflow-hidden"
-        style={{
-          maskImage:
-            'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
-          WebkitMaskImage:
-            'linear-gradient(90deg, transparent 0%, black 10%, black 90%, transparent 100%)',
-        }}
-      >
-        <motion.div
-          className="flex w-max"
-          animate={reduceMotion ? undefined : { x: ['0%', '-33.333%'] }}
-          transition={{
-            x: {
-              duration: 20,
-              ease: 'linear',
-              repeat: Infinity,
-            },
-          }}
-        >
-          <LogoRow />
-          <LogoRow hidden />
-          <LogoRow hidden />
-        </motion.div>
-      </div>
-    </div>
-  )
-}
 
 function SearchFormInner() {
   const router = useRouter()
@@ -129,13 +28,13 @@ function SearchFormInner() {
   }
 
   const inputClasses =
-    'rounded-2xl border-2 border-warm-ink/10 bg-white px-5 py-3.5 text-base font-medium text-warm-ink transition placeholder:text-warm-ink/40 focus:border-sun focus:outline-none'
+    'rounded-2xl border-2 border-warm-ink/8 bg-warm-cream/40 px-5 py-4 text-base font-medium text-warm-ink transition placeholder:text-warm-ink/40 focus:border-sun focus:bg-white focus:outline-none'
 
-  const labelClasses = 'text-sm font-bold text-warm-ink/70'
+  const labelClasses = 'text-sm font-bold tracking-wide text-warm-ink/60 uppercase'
 
   return (
-    <div className="mx-auto w-full max-w-4xl rounded-[2.75rem] bg-white p-8 shadow-[0_12px_32px_rgb(42_24_10/0.12)] split:p-10">
-      <div className="grid gap-6 split:grid-cols-[1fr_1fr_auto_auto]">
+    <div className="mx-auto w-full max-w-4xl rounded-[3rem] bg-white p-8 shadow-[0_16px_48px_rgb(42_24_10/0.15),0_4px_12px_rgb(42_24_10/0.08)] split:p-12">
+      <div className="grid gap-8 split:grid-cols-[1fr_1fr_auto_auto] split:gap-6">
         <div>
           <label htmlFor={checkInId} className={labelClasses}>
             Check-in
@@ -145,7 +44,7 @@ function SearchFormInner() {
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            className={clsx(inputClasses, 'mt-1.5 w-full')}
+            className={clsx(inputClasses, 'mt-2.5 w-full')}
           />
         </div>
 
@@ -159,7 +58,7 @@ function SearchFormInner() {
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
             min={checkIn || undefined}
-            className={clsx(inputClasses, 'mt-1.5 w-full')}
+            className={clsx(inputClasses, 'mt-2.5 w-full')}
           />
         </div>
 
@@ -171,7 +70,7 @@ function SearchFormInner() {
             id={guestsId}
             value={guests}
             onChange={(e) => setGuests(e.target.value)}
-            className={clsx(inputClasses, 'mt-1.5 w-full')}
+            className={clsx(inputClasses, 'mt-2.5 w-full')}
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
               <option key={num} value={num}>
@@ -216,25 +115,22 @@ export function HeroWithSearch() {
       <div aria-hidden="true" className="absolute inset-0 -z-10 tile-shade" />
 
       {/* Content */}
-      <div className="mx-auto flex w-full max-w-[75rem] flex-1 flex-col px-6 pt-40 pb-[calc(var(--band-radius)+5rem)] split:px-10 split:pt-48">
+      <div className="mx-auto flex w-full max-w-[78rem] flex-1 flex-col px-6 pt-44 pb-[calc(var(--band-radius)+6rem)] split:px-12 split:pt-52">
         <FadeIn className="text-center">
-          <h1 className="type-display text-[clamp(3rem,8vw,6rem)] text-balance">
-            Your mountain escape.
+          <h1 className="type-display text-[clamp(2.75rem,7.5vw,5.5rem)] text-balance">
+            Stay close to adventure.
             <br />
-            Book direct. Save more.
+            Settle into comfort.
           </h1>
-          <p className="mx-auto mt-8 max-w-[48ch] text-[1.1875rem]/[1.55] text-warm-cream/90">
-            Experience Mount Washington from our thoughtfully managed vacation
-            rentals. Best rates guaranteed when you book directly with us.
+          <p className="mx-auto mt-10 max-w-[50ch] text-[1.25rem]/[1.6] text-warm-cream/90">
+            Discover Mount Washington chalets and condos, thoughtfully prepared
+            and hosted by a local team who know and love the mountain.
           </p>
         </FadeIn>
 
-        <div className="mt-14">
+        <div className="mt-16">
           <SearchForm />
         </div>
-
-        {/* Partner Marquee */}
-        <PartnerMarquee />
       </div>
     </div>
   )

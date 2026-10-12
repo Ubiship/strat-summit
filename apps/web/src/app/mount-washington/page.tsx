@@ -145,11 +145,11 @@ export default async function MountWashingtonHub() {
               Washington. From cozy studios to spacious chalets, find your
               perfect mountain retreat.
             </p>
-            <div className="mt-12 flex flex-wrap justify-center gap-5">
-              <Button href="/stays" tone="forest" arrow>
+            <div className="mt-14 flex flex-wrap justify-center gap-5">
+              <Button href="/stays" tone="forest" size="lg" arrow>
                 Browse Properties
               </Button>
-              <Button href="/contact" tone="cream">
+              <Button href="/contact" tone="cream" size="lg">
                 Contact Us
               </Button>
             </div>

@@ -175,11 +175,11 @@ export default async function GuidePage(props: Props) {
               comfort of one of our premium vacation rentals. Book direct for
               the best rates.
             </p>
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button href="/stays" tone="forest" arrow>
+            <div className="mt-12 flex flex-wrap justify-center gap-5">
+              <Button href="/stays" tone="forest" size="lg" arrow>
                 Browse Properties
               </Button>
-              <Button href="/mount-washington" tone="cream">
+              <Button href="/mount-washington" tone="cream" size="lg">
                 More Guides
               </Button>
             </div>

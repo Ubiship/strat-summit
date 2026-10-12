@@ -6,12 +6,12 @@
 }
 
 :root {
-  --band-radius: 2.5rem;
+  --band-radius: 2.75rem;
 }
 
 @media (width >= 56.25rem) {
   :root {
-    --band-radius: 4rem;
+    --band-radius: 4.5rem;
   }
 }
 
