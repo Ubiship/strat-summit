@@ -66,7 +66,11 @@ export type HostawayError = {
 
 const BASE_URL = 'https://api.hostaway.com/v1'
 
-function getApiKey(): string {
+// Cache for OAuth2 access token (valid for ~2 years)
+let cachedAccessToken: string | null = null
+let tokenExpiresAt: number = 0
+
+function getClientSecret(): string {
   const key = process.env.HOSTAWAY_API_KEY
   if (!key) {
     throw new Error('HOSTAWAY_API_KEY environment variable is not set')
@@ -74,11 +78,6 @@ function getApiKey(): string {
   return key
 }
 
-/**
- * Get the Hostaway account ID from environment variables.
- * Currently not used in direct booking flow, but may be required for future
- * API endpoints (e.g., account management, advanced reporting).
- */
 function getAccountId(): string {
   const id = process.env.HOSTAWAY_ACCOUNT_ID
   if (!id) {
@@ -95,18 +94,64 @@ function getCheckoutBaseUrl(): string {
   return url
 }
 
+/**
+ * Get an OAuth2 access token using client credentials flow.
+ * Tokens are cached and reused until they expire (~2 years).
+ */
+async function getAccessToken(): Promise<string> {
+  // Return cached token if still valid (with 5 minute buffer)
+  if (cachedAccessToken && Date.now() < tokenExpiresAt - 300000) {
+    return cachedAccessToken
+  }
+
+  const clientId = getAccountId()
+  const clientSecret = getClientSecret()
+
+  const body = new URLSearchParams({
+    grant_type: 'client_credentials',
+    client_id: clientId,
+    client_secret: clientSecret,
+    scope: 'general',
+  })
+
+  const response = await fetch(`${BASE_URL}/accessTokens`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: body.toString(),
+  })
+
+  if (!response.ok) {
+    const error = await response.text()
+    console.error('[Hostaway] Failed to get access token:', response.status, error)
+    throw new Error(`Failed to authenticate with Hostaway: ${response.status}`)
+  }
+
+  const data = await response.json()
+  cachedAccessToken = data.access_token
+  tokenExpiresAt = Date.now() + data.expires_in * 1000
+
+  // Wait 2 seconds as per Hostaway docs (token valid 1 second after creation)
+  await new Promise((resolve) => setTimeout(resolve, 2000))
+
+  return cachedAccessToken!
+}
+
 async function fetchHostaway<T>(
   endpoint: string,
   options?: RequestInit,
 ): Promise<T | null> {
   try {
-    const url = new URL(endpoint, BASE_URL).toString()
-    const apiKey = getApiKey()
+    // Construct URL properly - endpoint should not have leading slash
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint
+    const url = `${BASE_URL}/${cleanEndpoint}`
+    const accessToken = await getAccessToken()
 
     const response = await fetch(url, {
       ...options,
       headers: {
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
         ...options?.headers,
       },
@@ -119,15 +164,67 @@ async function fetchHostaway<T>(
 
     // Handle other non-2xx responses
     if (!response.ok) {
-      console.error(`Hostaway API error: ${response.status} ${response.statusText}`)
+      const errorBody = await response.text()
+      console.error(`[Hostaway] API error: ${response.status} - ${errorBody}`)
       throw new Error(`Hostaway API returned ${response.status}`)
     }
 
-    const data = await response.json()
-    return data as T
+    return (await response.json()) as T
   } catch (error) {
-    console.error('Hostaway fetch error:', error)
+    console.error('[Hostaway] Fetch error:', error)
     throw error
+  }
+}
+
+// Raw Hostaway listing type from API
+type HostawayListingRaw = {
+  id: number
+  name: string
+  internalListingName?: string
+  description?: string
+  address?: string
+  city?: string
+  state?: string
+  countryCode?: string
+  zipcode?: string
+  bedrooms?: number
+  bathrooms?: number
+  personCapacity?: number
+  price?: number
+  currencyCode?: string
+  listingImages?: Array<{
+    url: string
+    caption?: string
+    sortOrder?: number
+  }>
+  amenities?: string[]
+  starRating?: number
+  reviewsCount?: number
+}
+
+/**
+ * Transform raw Hostaway listing to our property type
+ */
+function transformListing(raw: HostawayListingRaw): HostawayProperty {
+  return {
+    id: raw.id,
+    name: raw.name || raw.internalListingName || 'Unnamed Property',
+    description: raw.description || '',
+    address: [raw.address, raw.city, raw.state].filter(Boolean).join(', '),
+    bedrooms: raw.bedrooms || 0,
+    bathrooms: raw.bathrooms || 0,
+    maxGuests: raw.personCapacity || 0,
+    basePrice: raw.price || 0,
+    photos: (raw.listingImages || [])
+      .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
+      .map((img) => ({
+        url: img.url,
+        caption: img.caption,
+        isCover: img.sortOrder === 0,
+      })),
+    amenities: raw.amenities || [],
+    rating: raw.starRating,
+    reviewCount: raw.reviewsCount,
   }
 }
 
@@ -136,15 +233,18 @@ async function fetchHostaway<T>(
  */
 export async function getProperties(): Promise<HostawayProperty[]> {
   try {
-    const response = await fetchHostaway<{ listings: HostawayProperty[] }>('/listings')
+    const response = await fetchHostaway<{
+      status: string
+      result: HostawayListingRaw[]
+    }>('/listings')
 
-    if (!response) {
+    if (!response || response.status !== 'success') {
       return []
     }
 
-    return response.listings || []
+    return (response.result || []).map(transformListing)
   } catch (error) {
-    console.error('Failed to fetch properties:', error)
+    console.error('[Hostaway] Failed to fetch properties:', error)
     return []
   }
 }
@@ -157,8 +257,16 @@ export async function getProperties(): Promise<HostawayProperty[]> {
  */
 export async function getProperty(id: string): Promise<HostawayProperty | null> {
   try {
-    const property = await fetchHostaway<HostawayProperty>(`/listings/${id}`)
-    return property
+    const response = await fetchHostaway<{
+      status: string
+      result: HostawayListingRaw
+    }>(`/listings/${id}`)
+
+    if (!response || response.status !== 'success' || !response.result) {
+      return null
+    }
+
+    return transformListing(response.result)
   } catch (error) {
     console.error(`Failed to fetch property ${id}:`, error)
     return null
