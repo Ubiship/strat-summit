@@ -217,10 +217,10 @@ function transformListing(raw: HostawayListingRaw): HostawayProperty {
     basePrice: raw.price || 0,
     photos: (raw.listingImages || [])
       .sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0))
-      .map((img) => ({
+      .map((img, index) => ({
         url: img.url,
         caption: img.caption,
-        isCover: img.sortOrder === 0,
+        isCover: index === 0, // First image after sorting is the cover
       })),
     amenities: raw.amenities || [],
     rating: raw.starRating,
@@ -233,10 +233,11 @@ function transformListing(raw: HostawayListingRaw): HostawayProperty {
  */
 export async function getProperties(): Promise<HostawayProperty[]> {
   try {
+    // includeResources=1 is required to get listing images
     const response = await fetchHostaway<{
       status: string
       result: HostawayListingRaw[]
-    }>('/listings')
+    }>('/listings?includeResources=1')
 
     if (!response || response.status !== 'success') {
       return []
@@ -257,10 +258,11 @@ export async function getProperties(): Promise<HostawayProperty[]> {
  */
 export async function getProperty(id: string): Promise<HostawayProperty | null> {
   try {
+    // includeResources=1 is required to get listing images
     const response = await fetchHostaway<{
       status: string
       result: HostawayListingRaw
-    }>(`/listings/${id}`)
+    }>(`/listings/${id}?includeResources=1`)
 
     if (!response || response.status !== 'success' || !response.result) {
       return null
