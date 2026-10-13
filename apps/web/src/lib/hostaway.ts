@@ -349,25 +349,57 @@ export async function getPricing(
   }
 }
 
+// Raw Hostaway review type from API
+type HostawayReviewRaw = {
+  id: number
+  listingMapId?: number
+  reservationId?: number
+  guestName?: string
+  rating?: number
+  text?: string
+  publicReview?: string
+  insertedOn?: string
+  createdAt?: string
+}
+
 /**
- * Fetch reviews for a property or all properties
+ * Transform raw Hostaway review to our review type
+ */
+function transformReview(raw: HostawayReviewRaw, listingId?: number): HostawayReview {
+  return {
+    id: raw.id,
+    listingId: raw.listingMapId || listingId || 0,
+    guestName: raw.guestName || 'Guest',
+    rating: raw.rating || 5,
+    comment: raw.publicReview || raw.text || '',
+    createdAt: raw.insertedOn || raw.createdAt || new Date().toISOString(),
+  }
+}
+
+/**
+ * Fetch reviews for a property or all properties.
+ * @param listingId - Optional Hostaway listing ID to filter reviews
+ * @returns Array of reviews, or empty array if none found or error occurs.
  */
 export async function getReviews(listingId?: string): Promise<HostawayReview[]> {
   try {
-    let endpoint = '/reviews'
+    // Hostaway reviews endpoint uses listingId in the path
+    const endpoint = listingId
+      ? `/reviews?listingId=${listingId}`
+      : '/reviews'
 
-    if (listingId) {
-      const params = new URLSearchParams({ listingId })
-      endpoint += `?${params.toString()}`
-    }
+    const response = await fetchHostaway<{
+      status: string
+      result: HostawayReviewRaw[]
+    }>(endpoint)
 
-    const response = await fetchHostaway<{ reviews: HostawayReview[] }>(endpoint)
-
-    if (!response) {
+    if (!response || response.status !== 'success') {
       return []
     }
 
-    return response.reviews || []
+    return (response.result || []).map((raw) =>
+      transformReview(raw, listingId ? parseInt(listingId) : undefined)
+    )
   } catch (error) {
     console.error('Failed to fetch reviews:', error)
     return []
