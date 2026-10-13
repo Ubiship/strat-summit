@@ -1,5 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "HOSTAWAY_API_KEY",
+    "HOSTAWAY_ACCOUNT_ID",
+    "HOSTAWAY_CHECKOUT_BASE_URL"
+  ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
