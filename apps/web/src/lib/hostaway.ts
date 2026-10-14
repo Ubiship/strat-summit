@@ -355,29 +355,39 @@ type HostawayReviewRaw = {
   listingMapId?: number
   reservationId?: number
   guestName?: string
-  rating?: number
+  reviewerName?: string
+  rating?: number // 0-10 scale
+  status?: string // 'pending', 'awaiting', 'published', etc.
+  type?: string // 'guest-to-host', 'host-to-guest'
   text?: string
   publicReview?: string
+  submittedAt?: string
   insertedOn?: string
   createdAt?: string
 }
 
 /**
- * Transform raw Hostaway review to our review type
+ * Transform raw Hostaway review to our review type.
+ * Converts 10-point rating scale to 5-point scale.
  */
 function transformReview(raw: HostawayReviewRaw, listingId?: number): HostawayReview {
+  // Convert 0-10 rating to 0-5 scale (round to nearest 0.5)
+  const rating10 = raw.rating || 10
+  const rating5 = Math.round((rating10 / 2) * 2) / 2 // e.g., 10 -> 5, 8 -> 4, 9 -> 4.5
+
   return {
     id: raw.id,
     listingId: raw.listingMapId || listingId || 0,
-    guestName: raw.guestName || 'Guest',
-    rating: raw.rating || 5,
+    guestName: raw.guestName || raw.reviewerName || 'Guest',
+    rating: rating5,
     comment: raw.publicReview || raw.text || '',
-    createdAt: raw.insertedOn || raw.createdAt || new Date().toISOString(),
+    createdAt: raw.submittedAt || raw.insertedOn || raw.createdAt || new Date().toISOString(),
   }
 }
 
 /**
  * Fetch reviews for a property or all properties.
+ * Only returns published guest-to-host reviews with actual content.
  * @param listingId - Optional Hostaway listing ID to filter reviews
  * @returns Array of reviews, or empty array if none found or error occurs.
  */
@@ -397,7 +407,15 @@ export async function getReviews(listingId?: string): Promise<HostawayReview[]> 
       return []
     }
 
-    return (response.result || []).map((raw) =>
+    // Filter to only published guest-to-host reviews with actual content
+    const publishedReviews = (response.result || []).filter(
+      (r) =>
+        r.status === 'published' &&
+        r.type === 'guest-to-host' &&
+        r.publicReview
+    )
+
+    return publishedReviews.map((raw) =>
       transformReview(raw, listingId ? parseInt(listingId) : undefined)
     )
   } catch (error) {
