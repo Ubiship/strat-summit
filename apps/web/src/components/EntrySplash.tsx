@@ -80,9 +80,6 @@ export function EntrySplash() {
           >
             <LogoMark className="size-28" />
             <p className="mt-6 type-display text-5xl">{site.shortName}</p>
-            <p className="mt-4 text-xs font-bold tracking-[0.16em] text-warm-muted uppercase">
-              {site.tagline}
-            </p>
             <span
               aria-hidden="true"
               className="mt-6 h-1.5 w-12 rounded-full bg-sun"

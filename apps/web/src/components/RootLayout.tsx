@@ -14,16 +14,115 @@ import { NumberBadge } from '@/components/NumberBadge'
 import { Offices } from '@/components/Offices'
 import { SocialMedia } from '@/components/SocialMedia'
 
-const headerLinks = [
-  { href: '/stays', label: 'Stays' },
+type NavItem = {
+  href: string
+  label: string
+  children?: { href: string; label: string }[]
+}
+
+const headerLinks: NavItem[] = [
+  {
+    href: '/stays',
+    label: 'Vacation Rentals',
+    children: [{ href: '/mount-washington', label: 'Mount Washington' }],
+  },
+  { href: '/property-management', label: 'Property Management' },
+  {
+    href: '#',
+    label: 'Property Support Services',
+    children: [
+      { href: '/cleaning', label: 'Cleaning' },
+      { href: '/renovations', label: 'Renovations' },
+    ],
+  },
+  { href: '/about', label: 'About Us' },
+  { href: '/contact', label: 'Contact Us' },
+]
+
+// Flatten for mobile menu
+const menuLinks = [
+  { href: '/stays', label: 'Vacation Rentals' },
   { href: '/mount-washington', label: 'Mount Washington' },
   { href: '/property-management', label: 'Property Management' },
   { href: '/cleaning', label: 'Cleaning' },
   { href: '/renovations', label: 'Renovations' },
   { href: '/about', label: 'About Us' },
+  { href: '/contact', label: 'Contact Us' },
 ]
 
-const menuLinks = [...headerLinks, { href: '/contact', label: 'Contact' }]
+function NavDropdown({ item }: { item: NavItem }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    setIsOpen(true)
+  }
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 150)
+  }
+
+  if (!item.children) {
+    return (
+      <Link
+        href={item.href}
+        className="hidden rounded-full px-4 py-3 text-[0.9375rem] font-semibold transition hover:bg-sand split:inline-flex"
+      >
+        {item.label}
+      </Link>
+    )
+  }
+
+  return (
+    <div
+      className="relative hidden split:block"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Link
+        href={item.href}
+        className="inline-flex items-center gap-1 rounded-full px-4 py-3 text-[0.9375rem] font-semibold transition hover:bg-sand"
+      >
+        {item.label}
+        <svg
+          className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M19 9l-7 7-7-7"
+          />
+        </svg>
+      </Link>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.15 }}
+            className="absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-2xl bg-warm-cream p-2 shadow-lg"
+          >
+            {item.children.map((child) => (
+              <Link
+                key={child.href}
+                href={child.href}
+                className="block rounded-xl px-4 py-2.5 text-[0.9375rem] font-medium transition hover:bg-sand"
+              >
+                {child.label}
+              </Link>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
 
 function SiteHeader({
   panelId,
@@ -37,24 +136,18 @@ function SiteHeader({
   openRef: React.RefObject<HTMLButtonElement | null>
 }) {
   return (
-    <header className="absolute inset-x-0 top-0 z-40 px-4 pt-5">
-      <div className="mx-auto flex max-w-[75rem] items-center justify-between gap-4 rounded-full bg-warm-cream/95 py-2.5 pr-2.5 pl-3 text-warm-ink shadow-[0_18px_40px_rgb(42_24_10/0.18)] backdrop-blur">
-        <Link href="/" className="rounded-full">
+    <header className="fixed inset-x-0 top-0 z-40 border-b border-warm-ink/10 bg-warm-cream/95 backdrop-blur">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 text-warm-ink sm:px-6 lg:px-8">
+        <Link href="/">
           <Logo />
         </Link>
         <nav aria-label="Primary" className="flex items-center gap-1">
           {headerLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="hidden rounded-full px-4 py-3 text-[0.9375rem] font-semibold transition hover:bg-sand split:inline-flex"
-            >
-              {link.label}
-            </Link>
+            <NavDropdown key={link.label} item={link} />
           ))}
           <span className="hidden split:block">
-            <Button href="/contact" size="sm">
-              Get in touch
+            <Button href="/stays" size="sm">
+              Book Now
             </Button>
           </span>
           <button
@@ -180,7 +273,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
     <>
       <div
         inert={open ? true : undefined}
-        className="relative flex min-h-full flex-auto flex-col"
+        className="relative flex min-h-full flex-auto flex-col pt-[72px]"
       >
         <SiteHeader
           panelId={panelId}

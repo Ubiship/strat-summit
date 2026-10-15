@@ -92,7 +92,7 @@ export function BookingCard({
     : today
 
   return (
-    <div className="rounded-[2.75rem] bg-white p-6 shadow-[0_8px_24px_rgb(42_24_10/0.08)] split:sticky split:top-24">
+    <div className="overflow-hidden rounded-[2.75rem] bg-white p-6 shadow-[0_8px_24px_rgb(42_24_10/0.08)] split:sticky split:top-24">
       <div className="mb-6">
         <p className="text-sm font-semibold text-warm-ink/60">From</p>
         <p className="type-display text-[clamp(1.75rem,3vw,2rem)] text-warm-ink">
@@ -103,7 +103,7 @@ export function BookingCard({
 
       {/* Date inputs */}
       <div className="mb-4 grid grid-cols-2 gap-2">
-        <div>
+        <div className="min-w-0">
           <label
             htmlFor="check-in"
             className="mb-1 block text-xs font-semibold uppercase text-warm-ink/60"
@@ -116,10 +116,10 @@ export function BookingCard({
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
             min={today}
-            className="w-full rounded-2xl border-2 border-warm-ink/10 bg-warm-cream/50 px-4 py-3 text-sm font-medium text-warm-ink transition focus:border-forest-warm focus:outline-none"
+            className="w-full min-w-0 rounded-2xl border-2 border-warm-ink/10 bg-warm-cream/50 px-3 py-2.5 text-sm font-medium text-warm-ink transition focus:border-forest-warm focus:outline-none"
           />
         </div>
-        <div>
+        <div className="min-w-0">
           <label
             htmlFor="check-out"
             className="mb-1 block text-xs font-semibold uppercase text-warm-ink/60"
@@ -132,7 +132,7 @@ export function BookingCard({
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
             min={minCheckOut}
-            className="w-full rounded-2xl border-2 border-warm-ink/10 bg-warm-cream/50 px-4 py-3 text-sm font-medium text-warm-ink transition focus:border-forest-warm focus:outline-none"
+            className="w-full min-w-0 rounded-2xl border-2 border-warm-ink/10 bg-warm-cream/50 px-3 py-2.5 text-sm font-medium text-warm-ink transition focus:border-forest-warm focus:outline-none"
           />
         </div>
       </div>

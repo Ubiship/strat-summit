@@ -3,135 +3,178 @@ import Link from 'next/link'
 
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
-import { CardIcon } from '@/components/CardIcon'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
-import { PageHeroWithMarquee } from '@/components/PageHeroWithMarquee'
+import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
-import iconFamilies from '@/images/icons/icon-families.png'
-import iconFirstTime from '@/images/icons/icon-first-time.png'
-import iconGettingHere from '@/images/icons/icon-getting-here.png'
-import iconSkiing from '@/images/icons/icon-skiing.png'
-import iconSummer from '@/images/icons/icon-summer.png'
-import { categoryMetadata, getAllGuides } from '@/lib/content'
-import { formatDate } from '@/lib/formatDate'
+import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Discover Mount Washington',
+  title: 'Explore Mount Washington',
   description:
-    'Your complete guide to Mount Washington. Explore local tips, activities, and insider knowledge to make the most of your mountain getaway.',
+    'Plan your mountain getaway with our local guide to seasonal adventures, places to eat, and helpful tips for your visit.',
 }
 
-const categories = [
-  { slug: 'skiing', icon: iconSkiing },
-  { slug: 'summer', icon: iconSummer },
-  { slug: 'families', icon: iconFamilies },
-  { slug: 'getting-here', icon: iconGettingHere },
-  { slug: 'first-time-visitors', icon: iconFirstTime },
-] as const
+function IconWinter({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M24 4v40M4 24h40M10 10l28 28M38 10 10 38" />
+      <circle cx="24" cy="24" r="4" />
+    </svg>
+  )
+}
 
-export default async function MountWashingtonHub() {
-  const allGuides = await getAllGuides()
-  const latestGuides = allGuides.slice(0, 6)
+function IconSummer({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <circle cx="24" cy="24" r="8" />
+      <path d="M24 4v4M24 40v4M4 24h4M40 24h4M9.86 9.86l2.83 2.83M35.31 35.31l2.83 2.83M9.86 38.14l2.83-2.83M35.31 12.69l2.83-2.83" />
+    </svg>
+  )
+}
 
+function IconDining({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M12 6v10c0 3.314 2.686 6 6 6v0c3.314 0 6-2.686 6-6V6" />
+      <path d="M18 22v20" />
+      <path d="M30 6v36" />
+      <path d="M30 6c4 0 6 4 6 10s-2 10-6 10" />
+    </svg>
+  )
+}
+
+function IconPlan({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect x="6" y="10" width="36" height="32" rx="4" />
+      <path d="M6 18h36" />
+      <path d="M16 6v8M32 6v8" />
+      <path d="M16 26h8M16 34h16" />
+    </svg>
+  )
+}
+
+const guideCategories = [
+  {
+    title: 'Winter Activities',
+    href: '/mount-washington/category/winter',
+    Icon: IconWinter,
+    description:
+      'Discover skiing, snowshoeing, tubing, and more ways to enjoy the snow.',
+    linkText: 'Explore winter activities',
+  },
+  {
+    title: 'Summer Activities',
+    href: '/mount-washington/category/summer',
+    Icon: IconSummer,
+    description:
+      'Explore hiking trails, mountain biking, lakes, and adventures beyond the mountain.',
+    linkText: 'Explore summer activities',
+  },
+  {
+    title: 'Where to Eat',
+    href: '/mount-washington/category/dining',
+    Icon: IconDining,
+    description:
+      'Find local restaurants, cafés, and favourite spots on the mountain and in the Comox Valley.',
+    linkText: 'Explore places to eat',
+  },
+  {
+    title: 'Before You Visit',
+    href: '/mount-washington/category/planning',
+    Icon: IconPlan,
+    description:
+      'Getting here, what to pack, and practical information for your trip.',
+    linkText: 'Plan your trip',
+  },
+]
+
+export default function MountWashingtonHub() {
   return (
     <RootLayout>
       {/* Hero Section */}
-      <PageHeroWithMarquee
-        title="Discover Mount Washington"
-        subtitle="Your complete guide to Mount Washington. Explore local tips, activities, and insider knowledge to make the most of your mountain getaway."
-      />
+      <PageHero
+        title="Explore Mount Washington"
+        size="short"
+        image={{
+          src: site.images.hero,
+          alt: 'Mount Washington alpine landscape',
+        }}
+      >
+        <p>
+          Plan your mountain getaway with our local guide to seasonal
+          adventures, places to eat, and helpful tips for your visit.
+        </p>
+      </PageHero>
 
       {/* Categories Section */}
       <Band tone="sand">
         <Container>
-          <SectionHead
-            kicker="Browse by Topic"
-            title="Find what you're looking for."
-          >
-            <p>
-              Whether you're planning a ski trip, summer adventure, or family
-              vacation, we've got you covered with expert local knowledge.
-            </p>
-          </SectionHead>
+          <SectionHead kicker="Local guides" title="Plan your visit." />
 
-          <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-2 wide:grid-cols-3">
-            {categories.map((cat) => {
-              const meta = categoryMetadata[cat.slug]
-              return (
-                <FadeIn
-                  key={cat.slug}
-                  className="group relative flex flex-col overflow-hidden rounded-[2.75rem] bg-white p-10 shadow-[0_8px_24px_rgb(42_24_10/0.06)] transition hover:shadow-[0_12px_32px_rgb(42_24_10/0.12)]"
+          <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-2">
+            {guideCategories.map((category) => (
+              <FadeIn
+                key={category.title}
+                className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] transition hover:shadow-[0_16px_48px_rgb(42_24_10/0.1)] split:p-12"
+              >
+                <div className="flex size-16 items-center justify-center rounded-2xl bg-forest-warm/8">
+                  <category.Icon className="size-10 text-forest-warm" />
+                </div>
+                <h3 className="mt-10 type-display text-[clamp(2rem,3vw,2.5rem)] text-warm-ink">
+                  {category.title}
+                </h3>
+                <p className="mt-5 flex-auto text-[1.0625rem]/[1.7] text-warm-muted">
+                  {category.description}
+                </p>
+                <Link
+                  href={category.href}
+                  className="mt-10 inline-flex items-center gap-3 text-base font-bold text-forest-warm transition hover:text-forest-deep"
                 >
-                  <CardIcon src={cat.icon} />
-                  <h3 className="mt-8 type-display text-[clamp(2.125rem,3vw,2.625rem)] text-warm-ink">
-                    {meta.title}
-                  </h3>
-                  <p className="mt-4 flex-auto text-[1.0625rem]/[1.6] text-warm-muted">
-                    {meta.description}
-                  </p>
-                  <Link
-                    href={`/mount-washington/category/${cat.slug}`}
-                    className="mt-8 inline-flex items-center gap-2.5 text-base font-bold text-forest-warm transition hover:text-forest-deep"
-                  >
-                    View guides
-                    <span aria-hidden="true" className="text-lg">
-                      →
-                    </span>
-                  </Link>
-                </FadeIn>
-              )
-            })}
+                  {category.linkText}
+                  <span aria-hidden="true" className="text-lg">
+                    →
+                  </span>
+                </Link>
+              </FadeIn>
+            ))}
           </FadeInStagger>
         </Container>
       </Band>
-
-      {/* Latest Guides Section */}
-      {latestGuides.length > 0 && (
-        <Band tone="cream">
-          <Container>
-            <SectionHead kicker="Recent Guides" title="Latest from the blog.">
-              <p>
-                Stay up to date with the latest tips, seasonal updates, and
-                insider recommendations for your Mount Washington visit.
-              </p>
-            </SectionHead>
-
-            <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-2 wide:grid-cols-3">
-              {latestGuides.map((guide) => (
-                <FadeIn
-                  key={guide.slug}
-                  className="group flex flex-col rounded-[2.5rem] bg-white p-8 shadow-[0_4px_16px_rgb(42_24_10/0.04)] transition hover:shadow-[0_8px_24px_rgb(42_24_10/0.08)]"
-                >
-                  <div className="mb-4 flex items-center gap-3 text-sm text-warm-muted">
-                    <time dateTime={guide.publishedAt}>
-                      {formatDate(guide.publishedAt)}
-                    </time>
-                    <span>·</span>
-                    <span className="capitalize">{guide.category}</span>
-                  </div>
-                  <h3 className="text-[1.5rem] font-bold leading-[1.3] text-warm-ink">
-                    {guide.title}
-                  </h3>
-                  <p className="mt-3 flex-auto text-base/[1.55] text-warm-muted">
-                    {guide.description}
-                  </p>
-                  <Link
-                    href={`/mount-washington/${guide.slug}`}
-                    className="mt-6 inline-flex items-center gap-2.5 text-base font-bold text-forest-warm transition hover:text-forest-deep"
-                  >
-                    Read more
-                    <span aria-hidden="true" className="text-lg">
-                      →
-                    </span>
-                  </Link>
-                </FadeIn>
-              ))}
-            </FadeInStagger>
-          </Container>
-        </Band>
-      )}
 
       {/* CTA Section */}
       <Band tone="apricot" last>
@@ -141,9 +184,8 @@ export default async function MountWashingtonHub() {
               Ready to book your stay?
             </h2>
             <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
-              Browse our curated selection of vacation rentals at Mount
-              Washington. From cozy studios to spacious chalets, find your
-              perfect mountain retreat.
+              Browse our Mount Washington vacation rentals and find your
+              mountain stay.
             </p>
             <div className="mt-14 flex flex-wrap justify-center gap-5">
               <Button href="/stays" tone="forest" size="lg" arrow>

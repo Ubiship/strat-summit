@@ -19,9 +19,9 @@ import {
 } from '@/lib/hostaway'
 
 export const metadata: Metadata = {
-  title: 'Find Your Stay',
+  title: 'Mount Washington Vacation Rentals',
   description:
-    'Browse our collection of vacation rentals on Vancouver Island. Comfortable, well-maintained properties in beautiful locations.',
+    'Browse our collection of vacation rentals on Mount Washington, Vancouver Island. Chalets and condos professionally cleaned and ready to welcome you.',
 }
 
 type SearchParams = Promise<{
@@ -30,7 +30,7 @@ type SearchParams = Promise<{
   guests?: string
   bedrooms?: string
   amenities?: string
-  priceRange?: string
+  propertyType?: string
 }>
 
 // Cache property list for 1 hour
@@ -62,11 +62,11 @@ async function filterAndEnrichProperties(
     )
   }
 
-  // Filter by price range
-  if (filters.priceRange) {
-    const [min, max] = filters.priceRange.split('-').map(Number)
-    filtered = filtered.filter(
-      (p) => p.basePrice >= min && p.basePrice <= max,
+  // Filter by property type (matches name containing "condo" or "chalet")
+  if (filters.propertyType) {
+    const type = filters.propertyType.toLowerCase()
+    filtered = filtered.filter((p) =>
+      p.name.toLowerCase().includes(type),
     )
   }
 
@@ -139,19 +139,13 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
   return (
     <RootLayout>
       <PageHero
-        kicker="Vacation rentals"
-        title="Find your perfect stay on Vancouver Island."
+        title="Mount Washington Vacation Rentals"
+        size="short"
         image={{
           src: site.images.hero,
           alt: 'Snow-capped mountain peak above Vancouver Island forest',
         }}
-      >
-        <p>
-          Browse our collection of well-maintained properties in beautiful
-          locations. Each rental is professionally cleaned and ready to welcome
-          you.
-        </p>
-      </PageHero>
+      />
 
       <Band tone="cream">
         <Container>

@@ -3,11 +3,13 @@ import { notFound } from 'next/navigation'
 import { unstable_cache } from 'next/cache'
 
 import { Band } from '@/components/Band'
+import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { RootLayout } from '@/components/RootLayout'
 import { PhotoGallery } from '@/components/PhotoGallery'
 import { BookingCard } from '@/components/BookingCard'
+import { MobileBookingCTA } from '@/components/MobileBookingCTA'
 import { AvailabilityCalendar } from '@/components/AvailabilityCalendar'
 import { ReviewList } from '@/components/ReviewList'
 import {
@@ -113,7 +115,7 @@ export default async function PropertyDetailPage(props: PageProps) {
                 <h1 className="type-display text-[clamp(2rem,4vw,3rem)] text-warm-ink">
                   {property.name}
                 </h1>
-                <p className="mt-2 text-lg text-warm-ink/70">{property.address}</p>
+                <p className="mt-2 text-lg text-warm-ink/70">Mount Washington, Vancouver Island</p>
 
                 {averageRating && (
                   <div className="mt-4 flex items-center gap-2">
@@ -187,7 +189,10 @@ export default async function PropertyDetailPage(props: PageProps) {
                   Location
                 </h2>
                 <p className="mt-4 text-base text-warm-ink/80">
-                  {property.address}
+                  Mount Washington, Vancouver Island, BC
+                </p>
+                <p className="mt-2 text-sm text-warm-ink/60">
+                  Exact address provided after booking confirmation
                 </p>
                 {/* Future task: Add map integration */}
                 <div className="mt-6 grid aspect-[16/9] place-items-center rounded-[2.75rem] bg-sand">
@@ -224,7 +229,9 @@ export default async function PropertyDetailPage(props: PageProps) {
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="mt-2 size-1.5 flex-shrink-0 rounded-full bg-forest-warm" />
-                    Pets may be allowed (check with host)
+                    Pet friendly: {property.amenities?.some(a =>
+                      a.toLowerCase().includes('pet') || a.toLowerCase().includes('dog')
+                    ) ? 'Yes' : 'No'}
                   </li>
                 </ul>
               </FadeIn>
@@ -235,26 +242,53 @@ export default async function PropertyDetailPage(props: PageProps) {
                   Cancellation policy
                 </h2>
                 <p className="mt-4 text-base/[1.7] text-warm-ink/80">
-                  Free cancellation up to 14 days before check-in. Cancel within 14
-                  days of check-in and receive a 50% refund, minus service fees.
+                  Cancellation policies vary by property and booking dates. Please
+                  review the specific cancellation terms during checkout or contact
+                  us for details.
                 </p>
+              </FadeIn>
+
+              {/* Bottom Book Now CTA */}
+              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+                <div className="rounded-[2.75rem] bg-forest-warm/5 p-8 text-center">
+                  <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
+                    Ready to book?
+                  </h2>
+                  <p className="mx-auto mt-3 max-w-md text-base text-warm-ink/70">
+                    Select your dates above and secure your stay at {property.name}.
+                  </p>
+                  <Button
+                    href="#booking-card"
+                    tone="forest"
+                    size="md"
+                    className="mt-6"
+                    arrow
+                  >
+                    Check Availability
+                  </Button>
+                </div>
               </FadeIn>
             </FadeInStagger>
 
             {/* Right column - Booking card (sticky on desktop) */}
             <FadeIn>
-              <BookingCard
-                listingId={property.id.toString()}
-                basePrice={property.basePrice}
-                maxGuests={property.maxGuests}
-                initialCheckIn={checkIn}
-                initialCheckOut={checkOut}
-                initialGuests={guests}
-              />
+              <div id="booking-card">
+                <BookingCard
+                  listingId={property.id.toString()}
+                  basePrice={property.basePrice}
+                  maxGuests={property.maxGuests}
+                  initialCheckIn={checkIn}
+                  initialCheckOut={checkOut}
+                  initialGuests={guests}
+                />
+              </div>
             </FadeIn>
           </div>
         </Container>
       </Band>
+
+      {/* Mobile sticky booking CTA */}
+      <MobileBookingCTA basePrice={property.basePrice} />
     </RootLayout>
   )
 }

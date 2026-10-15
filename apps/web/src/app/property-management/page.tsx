@@ -1,130 +1,176 @@
 import { type Metadata } from 'next'
-import clsx from 'clsx'
 
 import { Band } from '@/components/Band'
-import { CardIcon } from '@/components/CardIcon'
-import { ContactSection } from '@/components/ContactSection'
+import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
-import { PhotoBand } from '@/components/PhotoBand'
 import { RootLayout } from '@/components/RootLayout'
-import { SectionHead } from '@/components/SectionHead'
-import { ValueCards } from '@/components/ValueCards'
-import iconBookingIntake from '@/images/icons/icon-booking-intake.png'
-import iconHotTub from '@/images/icons/icon-hot-tub.png'
-import iconLinenService from '@/images/icons/icon-linen-service.png'
-import iconMaintenanceFlag from '@/images/icons/icon-maintenance-flag.png'
-import iconPhotoDocumentation from '@/images/icons/icon-photo-documentation.png'
-import iconRestocking from '@/images/icons/icon-restocking.png'
-import iconTierBasic from '@/images/icons/icon-tier-basic.png'
-import iconTierCaretaking from '@/images/icons/icon-tier-caretaking.png'
-import iconTierFull from '@/images/icons/icon-tier-full.png'
-import iconCalendarSync from '@/images/values/icon-calendar-sync.png'
-import iconGuestReady from '@/images/values/icon-guest-ready.png'
-import iconOwnerVisibility from '@/images/values/icon-owner-visibility.png'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Property Management & Cleaning',
+  title: 'Mount Washington Property Management',
   description:
-    'Vacation rental cleaning, caretaking, and full property management on Vancouver Island.',
+    'Full-service short-term rental management for Mount Washington vacation homes. Bookings, guests, and everyday care from a local team.',
 }
 
-const tiers = [
-  {
-    label: 'Tier 1',
-    title: 'Basic cleaning',
-    icon: iconTierBasic,
-    description:
-      'You send dates, we clean and reset the property. Ideal when you handle bookings and guest communication yourself.',
-    tone: 'bg-sand text-warm-ink',
-  },
-  {
-    label: 'Tier 2',
-    title: 'Cleaning + caretaking',
-    icon: iconTierCaretaking,
-    description:
-      'Maintenance checks, restocking, and proactive care between guests. You stay in control of marketing and bookings.',
-    tone: 'bg-sun text-warm-ink',
-  },
-  {
-    label: 'Tier 3',
-    title: 'Full property management',
-    icon: iconTierFull,
-    description:
-      'End-to-end operations: bookings coordination, owner statements, and the full payout workflow. Built for hands-off owners.',
-    tone: 'bg-forest-warm text-warm-cream',
-  },
-]
+function IconRevenue({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M6 38V18l18-12 18 12v20" />
+      <path d="M6 38h36" />
+      <path d="M18 38V26h12v12" />
+      <circle cx="24" cy="18" r="3" />
+    </svg>
+  )
+}
 
-const inclusions = [
-  { label: 'Turnover cleaning & linen service', icon: iconLinenService },
-  { label: 'Restocking & supplies', icon: iconRestocking },
-  { label: 'Hot tub & exterior checks', icon: iconHotTub },
-  { label: 'Photo documentation', icon: iconPhotoDocumentation },
-  { label: 'Maintenance flagging', icon: iconMaintenanceFlag },
-  { label: 'Direct booking intake (Tier 2+)', icon: iconBookingIntake },
-]
+function IconMarketing({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect x="6" y="10" width="36" height="28" rx="4" />
+      <path d="M6 18h36" />
+      <circle cx="14" cy="14" r="1.5" fill="currentColor" />
+      <circle cx="20" cy="14" r="1.5" fill="currentColor" />
+      <path d="M14 28h20M14 34h12" />
+    </svg>
+  )
+}
 
-const platformFeatures = [
+function IconCare({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M12 38V22l12-12 12 12v16a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2Z" />
+      <path d="M20 38v-10h8v10" />
+      <path d="M18 22h12" />
+    </svg>
+  )
+}
+
+function IconOversight({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <rect x="8" y="8" width="32" height="32" rx="4" />
+      <path d="M8 16h32" />
+      <path d="M16 8v8" />
+      <path d="M16 26l4 4 8-8" />
+    </svg>
+  )
+}
+
+const services = [
   {
-    title: 'Calendar sync',
-    icon: iconCalendarSync,
+    title: 'Revenue & Booking Management',
+    Icon: IconRevenue,
     description:
-      'iCal integration keeps cleaning jobs aligned with confirmed stays.',
+      "Thoughtful pricing through the mountain's changing seasons, coordinated calendars, and room for the time you want to spend here yourself.",
   },
   {
-    title: 'Guest-ready standard',
-    icon: iconGuestReady,
-    description: 'Consistent checklists and photo records for every turnover.',
+    title: 'Marketing & Guest Experience',
+    Icon: IconMarketing,
+    description:
+      'Listings that show what makes your home special, clear guest communication, and the practical details that help people settle in.',
   },
   {
-    title: 'Owner visibility',
-    icon: iconOwnerVisibility,
+    title: 'Local Property Care',
+    Icon: IconCare,
     description:
-      'Tier 3 owners get statements, breakdowns, and a dedicated portal as the platform rolls out.',
+      'From a freshly prepared home to supplies running low or something needing repair, we coordinate the care that keeps your property ready for the next stay.',
+  },
+  {
+    title: 'Owner Oversight',
+    Icon: IconOversight,
+    description:
+      'Clear reporting, visibility into your property, and a local team you can talk to about how things are going.',
   },
 ]
 
 export default function PropertyManagement() {
   return (
     <RootLayout>
+      {/* 1. OPENING */}
       <PageHero
-        kicker="Property management"
-        title="Cleaning, caretaking, and full management for your property."
+        kicker="Mount Washington Property Management"
+        title="Your mountain home. Our everyday care."
+        size="short"
         image={{
           src: site.images.hero,
-          alt: 'Snow-capped mountain peak above Vancouver Island forest',
+          alt: 'Mount Washington alpine landscape',
         }}
       >
         <p>
-          From scheduled turnover cleans to complete owner support, we offer
-          three service tiers so you only pay for the level of involvement you
-          need.
+          Full-service short-term rental management from Joel, Amanda, and our
+          local team. We look after the bookings, the guests, and the details
+          that keep your Mount Washington home ready to welcome them.
         </p>
       </PageHero>
 
       <Band tone="cream">
         <Container>
-          <FadeInStagger className="grid gap-6 split:grid-cols-[1fr_1fr_1.35fr]">
-            {tiers.map((tier) => (
+          <FadeIn className="text-center">
+            <Button href="/contact" tone="forest" size="lg" arrow>
+              Let's Talk About Your Property
+            </Button>
+          </FadeIn>
+        </Container>
+      </Band>
+
+      {/* 2. WHAT'S INCLUDED */}
+      <Band tone="sand">
+        <Container>
+          <FadeIn>
+            <p className="mx-auto max-w-3xl text-center text-[1.25rem]/[1.6] text-warm-ink/80">
+              There's a lot behind a great mountain stay. We bring it together,
+              so you can enjoy your home without managing every moving part.
+            </p>
+          </FadeIn>
+
+          <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-2">
+            {services.map((service) => (
               <FadeIn
-                key={tier.label}
-                className={clsx(
-                  'flex min-h-[24rem] flex-col rounded-[2.75rem] p-10',
-                  tier.tone,
-                )}
+                key={service.title}
+                className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] split:p-12"
               >
-                <p className="text-sm font-bold tracking-[0.1em] uppercase">
-                  {tier.label}
-                </p>
-                <CardIcon src={tier.icon} className="mt-6" />
-                <h2 className="mt-auto pt-10 type-display text-[clamp(2.375rem,3.4vw,3.125rem)]">
-                  {tier.title}
-                </h2>
-                <p className="mt-4 text-[1.0625rem]/[1.55] opacity-90">
-                  {tier.description}
+                <div className="flex size-16 items-center justify-center rounded-2xl bg-forest-warm/8">
+                  <service.Icon className="size-10 text-forest-warm" />
+                </div>
+                <h3 className="mt-8 type-display text-[clamp(1.75rem,2.5vw,2.125rem)] text-warm-ink">
+                  {service.title}
+                </h3>
+                <p className="mt-4 text-[1.0625rem]/[1.7] text-warm-muted">
+                  {service.description}
                 </p>
               </FadeIn>
             ))}
@@ -132,50 +178,54 @@ export default function PropertyManagement() {
         </Container>
       </Band>
 
-      <Band tone="sand">
+      {/* 3. ONE LOCAL TEAM */}
+      <Band tone="cream">
         <Container>
-          <SectionHead kicker="Included" title="What every visit covers">
-            <p>
-              Our cleaning checklists are built from real turnover workflows —
-              not generic templates — so nothing gets missed before the next
-              guest arrives.
-            </p>
-          </SectionHead>
-          <FadeIn>
-            <ul role="list" className="mt-16 flex flex-wrap gap-4">
-              {inclusions.map((item) => (
-                <li
-                  key={item.label}
-                  className="flex items-center gap-3 rounded-full bg-warm-cream py-3 pr-7 pl-3.5 text-lg font-semibold"
-                >
-                  <CardIcon src={item.icon} size="sm" />
-                  {item.label}
-                </li>
-              ))}
-            </ul>
+          <FadeIn className="mx-auto max-w-3xl">
+            <h2 className="type-display text-center text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
+              We know the work behind the welcome.
+            </h2>
+            <div className="mt-10 space-y-6 text-[1.125rem]/[1.7] text-warm-ink/80">
+              <p>
+                Our roots are in cleaning and caring for mountain homes. That
+                hands-on experience shapes how we manage them today: we know the
+                work it takes to get a property ready, the details guests
+                notice, and what needs attention between stays.
+              </p>
+              <p>
+                Joel and Amanda bring that same care to the bookings and guest
+                experience, with one team connecting it all.
+              </p>
+              <p>
+                Before your first managed booking, we work through a structured
+                launch to get your home, listing, guest information, and
+                operating systems ready together.
+              </p>
+            </div>
           </FadeIn>
         </Container>
       </Band>
 
-      <Band tone="forest">
+      {/* 4. FINAL CONTACT SECTION */}
+      <Band tone="apricot" last>
         <Container>
-          <SectionHead
-            tone="dark"
-            kicker="Platforms"
-            title="Works with how you already book."
-          >
-            <p>
-              We sync with Airbnb and VRBO calendars and can coordinate direct
-              bookings through {site.shortName} as your portfolio grows.
+          <FadeIn className="mx-auto max-w-3xl text-center">
+            <h2 className="type-display text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
+              Let's talk about your mountain home.
+            </h2>
+            <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
+              Maybe it's your family's weekend escape, an investment, or a bit
+              of both. Tell us how you use it and what you'd like renting it to
+              look like. We'll start there.
             </p>
-          </SectionHead>
-          <ValueCards items={platformFeatures} />
+            <div className="mt-12">
+              <Button href="/contact" tone="forest" size="lg" arrow>
+                Let's Talk About Your Property
+              </Button>
+            </div>
+          </FadeIn>
         </Container>
       </Band>
-
-      <PhotoBand src={site.images.hero} alt="" />
-
-      <ContactSection />
     </RootLayout>
   )
 }

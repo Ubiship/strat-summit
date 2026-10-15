@@ -6,10 +6,8 @@ import { ContactForm } from '@/components/ContactForm'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { Kicker } from '@/components/Kicker'
-import { Offices } from '@/components/Offices'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
-import { SocialMedia } from '@/components/SocialMedia'
 import { site } from '@/lib/site'
 
 function ContactDetails() {
@@ -17,16 +15,14 @@ function ContactDetails() {
     <FadeIn className="rounded-[2.5rem] bg-sand p-8 split:p-10">
       <Kicker as="h2">Service area</Kicker>
       <p className="mt-4 text-base/[1.6] text-warm-muted">
-        We serve property owners across Vancouver Island. Reach out to confirm
-        coverage for your address.
+        Serving Mount Washington and the surrounding Comox Valley.
       </p>
-      <Offices className="mt-6" />
 
       <div className="mt-8 border-t-2 border-warm-cream pt-8">
         <Kicker as="h2">Email & phone</Kicker>
         <dl className="mt-4 grid gap-5 text-base">
           <div>
-            <dt className="font-bold text-warm-ink">General inquiries</dt>
+            <dt className="font-bold text-warm-ink">Email</dt>
             <dd className="mt-1">
               <Link
                 href={`mailto:${site.contactEmail}`}
@@ -44,8 +40,14 @@ function ContactDetails() {
       </div>
 
       <div className="mt-8 border-t-2 border-warm-cream pt-8">
-        <Kicker as="h2">Follow us</Kicker>
-        <SocialMedia className="mt-5" />
+        <Kicker as="h2">Mailing address</Kicker>
+        <address className="mt-4 text-base/[1.6] text-warm-muted not-italic">
+          P.O. Box 3866, Station Main
+          <br />
+          Courtenay, BC V9N 7P2
+          <br />
+          Canada
+        </address>
       </div>
     </FadeIn>
   )
@@ -53,20 +55,17 @@ function ContactDetails() {
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: `Contact ${site.shortName} about property management, cleaning, or renovations.`,
+  description: `Contact ${site.shortName} about vacation rentals, property management, cleaning, or renovations.`,
 }
 
 export default function Contact() {
   return (
     <RootLayout>
-      <PageHero
-        size="short"
-        kicker="Contact"
-        title="Let's talk about your property."
-      >
+      <PageHero size="short" title="Let's chat.">
         <p>
-          Tell us a bit about your property and what you need — we will get back
-          to you shortly.
+          Whether you have questions about a booking, want to discuss property
+          management, or are thinking about a renovation, we would love to hear
+          from you.
         </p>
       </PageHero>
 

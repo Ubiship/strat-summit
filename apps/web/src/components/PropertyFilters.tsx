@@ -11,32 +11,20 @@ const bedroomOptions = [
   { value: '4', label: '4+' },
 ]
 
-const priceRanges = [
-  { value: '', label: 'Any price' },
-  { value: '0-100', label: 'Under $100' },
-  { value: '100-200', label: '$100 - $200' },
-  { value: '200-300', label: '$200 - $300' },
-  { value: '300-500', label: '$300 - $500' },
-  { value: '500-999999', label: '$500+' },
+const propertyTypes = [
+  { value: '', label: 'All types' },
+  { value: 'condo', label: 'Condo' },
+  { value: 'chalet', label: 'Chalet' },
 ]
 
-const commonAmenities = [
-  'WiFi',
-  'Kitchen',
-  'Parking',
-  'Hot tub',
-  'Washer/Dryer',
-  'Pet friendly',
-  'Air conditioning',
-  'Heating',
-]
+const amenityFilters = ['Hot tub', 'Pet friendly']
 
 export function PropertyFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const currentBedrooms = searchParams.get('bedrooms') || ''
-  const currentPriceRange = searchParams.get('priceRange') || ''
+  const currentPropertyType = searchParams.get('propertyType') || ''
   const currentAmenities = searchParams.get('amenities')?.split(',') || []
 
   function updateFilters(updates: Record<string, string | null>) {
@@ -79,11 +67,9 @@ export function PropertyFilters() {
     )
 
   return (
-    <div className="rounded-[2.75rem] bg-white p-8 shadow-[0_12px_32px_rgb(42_24_10/0.12)]">
-      <h2 className="text-lg font-bold text-warm-ink">Filters</h2>
-
-      <div className="mt-6 grid gap-6 split:grid-cols-2">
-        <div>
+    <div className="rounded-[2.75rem] bg-white p-6 shadow-[0_12px_32px_rgb(42_24_10/0.12)] sm:p-8">
+      <div className="flex flex-wrap items-center gap-4 sm:gap-6">
+        <div className="min-w-0 flex-1 sm:flex-none">
           <label
             htmlFor="bedrooms"
             className="text-sm font-bold text-warm-ink/70"
@@ -94,7 +80,7 @@ export function PropertyFilters() {
             id="bedrooms"
             value={currentBedrooms}
             onChange={(e) => updateFilters({ bedrooms: e.target.value || null })}
-            className={clsx(selectClasses, 'mt-1.5 w-full')}
+            className={clsx(selectClasses, 'mt-1.5 w-full min-w-0 sm:w-32')}
           >
             {bedroomOptions.map((option) => (
               <option key={option.value} value={option.value}>
@@ -104,43 +90,43 @@ export function PropertyFilters() {
           </select>
         </div>
 
-        <div>
+        <div className="min-w-0 flex-1 sm:flex-none">
           <label
-            htmlFor="price-range"
+            htmlFor="property-type"
             className="text-sm font-bold text-warm-ink/70"
           >
-            Price range
+            Property type
           </label>
           <select
-            id="price-range"
-            value={currentPriceRange}
+            id="property-type"
+            value={currentPropertyType}
             onChange={(e) =>
-              updateFilters({ priceRange: e.target.value || null })
+              updateFilters({ propertyType: e.target.value || null })
             }
-            className={clsx(selectClasses, 'mt-1.5 w-full')}
+            className={clsx(selectClasses, 'mt-1.5 w-full min-w-0 sm:w-36')}
           >
-            {priceRanges.map((option) => (
+            {propertyTypes.map((option) => (
               <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
           </select>
         </div>
-      </div>
 
-      <div className="mt-6">
-        <p className="text-sm font-bold text-warm-ink/70">Amenities</p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {commonAmenities.map((amenity) => (
-            <button
-              key={amenity}
-              type="button"
-              onClick={() => toggleAmenity(amenity)}
-              className={amenityButtonClasses(currentAmenities.includes(amenity))}
-            >
-              {amenity}
-            </button>
-          ))}
+        <div className="w-full sm:w-auto sm:flex-1">
+          <p className="text-sm font-bold text-warm-ink/70">Amenities</p>
+          <div className="mt-1.5 flex flex-wrap gap-2">
+            {amenityFilters.map((amenity) => (
+              <button
+                key={amenity}
+                type="button"
+                onClick={() => toggleAmenity(amenity)}
+                className={amenityButtonClasses(currentAmenities.includes(amenity))}
+              >
+                {amenity}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -187,8 +187,10 @@ type HostawayListingRaw = {
   state?: string
   countryCode?: string
   zipcode?: string
-  bedrooms?: number
-  bathrooms?: number
+  // Hostaway uses bedroomsNumber/bathroomsNumber, not bedrooms/bathrooms
+  bedroomsNumber?: number
+  bathroomsNumber?: number
+  bedsNumber?: number
   personCapacity?: number
   price?: number
   currencyCode?: string
@@ -211,8 +213,8 @@ function transformListing(raw: HostawayListingRaw): HostawayProperty {
     name: raw.name || raw.internalListingName || 'Unnamed Property',
     description: raw.description || '',
     address: [raw.address, raw.city, raw.state].filter(Boolean).join(', '),
-    bedrooms: raw.bedrooms || 0,
-    bathrooms: raw.bathrooms || 0,
+    bedrooms: raw.bedroomsNumber || 0,
+    bathrooms: raw.bathroomsNumber || 0,
     maxGuests: raw.personCapacity || 0,
     basePrice: raw.price || 0,
     photos: (raw.listingImages || [])
@@ -369,16 +371,21 @@ type HostawayReviewRaw = {
 /**
  * Transform raw Hostaway review to our review type.
  * Converts 10-point rating scale to 5-point scale.
+ * Extracts first name only for guest privacy.
  */
 function transformReview(raw: HostawayReviewRaw, listingId?: number): HostawayReview {
   // Convert 0-10 rating to 0-5 scale (round to nearest 0.5)
   const rating10 = raw.rating || 10
   const rating5 = Math.round((rating10 / 2) * 2) / 2 // e.g., 10 -> 5, 8 -> 4, 9 -> 4.5
 
+  // Extract first name only for privacy (e.g., "Andrew Peterson" -> "Andrew")
+  const fullName = raw.guestName || raw.reviewerName || ''
+  const firstName = fullName.split(' ')[0] || 'Guest'
+
   return {
     id: raw.id,
     listingId: raw.listingMapId || listingId || 0,
-    guestName: raw.guestName || raw.reviewerName || 'Guest',
+    guestName: firstName,
     rating: rating5,
     comment: raw.publicReview || raw.text || '',
     createdAt: raw.submittedAt || raw.insertedOn || raw.createdAt || new Date().toISOString(),
@@ -388,15 +395,22 @@ function transformReview(raw: HostawayReviewRaw, listingId?: number): HostawayRe
 /**
  * Fetch reviews for a property or all properties.
  * Only returns published guest-to-host reviews with actual content.
+ * Reviews are sorted by most recent first.
  * @param listingId - Optional Hostaway listing ID to filter reviews
  * @returns Array of reviews, or empty array if none found or error occurs.
  */
 export async function getReviews(listingId?: string): Promise<HostawayReview[]> {
   try {
-    // Hostaway reviews endpoint uses listingId in the path
-    const endpoint = listingId
-      ? `/reviews?listingId=${listingId}`
-      : '/reviews'
+    // Build query params - request sorting by submittedAt descending (most recent first)
+    const params = new URLSearchParams({
+      sortOrder: 'desc',
+      sortBy: 'submittedAt',
+    })
+    if (listingId) {
+      params.set('listingId', listingId)
+    }
+
+    const endpoint = `/reviews?${params.toString()}`
 
     const response = await fetchHostaway<{
       status: string
@@ -415,8 +429,13 @@ export async function getReviews(listingId?: string): Promise<HostawayReview[]> 
         r.publicReview
     )
 
-    return publishedReviews.map((raw) =>
+    // Transform and ensure client-side sort as backup (most recent first)
+    const transformedReviews = publishedReviews.map((raw) =>
       transformReview(raw, listingId ? parseInt(listingId) : undefined)
+    )
+
+    return transformedReviews.sort(
+      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     )
   } catch (error) {
     console.error('Failed to fetch reviews:', error)

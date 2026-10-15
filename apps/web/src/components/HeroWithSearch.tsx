@@ -33,9 +33,9 @@ function SearchFormInner() {
   const labelClasses = 'text-sm font-bold tracking-wide text-warm-ink/60 uppercase'
 
   return (
-    <div className="mx-auto w-full max-w-4xl rounded-[3rem] bg-white p-8 shadow-[0_16px_48px_rgb(42_24_10/0.15),0_4px_12px_rgb(42_24_10/0.08)] split:p-12">
-      <div className="grid gap-8 split:grid-cols-[1fr_1fr_auto_auto] split:gap-6">
-        <div>
+    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-[3rem] bg-white p-6 shadow-[0_16px_48px_rgb(42_24_10/0.15),0_4px_12px_rgb(42_24_10/0.08)] sm:p-8 split:p-12">
+      <div className="grid gap-5 sm:gap-8 split:grid-cols-[1fr_1fr_auto_auto] split:gap-6">
+        <div className="min-w-0">
           <label htmlFor={checkInId} className={labelClasses}>
             Check-in
           </label>
@@ -44,11 +44,11 @@ function SearchFormInner() {
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            className={clsx(inputClasses, 'mt-2.5 w-full')}
+            className={clsx(inputClasses, 'mt-2.5 w-full min-w-0')}
           />
         </div>
 
-        <div>
+        <div className="min-w-0">
           <label htmlFor={checkOutId} className={labelClasses}>
             Check-out
           </label>
@@ -58,11 +58,11 @@ function SearchFormInner() {
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
             min={checkIn || undefined}
-            className={clsx(inputClasses, 'mt-2.5 w-full')}
+            className={clsx(inputClasses, 'mt-2.5 w-full min-w-0')}
           />
         </div>
 
-        <div>
+        <div className="min-w-0">
           <label htmlFor={guestsId} className={labelClasses}>
             Guests
           </label>
@@ -70,7 +70,7 @@ function SearchFormInner() {
             id={guestsId}
             value={guests}
             onChange={(e) => setGuests(e.target.value)}
-            className={clsx(inputClasses, 'mt-2.5 w-full')}
+            className={clsx(inputClasses, 'mt-2.5 w-full min-w-0')}
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
               <option key={num} value={num}>

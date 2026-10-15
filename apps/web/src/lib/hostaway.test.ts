@@ -291,12 +291,30 @@ describe('getAvailability', () => {
 
 describe('getReviews', () => {
   it('should fetch reviews for a specific property', async () => {
-    const mockReviews = [
+    // Mock the raw API response format
+    const mockApiResponse = {
+      status: 'success',
+      result: [
+        {
+          id: 1,
+          listingMapId: 12345,
+          guestName: 'John Doe',
+          rating: 10, // Hostaway uses 0-10 scale
+          publicReview: 'Excellent stay!',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-15T10:30:00Z',
+        },
+      ],
+    }
+
+    // Expected transformed output (first name only, rating converted to 5-point scale)
+    const expectedReviews = [
       {
         id: 1,
         listingId: 12345,
-        guestName: 'John Doe',
-        rating: 5,
+        guestName: 'John', // First name only
+        rating: 5, // Converted from 10
         comment: 'Excellent stay!',
         createdAt: '2026-01-15T10:30:00Z',
       },
@@ -306,13 +324,13 @@ describe('getReviews', () => {
       Promise.resolve({
         status: 200,
         ok: true,
-        json: () => Promise.resolve({ reviews: mockReviews }),
+        json: () => Promise.resolve(mockApiResponse),
       } as Response)
     )
 
     const result = await getReviews('12345')
 
-    expect(result).toEqual(mockReviews)
+    expect(result).toEqual(expectedReviews)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('/reviews'),
       expect.any(Object)
@@ -320,26 +338,22 @@ describe('getReviews', () => {
   })
 
   it('should fetch all reviews when no listingId provided', async () => {
-    const mockReviews: Array<{
-      id: number
-      listingId: number
-      guestName: string
-      rating: number
-      comment: string
-      createdAt: string
-    }> = []
+    const mockApiResponse = {
+      status: 'success',
+      result: [],
+    }
 
     global.fetch = vi.fn(() =>
       Promise.resolve({
         status: 200,
         ok: true,
-        json: () => Promise.resolve({ reviews: mockReviews }),
+        json: () => Promise.resolve(mockApiResponse),
       } as Response)
     )
 
     const result = await getReviews()
 
-    expect(result).toEqual(mockReviews)
+    expect(result).toEqual([])
   })
 
   it('should return empty array on error', async () => {
@@ -350,5 +364,74 @@ describe('getReviews', () => {
     const result = await getReviews('12345')
 
     expect(result).toEqual([])
+  })
+
+  it('should sort reviews by most recent first', async () => {
+    const mockApiResponse = {
+      status: 'success',
+      result: [
+        {
+          id: 1,
+          guestName: 'Alice Smith',
+          rating: 10,
+          publicReview: 'Older review',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-01T10:00:00Z',
+        },
+        {
+          id: 2,
+          guestName: 'Bob Jones',
+          rating: 10,
+          publicReview: 'Newer review',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-15T10:00:00Z',
+        },
+      ],
+    }
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        status: 200,
+        ok: true,
+        json: () => Promise.resolve(mockApiResponse),
+      } as Response)
+    )
+
+    const result = await getReviews()
+
+    // Should be sorted with most recent first
+    expect(result[0].guestName).toBe('Bob')
+    expect(result[1].guestName).toBe('Alice')
+  })
+
+  it('should extract first name only from guest name', async () => {
+    const mockApiResponse = {
+      status: 'success',
+      result: [
+        {
+          id: 1,
+          guestName: 'Mary Jane Watson',
+          rating: 10,
+          publicReview: 'Great place!',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-15T10:00:00Z',
+        },
+      ],
+    }
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        status: 200,
+        ok: true,
+        json: () => Promise.resolve(mockApiResponse),
+      } as Response)
+    )
+
+    const result = await getReviews()
+
+    expect(result[0].guestName).toBe('Mary')
   })
 })

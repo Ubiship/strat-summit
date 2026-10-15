@@ -28,9 +28,9 @@ export function SearchBar() {
   const labelClasses = 'text-sm font-bold text-warm-ink/70'
 
   return (
-    <div className="rounded-[2.75rem] bg-white p-8 shadow-[0_12px_32px_rgb(42_24_10/0.12)]">
-      <div className="grid gap-5 split:grid-cols-[1fr_1fr_auto_auto]">
-        <div>
+    <div className="overflow-hidden rounded-[2.75rem] bg-white p-6 shadow-[0_12px_32px_rgb(42_24_10/0.12)] sm:p-8">
+      <div className="grid gap-4 sm:gap-5 split:grid-cols-[1fr_1fr_auto_auto]">
+        <div className="min-w-0">
           <label htmlFor="check-in" className={labelClasses}>
             Check-in
           </label>
@@ -39,11 +39,11 @@ export function SearchBar() {
             type="date"
             value={checkIn}
             onChange={(e) => setCheckIn(e.target.value)}
-            className={clsx(inputClasses, 'mt-1.5 w-full')}
+            className={clsx(inputClasses, 'mt-1.5 w-full min-w-0')}
           />
         </div>
 
-        <div>
+        <div className="min-w-0">
           <label htmlFor="check-out" className={labelClasses}>
             Check-out
           </label>
@@ -53,11 +53,11 @@ export function SearchBar() {
             value={checkOut}
             onChange={(e) => setCheckOut(e.target.value)}
             min={checkIn || undefined}
-            className={clsx(inputClasses, 'mt-1.5 w-full')}
+            className={clsx(inputClasses, 'mt-1.5 w-full min-w-0')}
           />
         </div>
 
-        <div>
+        <div className="min-w-0">
           <label htmlFor="guests" className={labelClasses}>
             Guests
           </label>
@@ -65,7 +65,7 @@ export function SearchBar() {
             id="guests"
             value={guests}
             onChange={(e) => setGuests(e.target.value)}
-            className={clsx(inputClasses, 'mt-1.5 w-full')}
+            className={clsx(inputClasses, 'mt-1.5 w-full min-w-0')}
           >
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
               <option key={num} value={num}>

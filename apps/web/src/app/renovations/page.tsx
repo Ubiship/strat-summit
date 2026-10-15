@@ -1,88 +1,52 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
-import clsx from 'clsx'
 
 import { Band } from '@/components/Band'
-import { CardIcon } from '@/components/CardIcon'
-import { ContactSection } from '@/components/ContactSection'
+import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { NumberBadge } from '@/components/NumberBadge'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
-import { SectionHead } from '@/components/SectionHead'
-import iconDecksExteriors from '@/images/icons/icon-decks-exteriors.png'
-import iconKitchensBathrooms from '@/images/icons/icon-kitchens-bathrooms.png'
-import iconSubtrades from '@/images/icons/icon-subtrades.png'
-import iconWholeHome from '@/images/icons/icon-whole-home.png'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Renovations & Construction',
+  title: 'Renovations on Mount Washington',
   description:
-    'Renovation and construction services on Vancouver Island — estimates, contracts, and seasonal project delivery.',
+    'Thoughtful renovation updates for your Mount Washington home. Joel takes on a limited number of projects, planned for spring through fall.',
 }
 
 const steps = [
   {
     title: 'Estimate',
     description:
-      'Line-item breakdowns for materials, labour, and margin — no mystery allowances.',
+      'We discuss your project and provide an estimate based on the agreed scope.',
   },
   {
     title: 'Contract',
     description:
-      'Fixed-price, cost-plus, or time & materials — we match the agreement to how well-defined the scope is.',
+      'We agree on the scope, costs, and timing before work begins.',
   },
   {
     title: 'Build',
     description:
-      'In-progress updates, change orders when scope shifts, and milestone billing tied to real progress.',
+      'Joel keeps you updated as work progresses. Changes to the scope are discussed and documented through change orders.',
   },
   {
     title: 'Complete',
     description:
-      'Final walkthrough, punch list, and documentation for your records.',
-  },
-]
-
-const projectTypes = [
-  {
-    title: 'Kitchens & bathrooms',
-    icon: iconKitchensBathrooms,
-    description:
-      'Layout updates, cabinetry, tile, fixtures, and ventilation — the rooms guests and owners notice first.',
-    tone: 'bg-warm-cream text-warm-ink',
-  },
-  {
-    title: 'Decks & exteriors',
-    icon: iconDecksExteriors,
-    description:
-      'Weather-ready materials suited for coastal conditions and strata requirements where applicable.',
-    tone: 'bg-sun text-warm-ink',
-  },
-  {
-    title: 'Whole-home refresh',
-    icon: iconWholeHome,
-    description:
-      'Flooring, paint, trim, and lighting packages to reset a property between seasons or before sale.',
-    tone: 'bg-forest-warm text-warm-cream',
-  },
-  {
-    title: 'Subtrade coordination',
-    icon: iconSubtrades,
-    description:
-      'Licensed trades brought in as needed — one point of contact for the owner.',
-    tone: 'bg-warm-cream text-warm-ink',
+      'We complete a final walk-through with you before sending the final invoice.',
   },
 ]
 
 export default function Renovations() {
   return (
     <RootLayout>
+      {/* 1. OPENING SECTION */}
       <PageHero
-        kicker="Renovations"
-        title="Seasonal construction with clear estimates and honest timelines."
+        kicker="Renovations on Mount Washington"
+        title="Thoughtful updates for your mountain home."
+        size="short"
         image={{
           src: site.images.renovations,
           alt: 'Interior renovation framing and construction in progress',
@@ -90,12 +54,66 @@ export default function Renovations() {
         }}
       >
         <p>
-          Summer-heavy renovation work across Vancouver Island — from kitchen
-          refreshes to full interior updates. We walk you through scope, budget,
-          and contract type before a single hammer swings.
+          Joel takes on a limited number of renovation projects, drawing on his
+          construction background and experience living and working on Mount
+          Washington. He enjoys helping owners make their spaces work better,
+          with a clear understanding of the work involved.
+        </p>
+        <p className="mt-4">
+          Most projects are planned for spring through fall, around the
+          mountain's busy ski season.
         </p>
       </PageHero>
 
+      <Band tone="cream">
+        <Container>
+          <FadeIn className="text-center">
+            <Button href="/contact" tone="forest" size="lg" arrow>
+              Enquire About a Project
+            </Button>
+          </FadeIn>
+        </Container>
+      </Band>
+
+      {/* 2. JOEL'S APPROACH */}
+      <Band tone="sand">
+        <Container>
+          <FadeIn className="mx-auto max-w-3xl">
+            <h2 className="type-display text-center text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
+              Good work starts with the right fit.
+            </h2>
+            <div className="mt-10 space-y-6 text-[1.125rem]/[1.7] text-warm-ink/80">
+              <p>
+                Renovations are something Joel enjoys, and we keep this part of
+                the business small. He takes on projects that suit his skills,
+                interests, and availability, with time to give each one the
+                attention it needs.
+              </p>
+              <p>
+                Living on the mountain, we know finding someone to take on your
+                project can be a challenge. We're happy to talk through what you
+                have in mind and see whether it's a good fit.
+              </p>
+            </div>
+          </FadeIn>
+
+          {/* Placeholder for project photos */}
+          <FadeInStagger className="mt-16 grid gap-6 split:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <FadeIn
+                key={i}
+                className="aspect-[4/3] rounded-[2.75rem] bg-warm-cream/80"
+              >
+                <div className="flex h-full items-center justify-center text-warm-ink/30">
+                  <span className="text-lg">Project photo {i}</span>
+                </div>
+              </FadeIn>
+            ))}
+          </FadeInStagger>
+        </Container>
+      </Band>
+
+      {/* 3. NUMBERED PROCESS */}
       <Band tone="cream">
         <Container>
           <FadeInStagger className="relative">
@@ -130,37 +148,7 @@ export default function Renovations() {
         </Container>
       </Band>
 
-      <Band tone="sand">
-        <Container>
-          <SectionHead kicker="Project types" title="What we typically take on">
-            <p>
-              Renovation demand peaks in summer — we plan capacity so your
-              project gets focused attention during the window that works for
-              Island properties.
-            </p>
-          </SectionHead>
-          <FadeInStagger className="mt-16 grid gap-6 split:grid-cols-2">
-            {projectTypes.map((project) => (
-              <FadeIn
-                key={project.title}
-                className={clsx(
-                  'flex min-h-[18rem] flex-col rounded-[2.75rem] p-10',
-                  project.tone,
-                )}
-              >
-                <CardIcon src={project.icon} />
-                <h3 className="mt-auto pt-10 type-display text-[clamp(2.25rem,3.2vw,2.875rem)]">
-                  {project.title}
-                </h3>
-                <p className="mt-4 text-[1.0625rem]/[1.55] opacity-90">
-                  {project.description}
-                </p>
-              </FadeIn>
-            ))}
-          </FadeInStagger>
-        </Container>
-      </Band>
-
+      {/* 4. JOEL'S QUOTE */}
       <Band tone="apricot">
         <Container className="grid items-center gap-12 split:grid-cols-[0.8fr_1.2fr] split:gap-20">
           <FadeIn className="relative aspect-4/5 overflow-hidden rounded-[2.75rem]">
@@ -176,10 +164,10 @@ export default function Renovations() {
             <figure>
               <blockquote className="type-display text-[clamp(2.25rem,4vw,3.5rem)] text-balance">
                 <p>
-                  <span aria-hidden="true">“</span>We would rather set
+                  <span aria-hidden="true">"</span>We would rather set
                   expectations early than surprise you mid-project — clear scope
                   up front keeps everyone aligned.
-                  <span aria-hidden="true">”</span>
+                  <span aria-hidden="true">"</span>
                 </p>
               </blockquote>
               <figcaption className="mt-8 text-lg font-bold">
@@ -190,7 +178,27 @@ export default function Renovations() {
         </Container>
       </Band>
 
-      <ContactSection />
+      {/* 5. ENQUIRY SECTION */}
+      <Band tone="cream" last>
+        <Container>
+          <FadeIn className="mx-auto max-w-3xl text-center">
+            <h2 className="type-display text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
+              Planning a project for next season?
+            </h2>
+            <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
+              Winter is a good time to get in touch about spring, summer, or
+              fall renovations. Joel's availability is limited, so an early
+              conversation gives us time to discuss your plans and see how they
+              might fit into the calendar.
+            </p>
+            <div className="mt-12">
+              <Button href="/contact" tone="forest" size="lg" arrow>
+                Enquire About a Project
+              </Button>
+            </div>
+          </FadeIn>
+        </Container>
+      </Band>
     </RootLayout>
   )
 }
