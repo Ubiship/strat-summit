@@ -38,15 +38,15 @@ function TextInput({
         required={required}
         {...props}
         placeholder=" "
-        className="peer block w-full rounded-full border-2 border-warm-ink/50 bg-white px-6 pt-7 pb-2.5 text-base/6 text-warm-ink transition focus:border-warm-ink focus:ring-2 focus:ring-warm-ink focus:outline-hidden"
+        className="peer block w-full rounded-2xl border border-line bg-white px-5 pt-7 pb-2.5 text-base/6 text-ink transition hover:border-ink/25 focus:border-accent focus:ring-3 focus:ring-accent/15 focus:outline-hidden"
       />
       <label
         htmlFor={id}
-        className="pointer-events-none absolute top-1/2 left-6 -mt-3 origin-left text-base/6 text-warm-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-semibold peer-not-placeholder-shown:text-warm-ink peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:font-semibold peer-focus:text-warm-ink"
+        className="pointer-events-none absolute top-1/2 left-5 -mt-3 origin-left text-base/6 text-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-medium peer-not-placeholder-shown:text-muted peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-accent"
       >
         {label}
         {required ? (
-          <span className="text-ember-deep" aria-hidden="true">
+          <span className="text-accent" aria-hidden="true">
             {' '}
             *
           </span>
@@ -71,18 +71,18 @@ function TextArea({
       <textarea
         id={id}
         required={required}
+        rows={5}
         {...props}
         placeholder=" "
-        rows={5}
-        className="peer block w-full rounded-3xl border-2 border-warm-ink/50 bg-white px-6 pt-8 pb-4 text-base/6 text-warm-ink transition focus:border-warm-ink focus:ring-2 focus:ring-warm-ink focus:outline-hidden resize-none"
+        className="peer block w-full resize-y rounded-2xl border border-line bg-white px-5 pt-8 pb-3 text-base/6 text-ink transition hover:border-ink/25 focus:border-accent focus:ring-3 focus:ring-accent/15 focus:outline-hidden"
       />
       <label
         htmlFor={id}
-        className="pointer-events-none absolute top-5 left-6 origin-left text-base/6 text-warm-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-2.5 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-semibold peer-not-placeholder-shown:text-warm-ink peer-focus:-translate-y-2.5 peer-focus:scale-75 peer-focus:font-semibold peer-focus:text-warm-ink"
+        className="pointer-events-none absolute top-4 left-5 origin-left text-base/6 text-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-1.5 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-medium peer-focus:-translate-y-1.5 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-accent"
       >
         {label}
         {required ? (
-          <span className="text-ember-deep" aria-hidden="true">
+          <span className="text-accent" aria-hidden="true">
             {' '}
             *
           </span>
@@ -103,17 +103,14 @@ function SelectInput({
   let id = useId()
 
   return (
-    <div>
-      <label
-        htmlFor={id}
-        className="block text-base/6 font-semibold text-warm-ink mb-2"
-      >
+    <div className="rounded-2xl border border-line bg-white px-5 pt-3 pb-2 transition focus-within:border-accent focus-within:ring-3 focus-within:ring-accent/15 hover:border-ink/25">
+      <label htmlFor={id} className="block text-xs font-medium text-muted">
         {label}
       </label>
       <select
         id={id}
         {...props}
-        className="block w-full rounded-full border-2 border-warm-ink/50 bg-white px-6 py-4 text-base/6 text-warm-ink transition focus:border-warm-ink focus:ring-2 focus:ring-warm-ink focus:outline-hidden appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20stroke%3D%22%236b7280%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%221.5%22%20d%3D%22M6%208l4%204%204-4%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1rem_center] bg-no-repeat pr-12"
+        className="mt-0.5 block w-full bg-transparent py-1 text-base/6 text-ink focus:outline-none"
       >
         {options.map((option) => (
           <option key={option.value} value={option.value}>
@@ -132,15 +129,20 @@ export function ContactForm() {
   )
 
   return (
-    <FadeIn className="rounded-[2.5rem] bg-warm-cream p-7 shadow-[0_24px_60px_rgb(42_24_10/0.08)] split:p-10">
+    <FadeIn className="rounded-[1.5rem] border border-line bg-white p-8 split:p-10">
       <form action={formAction}>
-        <h2 className="type-display text-4xl">Send us a message</h2>
+        <h2 className="text-[1.75rem] font-semibold tracking-[-0.025em] text-ink">
+          Send us a message
+        </h2>
+        <p className="mt-2 text-base text-muted">
+          We typically respond within one business day.
+        </p>
 
         {state.message ? (
           <p
             role="status"
             className={`mt-5 rounded-2xl px-4 py-3 text-sm ${
-              state.success ? 'bg-sand text-warm-ink' : 'bg-red-50 text-red-800'
+              state.success ? 'bg-tint text-accent-deep' : 'bg-red-50 text-red-800'
             }`}
           >
             {state.success
@@ -150,7 +152,7 @@ export function ContactForm() {
         ) : null}
 
         <div
-          className={`mt-7 grid gap-4 ${
+          className={`mt-7 grid gap-3 ${
             pending || state.success ? 'pointer-events-none opacity-60' : ''
           }`}
         >
@@ -162,7 +164,12 @@ export function ContactForm() {
             autoComplete="email"
             required
           />
-          <TextInput label="Phone (optional)" type="tel" name="phone" autoComplete="tel" />
+          <TextInput
+            label="Phone (optional)"
+            type="tel"
+            name="phone"
+            autoComplete="tel"
+          />
           <TextArea label="Message" name="message" required />
           <SelectInput
             label="What can we help with?"
@@ -177,7 +184,7 @@ export function ContactForm() {
           className="mt-8"
           disabled={pending || state.success}
         >
-          {pending ? 'Sending…' : 'Send Message'}
+          {pending ? 'Sending…' : 'Send message'}
         </Button>
       </form>
     </FadeIn>

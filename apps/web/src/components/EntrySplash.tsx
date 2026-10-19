@@ -64,7 +64,7 @@ export function EntrySplash() {
       {show ? (
         <motion.div
           key="entry-splash"
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-warm-cream px-6 text-warm-ink"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-white px-6 text-ink"
           initial={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{
@@ -78,11 +78,11 @@ export function EntrySplash() {
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             className="flex flex-col items-center text-center"
           >
-            <LogoMark className="size-28" />
-            <p className="mt-6 type-display text-5xl">{site.shortName}</p>
+            <LogoMark className="h-16" />
+            <p className="mt-6 type-display text-4xl">{site.shortName}</p>
             <span
               aria-hidden="true"
-              className="mt-6 h-1.5 w-12 rounded-full bg-sun"
+              className="mt-6 h-1 w-10 rounded-full bg-highlight"
             />
           </motion.div>
         </motion.div>

@@ -1,7 +1,7 @@
 import Image from 'next/image'
 
 import { Band } from '@/components/Band'
-import { ContactSection } from '@/components/ContactSection'
+import { PropertiesCta } from '@/components/PropertiesCta'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { MDXComponents } from '@/components/MDXComponents'
@@ -30,28 +30,28 @@ export default async function CaseStudyLayout({
           <p>{caseStudy.description}</p>
         </PageHero>
 
-        <Band tone="cream">
+        <Band tone="white">
           <Container>
             <FadeIn>
               <dl className="grid gap-3 split:grid-cols-3">
-                <div className="rounded-[2rem] bg-sand px-6 py-4">
-                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                <div className="rounded-[1.5rem] border border-line bg-white px-6 py-5">
+                  <dt className="text-sm font-medium text-accent">
                     Client
                   </dt>
                   <dd className="mt-1 text-lg font-semibold">
                     {caseStudy.client}
                   </dd>
                 </div>
-                <div className="rounded-[2rem] bg-sand px-6 py-4">
-                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                <div className="rounded-[1.5rem] border border-line bg-white px-6 py-5">
+                  <dt className="text-sm font-medium text-accent">
                     Year
                   </dt>
                   <dd className="mt-1 text-lg font-semibold">
                     <time dateTime={year}>{year}</time>
                   </dd>
                 </div>
-                <div className="rounded-[2rem] bg-sand px-6 py-4">
-                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                <div className="rounded-[1.5rem] border border-line bg-white px-6 py-5">
+                  <dt className="text-sm font-medium text-accent">
                     Service
                   </dt>
                   <dd className="mt-1 text-lg font-semibold">
@@ -59,13 +59,13 @@ export default async function CaseStudyLayout({
                   </dd>
                 </div>
               </dl>
-              <div className="mt-8 overflow-hidden rounded-[2.75rem] bg-sand">
+              <div className="mt-8 overflow-hidden rounded-[2rem] bg-mist">
                 <Image
                   alt=""
                   {...caseStudy.image}
                   sizes="(min-width: 75rem) 72rem, calc(100vw - 3rem)"
                   preload
-                  className="w-full photo-warm"
+                  className="w-full"
                 />
               </div>
             </FadeIn>
@@ -80,7 +80,7 @@ export default async function CaseStudyLayout({
         <PageLinks title="More case studies" pages={moreCaseStudies} />
       )}
 
-      <ContactSection />
+      <PropertiesCta audience="owners" />
     </RootLayout>
   )
 }

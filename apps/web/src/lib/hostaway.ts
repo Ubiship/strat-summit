@@ -5,6 +5,13 @@
  * Uses Bearer token authentication with the Hostaway API.
  */
 
+import {
+  sampleAvailability,
+  sampleProperties,
+  sampleReviews,
+  isSampleMode,
+} from '@/lib/sampleData'
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -26,6 +33,8 @@ export type HostawayProperty = {
   basePrice: number
   photos: HostawayPhoto[]
   amenities: string[]
+  // Free-text type from the listing, e.g. "Condominium" or "Chalet"
+  propertyType?: string
   rating?: number
   reviewCount?: number
 }
@@ -234,6 +243,8 @@ function transformListing(raw: HostawayListingRaw): HostawayProperty {
  * Fetch all properties from Hostaway
  */
 export async function getProperties(): Promise<HostawayProperty[]> {
+  if (isSampleMode()) return sampleProperties
+
   try {
     // includeResources=1 is required to get listing images
     const response = await fetchHostaway<{
@@ -259,6 +270,10 @@ export async function getProperties(): Promise<HostawayProperty[]> {
  *          Null returns from API errors are logged to console.error for debugging.
  */
 export async function getProperty(id: string): Promise<HostawayProperty | null> {
+  if (isSampleMode()) {
+    return sampleProperties.find((p) => String(p.id) === id) ?? null
+  }
+
   try {
     // includeResources=1 is required to get listing images
     const response = await fetchHostaway<{
@@ -285,6 +300,8 @@ export async function getAvailability(
   startDate: string,
   endDate: string,
 ): Promise<HostawayCalendarDay[]> {
+  if (isSampleMode()) return sampleAvailability(startDate, endDate)
+
   try {
     const params = new URLSearchParams({
       listingId,
@@ -400,6 +417,12 @@ function transformReview(raw: HostawayReviewRaw, listingId?: number): HostawayRe
  * @returns Array of reviews, or empty array if none found or error occurs.
  */
 export async function getReviews(listingId?: string): Promise<HostawayReview[]> {
+  if (isSampleMode()) {
+    return listingId
+      ? sampleReviews.filter((r) => String(r.listingId) === listingId)
+      : sampleReviews
+  }
+
   try {
     // Build query params - request sorting by submittedAt descending (most recent first)
     const params = new URLSearchParams({

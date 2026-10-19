@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Band } from '@/components/Band'
 import { Blockquote } from '@/components/Blockquote'
 import { Button } from '@/components/Button'
-import { ContactSection } from '@/components/ContactSection'
+import { PropertiesCta } from '@/components/PropertiesCta'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
@@ -28,17 +28,17 @@ function CaseStudies({
   caseStudies: Array<MDXEntry<CaseStudy>>
 }) {
   return (
-    <Band tone="cream">
+    <Band tone="white">
       <Container>
         <FadeIn>
-          <h2 className="type-display text-[clamp(3.25rem,6vw,5.5rem)]">
+          <h2 className="type-display text-[clamp(2.5rem,5vw,4rem)] text-balance">
             Case studies
           </h2>
         </FadeIn>
-        <div className="mt-12 grid gap-4.5">
+        <div className="mt-14 grid gap-5 split:mt-16">
           {caseStudies.map((caseStudy) => (
             <FadeIn key={caseStudy.client}>
-              <article className="grid gap-8 rounded-[2.75rem] bg-sand p-8 split:grid-cols-[16rem_1fr] split:p-10">
+              <article className="grid gap-8 rounded-[1.5rem] border border-line bg-white p-8 split:grid-cols-[16rem_1fr] split:p-10">
                 <div>
                   <Image
                     src={caseStudy.logo}
@@ -46,26 +46,28 @@ function CaseStudies({
                     className="size-16"
                     unoptimized
                   />
-                  <h3 className="mt-5 text-lg font-bold">{caseStudy.client}</h3>
-                  <p className="mt-1 text-sm text-warm-muted">
+                  <h3 className="mt-5 text-lg font-semibold">
+                    {caseStudy.client}
+                  </h3>
+                  <p className="mt-1 text-sm text-muted">
                     {caseStudy.service}
                   </p>
-                  <p className="mt-1 text-sm text-warm-muted">
+                  <p className="mt-1 text-sm text-muted">
                     <time dateTime={caseStudy.date}>
                       {formatDate(caseStudy.date)}
                     </time>
                   </p>
                 </div>
                 <div className="max-w-2xl">
-                  <p className="type-display text-[clamp(2.25rem,3.6vw,3.25rem)]">
+                  <p className="text-[clamp(1.625rem,2.5vw,2rem)]/[1.2] font-semibold tracking-[-0.025em] text-balance">
                     <Link
                       href={caseStudy.href}
-                      className="transition hover:text-ember-deep"
+                      className="transition hover:text-accent"
                     >
                       {caseStudy.title}
                     </Link>
                   </p>
-                  <div className="mt-5 space-y-5 text-base/[1.6] text-warm-muted">
+                  <div className="mt-5 space-y-5 text-base/[1.6] text-muted">
                     {caseStudy.summary.map((paragraph) => (
                       <p key={paragraph}>{paragraph}</p>
                     ))}
@@ -109,21 +111,21 @@ const clients = [
 
 function Clients() {
   return (
-    <Band tone="sand">
+    <Band tone="mist">
       <Container>
         <FadeIn>
-          <h2 className="type-display text-[clamp(3.25rem,6vw,5.5rem)]">
+          <h2 className="type-display text-[clamp(2.5rem,5vw,4rem)] text-balance">
             You’re in good company
           </h2>
         </FadeIn>
         <FadeInStagger faster>
           <ul
             role="list"
-            className="mt-10 grid grid-cols-2 gap-3 split:grid-cols-4"
+            className="mt-14 grid grid-cols-2 gap-4 split:mt-16 split:grid-cols-4"
           >
             {clients.map(([client, logo]) => (
               <li key={client}>
-                <FadeIn className="grid h-28 place-items-center rounded-[2rem] bg-warm-cream px-6">
+                <FadeIn className="grid h-28 place-items-center rounded-[1.5rem] border border-line bg-white px-6">
                   <Image src={logo} alt={client} unoptimized />
                 </FadeIn>
               </li>
@@ -166,7 +168,7 @@ export default async function Work() {
 
       <Clients />
 
-      <ContactSection />
+      <PropertiesCta audience="owners" />
     </RootLayout>
   )
 }

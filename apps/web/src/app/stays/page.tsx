@@ -4,17 +4,20 @@ import { unstable_cache } from 'next/cache'
 
 import { Band } from '@/components/Band'
 import { Container } from '@/components/Container'
-import { FadeIn, FadeInStagger } from '@/components/FadeIn'
+import { FadeIn } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
-import { PropertyCard } from '@/components/PropertyCard'
 import { PropertyFilters } from '@/components/PropertyFilters'
 import { RootLayout } from '@/components/RootLayout'
 import { SearchBar } from '@/components/SearchBar'
+import {
+  ExpandablePropertyCards,
+  type ExpandableProperty,
+} from '@/components/ui/expandable-property-cards'
+import { getPropertyHighlights } from '@/lib/propertyHighlights'
 import { site } from '@/lib/site'
 import {
   getProperties,
   getAvailability,
-  getPricing,
   type HostawayProperty,
 } from '@/lib/hostaway'
 
@@ -42,7 +45,7 @@ const getCachedProperties = unstable_cache(
   { revalidate: 3600 },
 )
 
-async function filterAndEnrichProperties(
+async function filterProperties(
   properties: HostawayProperty[],
   filters: Awaited<SearchParams>,
 ) {
@@ -54,91 +57,90 @@ async function filterAndEnrichProperties(
     filtered = filtered.filter((p) => p.bedrooms >= minBedrooms)
   }
 
-  // Filter by amenities
+  // Filter by property type, using the same rule as the card labels
+  if (filters.propertyType) {
+    filtered = filtered.filter(
+      (p) => getPropertyHighlights(p).type === filters.propertyType,
+    )
+  }
+
+  // Filter by amenities. Hot tub and pets go through the highlight detection
+  // so listings that say "Jacuzzi" or "Pets allowed" still match.
   if (filters.amenities) {
     const requiredAmenities = filters.amenities.split(',')
-    filtered = filtered.filter((p) =>
-      requiredAmenities.every((amenity) => p.amenities?.includes(amenity)),
-    )
+    filtered = filtered.filter((p) => {
+      let highlights = getPropertyHighlights(p)
+      return requiredAmenities.every((amenity) => {
+        if (amenity === 'Hot tub') return highlights.hotTub
+        if (amenity === 'Pet friendly') return highlights.petFriendly
+        return p.amenities?.includes(amenity)
+      })
+    })
   }
 
-  // Filter by property type (matches name containing "condo" or "chalet")
-  if (filters.propertyType) {
-    const type = filters.propertyType.toLowerCase()
-    filtered = filtered.filter((p) =>
-      p.name.toLowerCase().includes(type),
-    )
-  }
-
-  // If dates provided, fetch availability and pricing
+  // If dates provided, keep only properties available for every night
   if (filters.checkIn && filters.checkOut) {
-    const enrichedProperties = await Promise.all(
+    const available = await Promise.all(
       filtered.map(async (property) => {
         try {
-          const guests = parseInt(filters.guests || '2')
-
-          // Check availability
           const availability = await getAvailability(
             property.id.toString(),
             filters.checkIn!,
             filters.checkOut!,
           )
-
-          const isAvailable = availability.every((day) => day.available)
-
-          if (!isAvailable) {
-            return null
-          }
-
-          // Get pricing if available
-          const pricing = await getPricing(
-            property.id.toString(),
-            filters.checkIn!,
-            filters.checkOut!,
-            guests,
-          )
-
-          return {
-            property,
-            price: pricing?.total,
-          }
+          return availability.every((day) => day.available) ? property : null
         } catch (error) {
-          // Log error but don't fail the entire request
-          console.error(`Error fetching availability/pricing for property ${property.id}:`, error)
-          // Return property without pricing on error - still show it to users
-          return {
-            property,
-            price: undefined,
-          }
+          // Log error but don't fail the entire request; still show the property
+          console.error(
+            `Error fetching availability for property ${property.id}:`,
+            error,
+          )
+          return property
         }
       }),
     )
 
-    // Filter out unavailable properties (null means unavailable, not error)
-    return enrichedProperties.filter((p) => p !== null) as {
-      property: HostawayProperty
-      price?: number
-    }[]
+    return available.filter((p) => p !== null)
   }
 
-  // No dates, return filtered properties without pricing
-  return filtered.map((property) => ({ property, price: undefined }))
+  return filtered
 }
 
 export default async function StaysPage(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams
   const allProperties = await getCachedProperties()
-  const propertiesWithPricing = await filterAndEnrichProperties(
-    allProperties,
-    searchParams,
-  )
+  const properties = await filterProperties(allProperties, searchParams)
 
   const hasSearchParams =
     searchParams.checkIn || searchParams.checkOut || searchParams.guests
 
+  // Carry the guest's dates and party size through to the property page.
+  const detailParams = new URLSearchParams()
+  if (searchParams.checkIn) detailParams.set('checkIn', searchParams.checkIn)
+  if (searchParams.checkOut) detailParams.set('checkOut', searchParams.checkOut)
+  if (searchParams.guests) detailParams.set('guests', searchParams.guests)
+  const detailQuery = detailParams.toString()
+
+  // Only plain data crosses into the client component.
+  const cards: ExpandableProperty[] = properties.map((property) => {
+    const cover = property.photos.find((p) => p.isCover) || property.photos[0]
+    return {
+      id: property.id,
+      name: property.name,
+      address: site.propertyArea,
+      description: property.description,
+      href: `/stays/${property.id}${detailQuery ? `?${detailQuery}` : ''}`,
+      rating: property.rating,
+      reviewCount: property.reviewCount,
+      highlights: getPropertyHighlights(property),
+      image: cover && { src: cover.url, alt: cover.caption || property.name },
+    }
+  })
+
   return (
     <RootLayout>
       <PageHero
+        kicker="Vacation rentals"
         title="Mount Washington Vacation Rentals"
         size="short"
         image={{
@@ -147,55 +149,53 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
         }}
       />
 
-      <Band tone="cream">
+      {/* Search and filters: a calm toolbar directly under the hero. */}
+      <section
+        aria-label="Search and filter stays"
+        className="bg-white pt-16 split:pt-20"
+      >
         <Container>
           <FadeIn>
-            <Suspense fallback={<div className="h-[200px]" />}>
+            <Suspense fallback={<div className="h-[4.75rem]" />}>
               <SearchBar />
             </Suspense>
           </FadeIn>
 
-          <FadeIn className="mt-8">
-            <Suspense fallback={<div className="h-[300px]" />}>
+          <FadeIn className="mt-10 border-t border-line pt-8 split:mt-12 split:pt-10">
+            <Suspense fallback={<div className="h-[5.5rem]" />}>
               <PropertyFilters />
             </Suspense>
           </FadeIn>
+        </Container>
+      </section>
 
-          {propertiesWithPricing.length === 0 ? (
-            <FadeIn className="mt-16 text-center">
-              <p className="type-display text-[clamp(1.5rem,2.5vw,2rem)] text-warm-ink">
+      <Band tone="white" className="pt-12! split:pt-14!">
+        <Container>
+          <FadeIn className="border-t border-line pt-8 split:pt-10">
+            <p className="text-[0.9375rem] font-medium text-muted">
+              <span className="font-semibold text-ink">
+                {properties.length}
+              </span>{' '}
+              {properties.length === 1 ? 'property' : 'properties'}{' '}
+              {hasSearchParams ? 'available' : 'in our collection'}
+            </p>
+          </FadeIn>
+
+          {properties.length === 0 ? (
+            <FadeIn className="mx-auto mt-16 max-w-xl text-center split:mt-20">
+              <p className="type-display text-[clamp(1.75rem,3vw,2.5rem)] text-balance text-ink">
                 {hasSearchParams
                   ? 'No properties match your search criteria.'
                   : 'No properties available at this time.'}
               </p>
-              <p className="mt-4 text-lg text-warm-ink/70">
+              <p className="mt-4 text-[1.1875rem]/[1.55] text-muted">
                 {hasSearchParams
                   ? 'Try adjusting your dates, guest count, or filters.'
                   : 'Please check back soon.'}
               </p>
             </FadeIn>
           ) : (
-            <>
-              <FadeIn className="mt-12">
-                <p className="text-lg font-semibold text-warm-ink/70">
-                  {propertiesWithPricing.length}{' '}
-                  {propertiesWithPricing.length === 1 ? 'property' : 'properties'}{' '}
-                  {hasSearchParams ? 'available' : 'in our collection'}
-                </p>
-              </FadeIn>
-
-              <FadeInStagger className="mt-8 grid gap-8 split:grid-cols-2 xl:grid-cols-3">
-                {propertiesWithPricing.map(({ property, price }) => (
-                  <FadeIn key={property.id}>
-                    <PropertyCard
-                      property={property}
-                      price={price}
-                      searchParams={searchParams}
-                    />
-                  </FadeIn>
-                ))}
-              </FadeInStagger>
-            </>
+            <ExpandablePropertyCards properties={cards} />
           )}
         </Container>
       </Band>

@@ -11,13 +11,13 @@ export function Offices({
         <address
           className={clsx(
             'text-base/[1.5] not-italic',
-            invert ? 'text-warm-cream/80' : 'text-warm-muted',
+            invert ? 'text-white/80' : 'text-muted',
           )}
         >
           <strong
             className={clsx(
-              'block type-display text-3xl',
-              invert ? 'text-warm-cream' : 'text-warm-ink',
+              'block text-[1.375rem] font-semibold tracking-[-0.02em]',
+              invert ? 'text-white' : 'text-ink',
             )}
           >
             Mount Washington

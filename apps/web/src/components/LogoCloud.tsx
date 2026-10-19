@@ -156,7 +156,7 @@ function wrap(min: number, max: number, value: number): number {
 function LogoMark({ item }: { item: LogoTile }) {
   if (item.customSvg) {
     return (
-      <div className="flex size-full items-center justify-center text-forest-warm">
+      <div className="flex size-full items-center justify-center text-accent">
         {item.customSvg}
       </div>
     )
@@ -166,7 +166,7 @@ function LogoMark({ item }: { item: LogoTile }) {
     return null
   }
 
-  const lightSrc = `https://cdn.simpleicons.org/${item.slug}/${item.brandColor ?? '2a2118'}`
+  const lightSrc = `https://cdn.simpleicons.org/${item.slug}/${item.brandColor ?? '17221d'}`
 
   if (item.tone !== 'dark') {
     return (
@@ -181,7 +181,7 @@ function LogoMark({ item }: { item: LogoTile }) {
     )
   }
 
-  const darkSrc = `https://cdn.simpleicons.org/${item.slug}/fdf5e8`
+  const darkSrc = `https://cdn.simpleicons.org/${item.slug}/ffffff`
 
   return (
     <>
@@ -210,7 +210,7 @@ function Tile({ item }: { item: Item }) {
     return (
       <div
         aria-hidden="true"
-        className="size-[var(--tile)] shrink-0 rounded-[0.875rem] bg-sand/60 blur-[0.5px] ring-1 ring-inset ring-warm-ink/5"
+        className="size-[var(--tile)] shrink-0 rounded-[0.875rem] bg-mist ring-1 ring-inset ring-line/60"
       />
     )
   }
@@ -219,13 +219,13 @@ function Tile({ item }: { item: Item }) {
     <div
       className={clsx(
         'flex size-[var(--tile)] shrink-0 items-center justify-center rounded-[0.875rem] p-2',
-        item.tone === 'light' && 'bg-white ring-1 ring-inset ring-warm-ink/10',
-        item.tone === 'dark' && 'bg-sand/80 ring-1 ring-inset ring-warm-ink/5',
-        item.tone === 'accent' && 'bg-forest-warm',
+        item.tone === 'light' && 'bg-white ring-1 ring-inset ring-line',
+        item.tone === 'dark' && 'bg-mist ring-1 ring-inset ring-line',
+        item.tone === 'accent' && 'bg-accent',
       )}
     >
       {item.tone === 'accent' && item.customSvg ? (
-        <div className="flex size-[55%] items-center justify-center text-warm-cream">
+        <div className="flex size-[55%] items-center justify-center text-white">
           {item.customSvg}
         </div>
       ) : item.tone === 'accent' ? (
@@ -307,19 +307,19 @@ export function LogoCloud() {
   return (
     <section
       aria-labelledby="logo-cloud-heading"
-      className="flex flex-col items-center justify-center overflow-x-clip bg-warm-cream py-20 antialiased selection:bg-forest-warm/25 selection:text-warm-ink sm:py-28"
+      className="flex flex-col items-center justify-center overflow-x-clip bg-white py-20 antialiased selection:bg-accent/25 selection:text-ink sm:py-28"
     >
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center gap-14 px-5 sm:gap-16 sm:px-8">
         <header className="flex flex-col items-center gap-5 sm:gap-6">
-          <p className="text-sm font-medium text-forest-warm">
+          <p className="text-sm font-semibold text-accent">
             Trusted Integrations
           </p>
           <h2
             id="logo-cloud-heading"
-            className="max-w-[34ch] text-center text-3xl font-medium tracking-tight text-balance text-warm-ink sm:text-4xl lg:text-[2.5rem]"
+            className="max-w-[34ch] text-center text-3xl font-semibold tracking-[-0.03em] text-balance text-ink sm:text-4xl lg:text-[2.5rem]"
           >
             Seamlessly connected to the platforms you already use.{' '}
-            <span className="text-warm-muted">
+            <span className="text-muted">
               From Airbnb to Hostaway, we integrate with the tools that power
               your vacation rental business.
             </span>

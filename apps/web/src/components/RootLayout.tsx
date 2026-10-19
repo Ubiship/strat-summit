@@ -4,18 +4,17 @@ import { useEffect, useId, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
+import clsx from 'clsx'
+import { ChevronDown } from 'lucide-react'
 
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { Footer } from '@/components/Footer'
-import { Kicker } from '@/components/Kicker'
 import { Logo } from '@/components/Logo'
-import { NumberBadge } from '@/components/NumberBadge'
-import { Offices } from '@/components/Offices'
-import { SocialMedia } from '@/components/SocialMedia'
+import { HeroButton } from '@/components/ui/hero-with-background'
 
 type NavItem = {
-  href: string
+  href?: string
   label: string
   children?: { href: string; label: string }[]
 }
@@ -24,11 +23,10 @@ const headerLinks: NavItem[] = [
   {
     href: '/stays',
     label: 'Vacation Rentals',
-    children: [{ href: '/mount-washington', label: 'Mount Washington' }],
+    children: [{ href: '/mount-washington', label: 'Mt Washington Info' }],
   },
   { href: '/property-management', label: 'Property Management' },
   {
-    href: '#',
     label: 'Property Support Services',
     children: [
       { href: '/cleaning', label: 'Cleaning' },
@@ -39,10 +37,10 @@ const headerLinks: NavItem[] = [
   { href: '/contact', label: 'Contact Us' },
 ]
 
-// Flatten for mobile menu
+// Flattened for the mobile menu
 const menuLinks = [
   { href: '/stays', label: 'Vacation Rentals' },
-  { href: '/mount-washington', label: 'Mount Washington' },
+  { href: '/mount-washington', label: 'Mt Washington Info' },
   { href: '/property-management', label: 'Property Management' },
   { href: '/cleaning', label: 'Cleaning' },
   { href: '/renovations', label: 'Renovations' },
@@ -50,69 +48,116 @@ const menuLinks = [
   { href: '/contact', label: 'Contact Us' },
 ]
 
+export type HeaderVariant = 'bar' | 'framed'
+
+type SiteHeaderProps = {
+  panelId: string
+  menuOpen: boolean
+  onOpenMenu: () => void
+  openRef: React.RefObject<HTMLButtonElement | null>
+}
+
+const navLinkClasses =
+  'inline-flex items-center gap-1 rounded-full px-3 py-2 text-[0.875rem] text-muted transition hover:text-ink aria-[current=page]:text-ink'
+
+function isCurrent(pathname: string, href?: string) {
+  return href ? pathname.startsWith(href) : false
+}
+
+// Opens on hover and on keyboard focus, and closes on Escape or when focus
+// leaves, so the submenu is reachable without a mouse.
 function NavDropdown({ item }: { item: NavItem }) {
-  const [isOpen, setIsOpen] = useState(false)
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current)
-    setIsOpen(true)
-  }
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => setIsOpen(false), 150)
-  }
+  let pathname = usePathname()
+  let [isOpen, setIsOpen] = useState(false)
+  let timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  let menuId = useId()
 
   if (!item.children) {
     return (
       <Link
-        href={item.href}
-        className="hidden rounded-full px-4 py-3 text-[0.9375rem] font-semibold transition hover:bg-sand split:inline-flex"
+        href={item.href!}
+        aria-current={isCurrent(pathname, item.href) ? 'page' : undefined}
+        className={navLinkClasses}
       >
         {item.label}
       </Link>
     )
   }
 
+  function open() {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
+    setIsOpen(true)
+  }
+
+  function close() {
+    timeoutRef.current = setTimeout(() => setIsOpen(false), 150)
+  }
+
+  let current =
+    isCurrent(pathname, item.href) ||
+    item.children.some((child) => isCurrent(pathname, child.href))
+  let chevron = (
+    <ChevronDown
+      aria-hidden="true"
+      strokeWidth={1.75}
+      className={clsx('size-3.5 transition-transform', isOpen && 'rotate-180')}
+    />
+  )
+
   return (
     <div
-      className="relative hidden split:block"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      className="relative"
+      onMouseEnter={open}
+      onMouseLeave={close}
+      onFocus={open}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) close()
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') setIsOpen(false)
+      }}
     >
-      <Link
-        href={item.href}
-        className="inline-flex items-center gap-1 rounded-full px-4 py-3 text-[0.9375rem] font-semibold transition hover:bg-sand"
-      >
-        {item.label}
-        <svg
-          className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
+      {item.href ? (
+        <Link
+          href={item.href}
+          aria-current={current ? 'page' : undefined}
+          aria-expanded={isOpen}
+          aria-controls={menuId}
+          className={navLinkClasses}
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M19 9l-7 7-7-7"
-          />
-        </svg>
-      </Link>
+          {item.label}
+          {chevron}
+        </Link>
+      ) : (
+        <button
+          type="button"
+          aria-expanded={isOpen}
+          aria-controls={menuId}
+          onClick={() => setIsOpen((value) => !value)}
+          className={clsx(navLinkClasses, current && 'text-ink')}
+        >
+          {item.label}
+          {chevron}
+        </button>
+      )}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -8 }}
+            id={menuId}
+            initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
+            exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-2xl bg-warm-cream p-2 shadow-lg"
+            className="absolute top-full left-0 z-50 mt-2 min-w-[13rem] rounded-2xl border border-line bg-white p-1.5 shadow-[0_18px_40px_rgb(20_28_34/0.1)]"
           >
             {item.children.map((child) => (
               <Link
                 key={child.href}
                 href={child.href}
-                className="block rounded-xl px-4 py-2.5 text-[0.9375rem] font-medium transition hover:bg-sand"
+                aria-current={
+                  isCurrent(pathname, child.href) ? 'page' : undefined
+                }
+                className="block rounded-xl px-3.5 py-2.5 text-[0.9375rem] text-ink transition hover:bg-mist aria-[current=page]:text-accent"
               >
                 {child.label}
               </Link>
@@ -124,44 +169,78 @@ function NavDropdown({ item }: { item: NavItem }) {
   )
 }
 
-function SiteHeader({
+function MenuButton({
   panelId,
   menuOpen,
   onOpenMenu,
   openRef,
-}: {
-  panelId: string
-  menuOpen: boolean
-  onOpenMenu: () => void
-  openRef: React.RefObject<HTMLButtonElement | null>
-}) {
+  className,
+}: SiteHeaderProps & { className?: string }) {
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-warm-ink/10 bg-warm-cream/95 backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 text-warm-ink sm:px-6 lg:px-8">
-        <Link href="/">
+    <button
+      ref={openRef}
+      type="button"
+      onClick={onOpenMenu}
+      aria-expanded={menuOpen}
+      aria-controls={panelId}
+      className={clsx(
+        'rounded-full px-4 py-2 text-[0.9375rem] font-medium ring-1 ring-line transition ring-inset hover:ring-ink/30',
+        className,
+      )}
+    >
+      Menu
+    </button>
+  )
+}
+
+// Sits inside the homepage hero's frame lines (see HeroWithBackground), so it
+// is positioned to the same insets rather than as a bar above the page.
+function FramedHeader(props: SiteHeaderProps) {
+  return (
+    <header className="absolute inset-x-4 top-4 z-40 flex items-center justify-between gap-6 px-4 py-4 md:inset-x-10 md:top-10 md:px-10">
+      <Link href="/" className="rounded-md">
+        <Logo />
+      </Link>
+      <nav aria-label="Primary" className="flex items-center gap-2">
+        <div className="hidden items-center gap-1 xl:flex">
+          {headerLinks.map((item) => (
+            <NavDropdown key={item.label} item={item} />
+          ))}
+        </div>
+        <HeroButton href="/stays" className="ml-3 hidden xl:flex">
+          Book Now
+        </HeroButton>
+        <MenuButton
+          {...props}
+          className="bg-white/70 backdrop-blur xl:hidden"
+        />
+      </nav>
+    </header>
+  )
+}
+
+// The full navigation needs ~1280px; narrower screens use the menu panel.
+function SiteHeader(props: SiteHeaderProps) {
+  return (
+    <header className="sticky top-0 z-40 border-b border-line/70 bg-white/85 backdrop-blur-xl">
+      <Container className="flex h-18 items-center justify-between gap-6">
+        <Link href="/" className="rounded-md">
           <Logo />
         </Link>
         <nav aria-label="Primary" className="flex items-center gap-1">
-          {headerLinks.map((link) => (
-            <NavDropdown key={link.label} item={link} />
-          ))}
-          <span className="hidden split:block">
+          <div className="hidden items-center gap-0.5 xl:flex">
+            {headerLinks.map((item) => (
+              <NavDropdown key={item.label} item={item} />
+            ))}
+          </div>
+          <span className="ml-3 hidden xl:block">
             <Button href="/stays" size="sm">
               Book Now
             </Button>
           </span>
-          <button
-            ref={openRef}
-            type="button"
-            onClick={onOpenMenu}
-            aria-expanded={menuOpen}
-            aria-controls={panelId}
-            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold ring-2 ring-warm-ink ring-inset transition hover:bg-sand split:hidden"
-          >
-            Menu
-          </button>
+          <MenuButton {...props} className="xl:hidden" />
         </nav>
-      </div>
+      </Container>
     </header>
   )
 }
@@ -181,66 +260,70 @@ function MenuPanel({
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-forest-warm text-warm-cream"
-      initial={{ opacity: 0, y: -16 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -16 }}
-      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white text-ink"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
     >
       <Container className="flex flex-auto flex-col">
-        <div className="flex items-center justify-between pt-7">
-          <Link href="/" onClick={onClose} className="rounded-full">
+        <div className="flex h-18 items-center justify-between">
+          <Link href="/" onClick={onClose} className="rounded-md">
             <Logo />
           </Link>
           <button
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="rounded-full bg-sun px-6 py-4 font-bold text-warm-ink focus-visible:-outline-offset-4"
+            className="rounded-full px-4 py-2 text-[0.9375rem] font-medium ring-1 ring-line transition ring-inset hover:ring-ink/30"
           >
             Close
           </button>
         </div>
 
-        <nav aria-label="Main" className="mt-10">
-          <ol role="list" className="grid gap-3">
-            {menuLinks.map((link, index) => (
+        <nav aria-label="Main" className="mt-6">
+          <ul role="list" className="divide-y divide-line border-y border-line">
+            {menuLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
                   onClick={onClose}
-                  className="flex items-center gap-4 rounded-full bg-warm-cream/8 py-2.5 pr-6 pl-2.5 transition hover:bg-warm-cream/15"
+                  className="flex items-center justify-between py-5 text-[1.625rem] font-semibold tracking-[-0.02em] transition hover:text-accent"
                 >
-                  <NumberBadge value={index + 1} tone="sun" />
-                  <span className="type-display text-[clamp(2rem,5vw,3.5rem)]">
-                    {link.label}
+                  {link.label}
+                  <span aria-hidden="true" className="text-xl text-accent">
+                    →
                   </span>
                 </Link>
               </li>
             ))}
-          </ol>
+          </ul>
         </nav>
 
-        <div className="mt-auto grid gap-10 py-12 split:grid-cols-2">
-          <div>
-            <Kicker as="h2" tone="dark">
-              Service area
-            </Kicker>
-            <Offices invert className="mt-4" />
-          </div>
-          <div>
-            <Kicker as="h2" tone="dark">
-              Follow us
-            </Kicker>
-            <SocialMedia invert className="mt-5" />
-          </div>
+        <div className="mt-auto py-10">
+          <Button
+            href="/stays"
+            onClick={onClose}
+            className="w-full justify-center"
+          >
+            Book Now
+          </Button>
+          <p className="mt-6 text-center text-sm text-muted">
+            Mount Washington · Comox Valley
+          </p>
         </div>
       </Container>
     </motion.div>
   )
 }
 
-function RootLayoutInner({ children }: { children: React.ReactNode }) {
+function RootLayoutInner({
+  header,
+  children,
+}: {
+  header: HeaderVariant
+  children: React.ReactNode
+}) {
   let panelId = useId()
   let [open, setOpen] = useState(false)
   let openRef = useRef<HTMLButtonElement>(null)
@@ -273,14 +356,19 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
     <>
       <div
         inert={open ? true : undefined}
-        className="relative flex min-h-full flex-auto flex-col pt-[72px]"
+        className="relative flex min-h-full flex-auto flex-col"
       >
-        <SiteHeader
-          panelId={panelId}
-          menuOpen={open}
-          onOpenMenu={() => setOpen(true)}
-          openRef={openRef}
-        />
+        {(() => {
+          let Header = header === 'framed' ? FramedHeader : SiteHeader
+          return (
+            <Header
+              panelId={panelId}
+              menuOpen={open}
+              onOpenMenu={() => setOpen(true)}
+              openRef={openRef}
+            />
+          )
+        })()}
         <main className="w-full flex-auto">{children}</main>
         <Footer />
       </div>
@@ -297,8 +385,18 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function RootLayout({ children }: { children: React.ReactNode }) {
+export function RootLayout({
+  header = 'bar',
+  children,
+}: {
+  header?: HeaderVariant
+  children: React.ReactNode
+}) {
   let pathname = usePathname()
 
-  return <RootLayoutInner key={pathname}>{children}</RootLayoutInner>
+  return (
+    <RootLayoutInner key={pathname} header={header}>
+      {children}
+    </RootLayoutInner>
+  )
 }

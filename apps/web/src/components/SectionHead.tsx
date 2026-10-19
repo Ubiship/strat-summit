@@ -7,38 +7,40 @@ export function SectionHead({
   kicker,
   title,
   tone = 'light',
+  align = 'start',
   className,
   children,
 }: {
   kicker?: string
   title: string
   tone?: 'light' | 'dark'
+  align?: 'start' | 'center'
   className?: string
   children?: React.ReactNode
 }) {
   return (
     <FadeIn
       className={clsx(
-        'grid gap-8 split:grid-cols-[1.1fr_0.9fr] split:items-end split:gap-16',
+        'max-w-3xl',
+        align === 'center' && 'mx-auto text-center [&>p:first-child]:justify-center',
         className,
       )}
     >
-      <div>
-        {kicker && <Kicker tone={tone}>{kicker}</Kicker>}
-        <h2
-          className={clsx(
-            'type-display text-[clamp(3rem,6vw,5rem)] text-balance',
-            kicker && 'mt-5',
-          )}
-        >
-          {title}
-        </h2>
-      </div>
+      {kicker && <Kicker tone={tone}>{kicker}</Kicker>}
+      <h2
+        className={clsx(
+          'type-display text-[clamp(2.5rem,5vw,4rem)] text-balance',
+          kicker && 'mt-4',
+        )}
+      >
+        {title}
+      </h2>
       {children && (
         <div
           className={clsx(
-            'max-w-[40ch] space-y-5 text-[1.1875rem]/[1.6]',
-            tone === 'dark' ? 'text-[#f1dfc6]' : 'text-warm-muted',
+            'mt-6 max-w-[52ch] space-y-4 text-[1.1875rem]/[1.55] text-pretty',
+            align === 'center' && 'mx-auto',
+            tone === 'dark' ? 'text-white/80' : 'text-muted',
           )}
         >
           {children}

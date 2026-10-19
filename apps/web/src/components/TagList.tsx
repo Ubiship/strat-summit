@@ -24,7 +24,7 @@ export function TagListItem({
   return (
     <li
       className={clsx(
-        'rounded-full bg-sand px-4.5 py-2 text-base font-semibold text-warm-ink',
+        'rounded-full border border-line bg-white px-4 py-1.5 text-[0.9375rem] font-medium text-ink',
         className,
       )}
     >

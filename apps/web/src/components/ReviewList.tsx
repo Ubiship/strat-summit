@@ -14,8 +14,8 @@ export function ReviewList({ reviews }: ReviewListProps) {
 
   if (reviews.length === 0) {
     return (
-      <div className="rounded-[2.75rem] bg-warm-cream/50 p-8 text-center">
-        <p className="text-lg text-warm-ink/60">No reviews yet</p>
+      <div className="rounded-[1.5rem] border border-line p-8 text-center">
+        <p className="text-lg text-muted">No reviews yet</p>
       </div>
     )
   }
@@ -33,7 +33,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
 
   const renderStars = (rating: number) => {
     return (
-      <div className="flex gap-1 text-sun">
+      <div className="flex gap-1 text-highlight">
         {Array.from({ length: 5 }, (_, i) => (
           <span key={i} className={clsx(i < rating ? 'opacity-100' : 'opacity-20')}>
             ★
@@ -51,16 +51,16 @@ export function ReviewList({ reviews }: ReviewListProps) {
   return (
     <div>
       <div className="mb-8 flex items-baseline gap-4">
-        <h3 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
+        <h2 className="text-[1.5rem] font-semibold tracking-[-0.02em]">
           Reviews
-        </h3>
+        </h2>
         {reviews.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-sun">★</span>
-            <span className="text-lg font-bold text-warm-ink">
+            <span className="text-xl text-highlight">★</span>
+            <span className="text-lg font-semibold">
               {averageRating.toFixed(1)}
             </span>
-            <span className="text-base text-warm-ink/60">
+            <span className="text-base text-muted">
               ({reviews.length} {reviews.length === 1 ? 'review' : 'reviews'})
             </span>
           </div>
@@ -71,18 +71,18 @@ export function ReviewList({ reviews }: ReviewListProps) {
         {visibleReviews.map((review) => (
           <article
             key={review.id}
-            className="rounded-[2.75rem] bg-warm-cream/50 p-6"
+            className="border-t border-line pt-6"
           >
             <div className="mb-3 flex items-start justify-between gap-4">
               <div>
-                <p className="font-bold text-warm-ink">{review.guestName}</p>
-                <p className="text-sm text-warm-ink/60">
+                <p className="font-semibold">{review.guestName}</p>
+                <p className="text-sm text-muted">
                   {formatDate(review.createdAt)}
                 </p>
               </div>
               {renderStars(review.rating)}
             </div>
-            <p className="text-base/[1.6] text-warm-ink/80">{review.comment}</p>
+            <p className="text-base/[1.65] text-ink">{review.comment}</p>
           </article>
         ))}
       </div>
@@ -91,7 +91,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
         <div className="mt-6 text-center">
           <Button
             onClick={() => setShowAll(!showAll)}
-            tone="cream"
+            tone="outline"
             size="sm"
           >
             {showAll ? 'Show less' : `Show all ${reviews.length} reviews`}

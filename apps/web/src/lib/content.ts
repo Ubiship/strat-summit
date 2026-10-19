@@ -67,7 +67,11 @@ function parseGuideFile(filename: string): Guide | null {
       title: data.title,
       description: data.description,
       category: data.category as GuideCategory,
-      publishedAt: data.publishedAt,
+      // YAML parses bare dates into Date objects; keep the YYYY-MM-DD string
+      publishedAt:
+        data.publishedAt instanceof Date
+          ? data.publishedAt.toISOString().slice(0, 10)
+          : String(data.publishedAt),
       author: data.author,
       content,
     }

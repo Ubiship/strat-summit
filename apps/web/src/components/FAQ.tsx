@@ -43,18 +43,16 @@ const faqs = [
     question: 'What is your cancellation policy?',
     answer: (
       <div className="space-y-4">
-        <p>For bookings made directly through our website:</p>
-        <ul className="list-disc space-y-1 pl-5">
-          <li>Cancel 30 or more days before arrival for a full refund.</li>
-          <li>
-            Cancel fewer than 30 days but at least 14 days before arrival for a
-            50% refund.
-          </li>
-          <li>
-            Cancel fewer than 14 days before arrival and no refund is available.
-          </li>
-        </ul>
-        <p className="font-semibold text-warm-ink">Winter conditions</p>
+        <p>
+          We have a 30-day cancellation policy on all bookings. Cancellations
+          made at least 30 days before your arrival date receive a full refund.
+          Cancellations made fewer than 30 days but at least 7 days before your
+          arrival date receive a 50% refund. Cancellations made fewer than 7
+          days before your arrival date receive no refund.
+        </p>
+        <p className="font-semibold text-ink">
+          Winter Conditions and Cancellation
+        </p>
         <p>
           Our standard cancellation policy applies throughout the winter season.
           Refunds, credits, or date changes are not provided due to snowfall,
@@ -63,10 +61,12 @@ const faqs = [
         </p>
         <p>
           If Mount Washington Alpine Resort closes all mountain operations
-          specifically due to insufficient snow, we will review affected
-          reservations and consider a refund or credit on a case-by-case basis.
-          If any portion of the mountain remains operational—including Nordic,
-          beginner terrain, or limited alpine terrain—the standard cancellation
+          specifically due to insufficient snow, we will consider affected
+          reservations for a refund or credit.
+        </p>
+        <p>
+          If any portion of the mountain remains operational, including Nordic,
+          beginner terrain, or limited alpine terrain, the standard cancellation
           policy remains in effect.
         </p>
       </div>
@@ -96,17 +96,19 @@ function AccordionItem({
   onToggle: () => void
 }) {
   return (
-    <div className="border-b border-warm-ink/8 last:border-b-0">
+    <div className="border-b border-line">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-6 py-7 text-left"
+        className="flex w-full items-center justify-between gap-6 py-6 text-left"
         aria-expanded={isOpen}
       >
-        <span className="text-[1.125rem] font-semibold leading-snug text-warm-ink">{question}</span>
+        <span className="text-[1.125rem]/[1.4] font-semibold tracking-[-0.01em] text-ink">
+          {question}
+        </span>
         <span
           className={clsx(
-            'flex size-10 shrink-0 items-center justify-center rounded-full bg-forest-warm/8 text-forest-warm transition-transform duration-300',
-            isOpen && 'rotate-45 bg-forest-warm text-warm-cream',
+            'flex size-9 shrink-0 items-center justify-center rounded-full text-accent ring-1 ring-line transition-transform duration-300 ring-inset',
+            isOpen && 'rotate-45',
           )}
         >
           <svg
@@ -127,7 +129,7 @@ function AccordionItem({
         )}
       >
         <div className="overflow-hidden">
-          <div className="pb-8 text-[1.0625rem]/[1.75] text-warm-muted">
+          <div className="max-w-[62ch] pb-7 text-[1.0625rem]/[1.7] text-muted">
             {answer}
           </div>
         </div>
@@ -140,14 +142,14 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <Band tone="cream">
+    <Band tone="white">
       <Container>
         <SectionHead kicker="FAQs" title="Frequently asked questions.">
           <p>A few helpful details before you book your mountain stay.</p>
         </SectionHead>
 
-        <FadeIn className="mx-auto mt-16 max-w-3xl">
-          <div className="rounded-[3rem] bg-white p-8 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] split:p-14">
+        <FadeIn className="mt-14 max-w-3xl split:mt-16">
+          <div className="border-t border-line">
             {faqs.map((faq, index) => (
               <AccordionItem
                 key={faq.question}
@@ -162,15 +164,13 @@ export function FAQ() {
           </div>
         </FadeIn>
 
-        <FadeIn className="mt-20 text-center">
-          <p className="text-[1.125rem] text-warm-muted">
+        <FadeIn className="mt-12 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
+          <p className="text-[1.0625rem] text-muted">
             Still have a question? We&apos;re happy to help.
           </p>
-          <div className="mt-8">
-            <Button href="/contact" tone="forest" arrow>
-              Contact us
-            </Button>
-          </div>
+          <Button href="/contact" tone="outline" size="sm" arrow>
+            Contact us
+          </Button>
         </FadeIn>
       </Container>
     </Band>
