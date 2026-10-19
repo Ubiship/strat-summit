@@ -29,15 +29,51 @@ function TextInput({
         required={required}
         {...props}
         placeholder=" "
-        className="peer block w-full rounded-full border-2 border-warm-ink/50 bg-white px-6 pt-7 pb-2.5 text-base/6 text-warm-ink transition focus:border-warm-ink focus:ring-2 focus:ring-warm-ink focus:outline-hidden"
+        className="peer block w-full rounded-2xl border border-line bg-white px-5 pt-7 pb-2.5 text-base/6 text-ink transition hover:border-ink/25 focus:border-accent focus:ring-3 focus:ring-accent/15 focus:outline-hidden"
       />
       <label
         htmlFor={id}
-        className="pointer-events-none absolute top-1/2 left-6 -mt-3 origin-left text-base/6 text-warm-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-semibold peer-not-placeholder-shown:text-warm-ink peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:font-semibold peer-focus:text-warm-ink"
+        className="pointer-events-none absolute top-1/2 left-5 -mt-3 origin-left text-base/6 text-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-3 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-medium peer-not-placeholder-shown:text-muted peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-accent"
       >
         {label}
         {required ? (
-          <span className="text-ember-deep" aria-hidden="true">
+          <span className="text-accent" aria-hidden="true">
+            {' '}
+            *
+          </span>
+        ) : null}
+      </label>
+    </div>
+  )
+}
+
+function TextArea({
+  label,
+  required,
+  ...props
+}: React.ComponentPropsWithoutRef<'textarea'> & {
+  label: string
+  required?: boolean
+}) {
+  let id = useId()
+
+  return (
+    <div className="relative">
+      <textarea
+        id={id}
+        required={required}
+        rows={5}
+        {...props}
+        placeholder=" "
+        className="peer block w-full resize-y rounded-2xl border border-line bg-white px-5 pt-8 pb-3 text-base/6 text-ink transition hover:border-ink/25 focus:border-accent focus:ring-3 focus:ring-accent/15 focus:outline-hidden"
+      />
+      <label
+        htmlFor={id}
+        className="pointer-events-none absolute top-4 left-5 origin-left text-base/6 text-muted transition-all duration-200 peer-not-placeholder-shown:-translate-y-1.5 peer-not-placeholder-shown:scale-75 peer-not-placeholder-shown:font-medium peer-focus:-translate-y-1.5 peer-focus:scale-75 peer-focus:font-medium peer-focus:text-accent"
+      >
+        {label}
+        {required ? (
+          <span className="text-accent" aria-hidden="true">
             {' '}
             *
           </span>
@@ -56,9 +92,9 @@ function RadioInput({
       <input
         type="radio"
         {...props}
-        className="size-6 flex-none appearance-none rounded-full border-2 border-warm-ink/50 bg-white checked:border-[0.45rem] checked:border-sun checked:bg-warm-ink"
+        className="mt-0.5 size-5 flex-none appearance-none rounded-full border border-ink/25 bg-white transition checked:border-[0.35rem] checked:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       />
-      <span className="text-base/6 text-warm-ink">{label}</span>
+      <span className="text-base/6 text-ink">{label}</span>
     </label>
   )
 }
@@ -70,10 +106,12 @@ export function ContactForm() {
   )
 
   return (
-    <FadeIn className="rounded-[2.5rem] bg-warm-cream p-7 shadow-[0_24px_60px_rgb(42_24_10/0.08)] split:p-10">
+    <FadeIn className="rounded-[1.5rem] border border-line bg-white p-8 split:p-10">
       <form action={formAction}>
-        <h2 className="type-display text-4xl">Send us a message</h2>
-        <p className="mt-3 text-base text-warm-muted">
+        <h2 className="text-[1.75rem] font-semibold tracking-[-0.025em] text-ink">
+          Send us a message
+        </h2>
+        <p className="mt-2 text-base text-muted">
           We typically respond within one business day.
         </p>
 
@@ -81,7 +119,7 @@ export function ContactForm() {
           <p
             role="status"
             className={`mt-5 rounded-2xl px-4 py-3 text-sm ${
-              state.success ? 'bg-sand text-warm-ink' : 'bg-red-50 text-red-800'
+              state.success ? 'bg-tint text-accent-deep' : 'bg-red-50 text-red-800'
             }`}
           >
             {state.message}
@@ -103,10 +141,10 @@ export function ContactForm() {
           />
           <TextInput label="Phone" type="tel" name="phone" autoComplete="tel" />
           <TextInput label="Property location" name="location" />
-          <TextInput label="Message" name="message" required />
-          <div className="rounded-[2rem] border-2 border-sand bg-white px-6 py-6">
+          <TextArea label="Message" name="message" required />
+          <div className="rounded-2xl border border-line bg-white px-5 py-6">
             <fieldset>
-              <legend className="text-base/6 font-semibold text-warm-ink">
+              <legend className="text-base/6 font-medium text-ink">
                 What can we help with?
               </legend>
               <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">

@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 import { Band } from '@/components/Band'
 import { Blockquote } from '@/components/Blockquote'
-import { ContactSection } from '@/components/ContactSection'
+import { PropertiesCta } from '@/components/PropertiesCta'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { List, ListItem } from '@/components/List'
@@ -33,7 +33,7 @@ function Section({
     <div className="grid items-center gap-10 split:grid-cols-2 split:gap-16">
       <FadeIn
         className={clsx(
-          'relative aspect-4/3 overflow-hidden rounded-[2.75rem]',
+          'relative aspect-4/3 overflow-hidden rounded-[1.75rem]',
           index % 2 === 0 && 'split:order-last',
         )}
       >
@@ -42,12 +42,12 @@ function Section({
           alt=""
           fill
           sizes="(min-width: 1200px) 34rem, (min-width: 900px) 50vw, 100vw"
-          className="object-cover photo-warm"
+          className="object-cover"
         />
       </FadeIn>
       <FadeIn>
-        <NumberBadge value={index} tone="sun" />
-        <h2 className="mt-5 type-display text-[clamp(2.75rem,5vw,4.5rem)]">
+        <NumberBadge value={index} />
+        <h2 className="mt-6 type-display text-[clamp(2.5rem,5vw,4rem)]">
           {title}
         </h2>
         <div className="mt-6">{children}</div>
@@ -59,10 +59,10 @@ function Section({
 function Discover() {
   return (
     <Section index={1} title="Discover" image={imageWhiteboard}>
-      <div className="space-y-6 text-base text-warm-muted">
+      <div className="space-y-6 text-base text-muted">
         <p>
           We work closely with our clients to understand their{' '}
-          <strong className="font-semibold text-warm-ink">needs</strong> and
+          <strong className="font-semibold text-ink">needs</strong> and
           goals, embedding ourselves in their every day operations to understand
           what makes their business tick.
         </p>
@@ -71,18 +71,18 @@ function Discover() {
           several weeks while our account managers focus on going through their
           trash. Our senior security experts then perform social engineering
           hacks to gain access to their{' '}
-          <strong className="font-semibold text-warm-ink">business</strong>{' '}
+          <strong className="font-semibold text-ink">business</strong>{' '}
           accounts — handing that information over to our forensic accounting
           team.
         </p>
         <p>
           Once the full audit is complete, we report back with a comprehensive{' '}
-          <strong className="font-semibold text-warm-ink">plan</strong> and,
+          <strong className="font-semibold text-ink">plan</strong> and,
           more importantly, a budget.
         </p>
       </div>
 
-      <h3 className="mt-12 text-lg font-bold text-warm-ink">
+      <h3 className="mt-12 text-lg font-semibold text-ink">
         Included in this phase
       </h3>
       <TagList className="mt-4">
@@ -100,7 +100,7 @@ function Discover() {
 function Build() {
   return (
     <Section index={2} title="Build" image={imageLaptop}>
-      <div className="space-y-6 text-base text-warm-muted">
+      <div className="space-y-6 text-base text-muted">
         <p>
           Based off of the discovery phase, we develop a comprehensive roadmap
           for each product and start working towards delivery. The roadmap is an
@@ -136,33 +136,33 @@ function Build() {
 function Deliver() {
   return (
     <Section index={3} title="Deliver" image={imageMeeting}>
-      <div className="space-y-6 text-base text-warm-muted">
+      <div className="space-y-6 text-base text-muted">
         <p>
           About halfway through the Build phase, we push each project out by 6
           weeks due to a change in{' '}
-          <strong className="font-semibold text-warm-ink">requirements</strong>.
+          <strong className="font-semibold text-ink">requirements</strong>.
           This allows us to increase the budget a final time before launch.
         </p>
         <p>
           Despite largely using pre-built components, most of the{' '}
-          <strong className="font-semibold text-warm-ink">progress</strong> on
+          <strong className="font-semibold text-ink">progress</strong> on
           each project takes place in the final 24 hours. The development time
           allocated to each client is actually spent making augmented reality
           demos that go viral on social media.
         </p>
         <p>
           We ensure that the main pages of the site are{' '}
-          <strong className="font-semibold text-warm-ink">
+          <strong className="font-semibold text-ink">
             fully functional
           </strong>{' '}
           at launch — the auxiliary pages will, of course, be lorem ipusm shells
           which get updated as part of our exorbitant{' '}
-          <strong className="font-semibold text-warm-ink">maintenance</strong>{' '}
+          <strong className="font-semibold text-ink">maintenance</strong>{' '}
           retainer.
         </p>
       </div>
 
-      <h3 className="mt-12 text-lg font-bold text-warm-ink">
+      <h3 className="mt-12 text-lg font-semibold text-ink">
         Included in this phase
       </h3>
       <List className="mt-8">
@@ -218,10 +218,9 @@ const values = [
 
 function Values() {
   return (
-    <Band tone="forest">
+    <Band tone="mist">
       <Container>
         <SectionHead
-          tone="dark"
           kicker="Our values"
           title="Balancing reliability and innovation"
         >
@@ -255,7 +254,7 @@ export default function Process() {
         </p>
       </PageHero>
 
-      <Band tone="cream">
+      <Band tone="white">
         <Container className="space-y-24 split:space-y-32">
           <Discover />
           <Build />
@@ -265,7 +264,7 @@ export default function Process() {
 
       <Values />
 
-      <ContactSection />
+      <PropertiesCta audience="owners" />
     </RootLayout>
   )
 }

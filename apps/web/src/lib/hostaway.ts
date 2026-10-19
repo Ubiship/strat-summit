@@ -5,6 +5,13 @@
  * Uses Bearer token authentication with the Hostaway API.
  */
 
+import {
+  sampleAvailability,
+  sampleProperties,
+  sampleReviews,
+  isSampleMode,
+} from '@/lib/sampleData'
+
 // ============================================================================
 // Types
 // ============================================================================
@@ -26,6 +33,8 @@ export type HostawayProperty = {
   basePrice: number
   photos: HostawayPhoto[]
   amenities: string[]
+  // Free-text type from the listing, e.g. "Condominium" or "Chalet"
+  propertyType?: string
   rating?: number
   reviewCount?: number
 }
@@ -135,6 +144,8 @@ async function fetchHostaway<T>(
  * Fetch all properties from Hostaway
  */
 export async function getProperties(): Promise<HostawayProperty[]> {
+  if (isSampleMode()) return sampleProperties
+
   try {
     const response = await fetchHostaway<{ listings: HostawayProperty[] }>('/listings')
 
@@ -156,6 +167,10 @@ export async function getProperties(): Promise<HostawayProperty[]> {
  *          Null returns from API errors are logged to console.error for debugging.
  */
 export async function getProperty(id: string): Promise<HostawayProperty | null> {
+  if (isSampleMode()) {
+    return sampleProperties.find((p) => String(p.id) === id) ?? null
+  }
+
   try {
     const property = await fetchHostaway<HostawayProperty>(`/listings/${id}`)
     return property
@@ -173,6 +188,8 @@ export async function getAvailability(
   startDate: string,
   endDate: string,
 ): Promise<HostawayCalendarDay[]> {
+  if (isSampleMode()) return sampleAvailability(startDate, endDate)
+
   try {
     const params = new URLSearchParams({
       listingId,
@@ -243,6 +260,12 @@ export async function getPricing(
  * Fetch reviews for a property or all properties
  */
 export async function getReviews(listingId?: string): Promise<HostawayReview[]> {
+  if (isSampleMode()) {
+    return listingId
+      ? sampleReviews.filter((r) => String(r.listingId) === listingId)
+      : sampleReviews
+  }
+
   try {
     let endpoint = '/reviews'
 

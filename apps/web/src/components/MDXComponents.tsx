@@ -3,6 +3,7 @@ import clsx from 'clsx'
 
 import { Blockquote } from '@/components/Blockquote'
 import { Border } from '@/components/Border'
+import { Kicker } from '@/components/Kicker'
 import { StatList, StatListItem } from '@/components/StatList'
 import { TagList, TagListItem } from '@/components/TagList'
 
@@ -21,7 +22,7 @@ export const MDXComponents = {
     return (
       <div
         className={clsx(
-          'my-10 overflow-hidden rounded-[2.75rem] bg-sand max-sm:-mx-6',
+          'my-10 overflow-hidden rounded-[1.5rem] bg-mist',
           className,
         )}
       >
@@ -29,7 +30,7 @@ export const MDXComponents = {
           alt={alt}
           {...props}
           sizes="(min-width: 768px) 48rem, 100vw"
-          className="aspect-16/10 w-full object-cover photo-warm"
+          className="aspect-16/10 w-full object-cover"
         />
       </div>
     )
@@ -76,9 +77,7 @@ export const MDXComponents = {
   }) {
     return (
       <Border position="left" className={clsx('my-10 pl-8', className)}>
-        <p className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
-          Top tip
-        </p>
+        <Kicker>Top tip</Kicker>
         <div className="mt-4">{children}</div>
       </Border>
     )

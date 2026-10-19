@@ -1,49 +1,66 @@
 import { type Metadata } from 'next'
-import Link from 'next/link'
+import { Mail, MapPin, Phone } from 'lucide-react'
 
 import { Band } from '@/components/Band'
 import { ContactForm } from '@/components/ContactForm'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { Kicker } from '@/components/Kicker'
-import { Offices } from '@/components/Offices'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
 import { SocialMedia } from '@/components/SocialMedia'
 import { site } from '@/lib/site'
 
+function DetailRow({
+  icon: Icon,
+  label,
+  children,
+}: {
+  icon: typeof Mail
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex gap-4">
+      <Icon
+        aria-hidden="true"
+        strokeWidth={1.5}
+        className="mt-0.5 size-5 flex-none text-accent"
+      />
+      <div>
+        <dt className="font-medium text-ink">{label}</dt>
+        <dd className="mt-1 text-base/[1.6] text-muted">{children}</dd>
+      </div>
+    </div>
+  )
+}
+
 function ContactDetails() {
   return (
-    <FadeIn className="rounded-[2.5rem] bg-sand p-8 split:p-10">
-      <Kicker as="h2">Service area</Kicker>
-      <p className="mt-4 text-base/[1.6] text-warm-muted">
-        We serve property owners across Vancouver Island. Reach out to confirm
-        coverage for your address.
-      </p>
-      <Offices className="mt-6" />
+    <FadeIn className="rounded-[1.5rem] border border-line bg-white p-8 split:p-10">
+      <h2 className="text-[1.375rem] font-semibold tracking-[-0.02em] text-ink">
+        Other ways to reach us
+      </h2>
+      <dl className="mt-8 space-y-7">
+        <DetailRow icon={Mail} label="General inquiries">
+          <a
+            href={`mailto:${site.contactEmail}`}
+            className="text-accent underline decoration-accent/30 decoration-1 underline-offset-4 transition hover:text-accent-deep hover:decoration-accent"
+          >
+            {site.contactEmail}
+          </a>
+        </DetailRow>
+        <DetailRow icon={Phone} label="Phone">
+          {site.phone}
+        </DetailRow>
+        <DetailRow icon={MapPin} label="Service area">
+          Based on Mount Washington, serving properties across the Comox
+          Valley and Vancouver Island. Reach out to confirm coverage for your
+          address.
+        </DetailRow>
+      </dl>
 
-      <div className="mt-8 border-t-2 border-warm-cream pt-8">
-        <Kicker as="h2">Email & phone</Kicker>
-        <dl className="mt-4 grid gap-5 text-base">
-          <div>
-            <dt className="font-bold text-warm-ink">General inquiries</dt>
-            <dd className="mt-1">
-              <Link
-                href={`mailto:${site.contactEmail}`}
-                className="text-warm-muted underline decoration-sun decoration-2 underline-offset-4 hover:text-warm-ink"
-              >
-                {site.contactEmail}
-              </Link>
-            </dd>
-          </div>
-          <div>
-            <dt className="font-bold text-warm-ink">Phone</dt>
-            <dd className="mt-1 text-warm-muted">{site.phone}</dd>
-          </div>
-        </dl>
-      </div>
-
-      <div className="mt-8 border-t-2 border-warm-cream pt-8">
+      <div className="mt-10 border-t border-line pt-8">
         <Kicker as="h2">Follow us</Kicker>
         <SocialMedia className="mt-5" />
       </div>
@@ -63,6 +80,11 @@ export default function Contact() {
         size="short"
         kicker="Contact"
         title="Let's talk about your property."
+        image={{
+          src: site.images.hero,
+          alt: 'Snow-capped mountain peak above Vancouver Island forest',
+          position: 'center 35%',
+        }}
       >
         <p>
           Tell us a bit about your property and what you need — we will get back
@@ -70,8 +92,8 @@ export default function Contact() {
         </p>
       </PageHero>
 
-      <Band tone="apricot">
-        <Container className="grid items-start gap-4.5 split:grid-cols-[1.2fr_0.8fr]">
+      <Band tone="white" className="pt-16 split:pt-24">
+        <Container className="grid items-start gap-5 split:grid-cols-[1.25fr_0.75fr]">
           <ContactForm />
           <ContactDetails />
         </Container>

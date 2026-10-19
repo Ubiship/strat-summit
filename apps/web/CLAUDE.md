@@ -49,7 +49,7 @@ Tailwind CSS v4 with shared brand theme:
 @import '@repo/tailwind-config/theme.css';
 ```
 
-Brand colors: forest, stone, cream, gold, charcoal
+Public site palette lives in `src/styles/brand.css` (predominantly white; sky-blue `accent`, `highlight` for small marks only; `ink`, `muted`, `line`, `mist`, `tint`). Imported Aceternity blocks are adapted in `src/components/ui/`.
 
 ## Server Components vs Client Components
 

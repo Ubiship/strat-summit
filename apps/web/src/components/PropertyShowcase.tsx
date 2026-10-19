@@ -1,10 +1,14 @@
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
-import { FadeIn, FadeInStagger } from '@/components/FadeIn'
-import { PropertyCard } from '@/components/PropertyCard'
+import { FadeIn } from '@/components/FadeIn'
 import { SectionHead } from '@/components/SectionHead'
+import {
+  ExpandablePropertyCards,
+  type ExpandableProperty,
+} from '@/components/ui/expandable-property-cards'
 import { getProperties } from '@/lib/hostaway'
+import { getPropertyHighlights } from '@/lib/propertyHighlights'
 
 export async function PropertyShowcase() {
   const allProperties = await getProperties()
@@ -14,30 +18,39 @@ export async function PropertyShowcase() {
     return null
   }
 
+  // Only plain data crosses into the client component.
+  let cards: ExpandableProperty[] = featuredProperties.map((property) => {
+    let cover = property.photos.find((p) => p.isCover) || property.photos[0]
+    return {
+      id: property.id,
+      name: property.name,
+      address: property.address,
+      description: property.description,
+      href: `/stays/${property.id}`,
+      rating: property.rating,
+      reviewCount: property.reviewCount,
+      highlights: getPropertyHighlights(property),
+      image: cover && { src: cover.url, alt: cover.caption || property.name },
+    }
+  })
+
   return (
-    <Band tone="sand">
+    <Band tone="white">
       <Container>
         <SectionHead
           kicker="Featured properties"
           title="Find your perfect mountain retreat."
         >
           <p>
-            From cozy alpine cabins to luxurious ski-in chalets, discover
-            hand-picked vacation rentals that make Mount Washington feel like
-            home.
+            Condos, chalets, and townhouses on Mount Washington, each one
+            cleaned, cared for, and ready for your stay.
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-12 grid gap-6 split:grid-cols-2">
-          {featuredProperties.map((property) => (
-            <FadeIn key={property.id}>
-              <PropertyCard property={property} />
-            </FadeIn>
-          ))}
-        </FadeInStagger>
+        <ExpandablePropertyCards properties={cards} />
 
-        <FadeIn className="mt-12 text-center">
-          <Button href="/stays" tone="forest" arrow>
+        <FadeIn className="mt-16 text-center">
+          <Button href="/stays" tone="outline" arrow>
             View all properties
           </Button>
         </FadeIn>

@@ -1,70 +1,30 @@
-import Link from 'next/link'
-
-import { Band } from '@/components/Band'
-import { Container } from '@/components/Container'
-import { Logo } from '@/components/Logo'
 import { socialMediaProfiles } from '@/components/SocialMedia'
+import { CenteredFooterWithLogo } from '@/components/ui/centered-footer-with-logo'
 import { site } from '@/lib/site'
 
-const navigation = [
-  {
-    title: 'Services',
-    links: [
-      { title: 'Stays', href: '/stays' },
-      { title: 'Cleaning', href: '/cleaning' },
-      { title: 'Property Management', href: '/property-management' },
-      { title: 'Renovations', href: '/renovations' },
-    ],
-  },
-  {
-    title: 'Company',
-    links: [
-      { title: 'About', href: '/about' },
-      { title: 'Mount Washington', href: '/mount-washington' },
-      { title: 'Contact', href: '/contact' },
-    ],
-  },
-  {
-    title: 'Connect',
-    links: socialMediaProfiles,
-  },
+const pages = [
+  { title: 'Stays', href: '/stays' },
+  { title: 'Mt Washington Info', href: '/mount-washington' },
+  { title: 'Property Management', href: '/property-management' },
+  { title: 'Cleaning', href: '/cleaning' },
+  { title: 'Renovations', href: '/renovations' },
+  { title: 'About', href: '/about' },
+  { title: 'Contact', href: '/contact' },
 ]
 
 export function Footer() {
   return (
-    <Band tone="cream" as="footer" last>
-      <Container>
-        <div className="grid gap-10 split:grid-cols-[1.3fr_repeat(3,1fr)]">
-          <Link href="/" className="self-start rounded-full">
-            <Logo />
-          </Link>
-          {navigation.map((section) => (
-            <nav key={section.title} aria-label={section.title}>
-              <h2 className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
-                {section.title}
-              </h2>
-              <ul role="list" className="mt-3.5 space-y-2.5">
-                {section.links.map((link) => (
-                  <li key={link.title}>
-                    <Link
-                      href={link.href}
-                      className="text-[1.0625rem] font-semibold transition hover:text-ember-deep"
-                    >
-                      {link.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          ))}
-        </div>
-        <div className="mt-12 flex flex-wrap justify-between gap-x-6 gap-y-2 rounded-[2rem] bg-sand px-6 py-4.5 text-sm text-warm-muted split:rounded-full">
-          <p>
-            © {site.shortName} {new Date().getFullYear()}
-          </p>
-          <p>Mount Washington · Comox Valley</p>
-        </div>
-      </Container>
-    </Band>
+    <CenteredFooterWithLogo
+      pages={pages}
+      socials={socialMediaProfiles}
+      copyright={
+        <>
+          &copy; {site.shortName} {new Date().getFullYear()}{' '}
+          <span className="whitespace-nowrap">
+            · Mount Washington · Comox Valley
+          </span>
+        </>
+      }
+    />
   )
 }

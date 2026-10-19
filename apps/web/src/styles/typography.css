@@ -1,5 +1,5 @@
 .typography {
-  color: var(--color-warm-ink);
+  color: var(--color-ink);
   font-size: var(--text-xl);
   line-height: var(--text-xl--line-height);
 
@@ -24,8 +24,9 @@
     font-weight: var(--font-weight-semibold);
     font-family: var(--font-display);
     font-variation-settings: var(--font-display--font-variation-settings);
-    font-size: var(--text-2xl);
-    line-height: var(--text-2xl--line-height);
+    font-size: 1.75rem;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
     margin-top: --spacing(16);
   }
 
@@ -33,8 +34,9 @@
     font-weight: var(--font-weight-semibold);
     font-family: var(--font-display);
     font-variation-settings: var(--font-display--font-variation-settings);
-    font-size: var(--text-xl);
-    line-height: var(--text-xl--line-height);
+    font-size: 1.375rem;
+    line-height: 1.3;
+    letter-spacing: -0.02em;
     margin-top: --spacing(10);
   }
 
@@ -61,7 +63,7 @@
   }
 
   :where(li)::marker {
-    color: var(--color-ember);
+    color: var(--color-accent);
   }
 
   :where(li > *),
@@ -70,7 +72,7 @@
   }
 
   :where(ol > li)::marker {
-    color: var(--color-ember-deep);
+    color: var(--color-accent);
     font-size: var(--text-base);
     font-weight: var(--font-weight-semibold);
   }
@@ -89,14 +91,14 @@
 
   :where(thead th) {
     padding-bottom: --spacing(6);
-    border-bottom: 1px solid var(--color-warm-ink);
+    border-bottom: 1px solid var(--color-accent);
   }
 
   :where(td) {
     vertical-align: top;
     padding-top: --spacing(6);
     padding-bottom: --spacing(6);
-    border-bottom: 1px solid --theme(--color-warm-ink / 0.1);
+    border-bottom: 1px solid var(--color-line);
   }
 
   :where(:is(th, td):not(:last-child)) {
@@ -107,7 +109,7 @@
   :where(pre) {
     display: flex;
     background-color: var(--color-neutral-950);
-    border-radius: var(--radius-4xl);
+    border-radius: 1.5rem;
     overflow-x: auto;
     margin-top: --spacing(10);
     margin-bottom: --spacing(10);
@@ -134,18 +136,25 @@
 
   /* <hr> */
   :where(hr) {
-    border-color: --theme(--color-warm-ink / 0.1);
+    border-color: var(--color-line);
     margin-top: --spacing(24);
     margin-bottom: --spacing(24);
   }
 
   /* Inline text */
   :where(a) {
+    color: var(--color-accent);
     text-decoration: underline;
+    text-decoration-color: --theme(--color-accent / 0.35);
     text-decoration-thickness: 1px;
-    text-underline-offset: 0.15em;
+    text-underline-offset: 0.2em;
     text-decoration-skip-ink: none;
-    font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-medium);
+    transition: text-decoration-color 150ms;
+
+    &:hover {
+      text-decoration-color: var(--color-accent);
+    }
   }
 
   :where(strong) {
@@ -163,7 +172,7 @@
   }
 
   :where(h2 code, h3 code) {
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-semibold);
   }
 
   /* Figures */

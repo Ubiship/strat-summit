@@ -1,28 +1,31 @@
 import { type Metadata } from 'next'
-import clsx from 'clsx'
+import {
+  BedDouble,
+  CalendarSync,
+  Camera,
+  ClipboardCheck,
+  Flag,
+  Inbox,
+  KeyRound,
+  LayoutDashboard,
+  PackageCheck,
+  Sparkles,
+  Waves,
+  Wrench,
+  type LucideIcon,
+} from 'lucide-react'
 
 import { Band } from '@/components/Band'
-import { CardIcon } from '@/components/CardIcon'
-import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
-import { PhotoBand } from '@/components/PhotoBand'
+import { PropertiesCta } from '@/components/PropertiesCta'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
-import { ValueCards } from '@/components/ValueCards'
-import iconBookingIntake from '@/images/icons/icon-booking-intake.png'
-import iconHotTub from '@/images/icons/icon-hot-tub.png'
-import iconLinenService from '@/images/icons/icon-linen-service.png'
-import iconMaintenanceFlag from '@/images/icons/icon-maintenance-flag.png'
-import iconPhotoDocumentation from '@/images/icons/icon-photo-documentation.png'
-import iconRestocking from '@/images/icons/icon-restocking.png'
-import iconTierBasic from '@/images/icons/icon-tier-basic.png'
-import iconTierCaretaking from '@/images/icons/icon-tier-caretaking.png'
-import iconTierFull from '@/images/icons/icon-tier-full.png'
-import iconCalendarSync from '@/images/values/icon-calendar-sync.png'
-import iconGuestReady from '@/images/values/icon-guest-ready.png'
-import iconOwnerVisibility from '@/images/values/icon-owner-visibility.png'
+import {
+  ThreeColumnFeaturesWithImage,
+  type Feature,
+} from '@/components/ui/three-column-features-with-image'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -31,57 +34,59 @@ export const metadata: Metadata = {
     'Vacation rental cleaning, caretaking, and full property management on Vancouver Island.',
 }
 
-const tiers = [
+// Images are placeholders until final photography.
+const tiers: Feature[] = [
   {
-    label: 'Tier 1',
     title: 'Basic cleaning',
-    icon: iconTierBasic,
+    icon: Sparkles,
     description:
       'You send dates, we clean and reset the property. Ideal when you handle bookings and guest communication yourself.',
-    tone: 'bg-sand text-warm-ink',
+    image: { src: '/HeroImage.jpg', alt: 'Mount Washington above the forest' },
   },
   {
-    label: 'Tier 2',
     title: 'Cleaning + caretaking',
-    icon: iconTierCaretaking,
+    icon: Wrench,
     description:
       'Maintenance checks, restocking, and proactive care between guests. You stay in control of marketing and bookings.',
-    tone: 'bg-sun text-warm-ink',
+    image: { src: '/Renos.png', alt: 'A home being cared for between stays' },
   },
   {
-    label: 'Tier 3',
     title: 'Full property management',
-    icon: iconTierFull,
+    icon: KeyRound,
     description:
       'End-to-end operations: bookings coordination, owner statements, and the full payout workflow. Built for hands-off owners.',
-    tone: 'bg-forest-warm text-warm-cream',
+    image: { src: '/PropertyManagment.png', alt: 'House keys on a table' },
   },
 ]
 
-const inclusions = [
-  { label: 'Turnover cleaning & linen service', icon: iconLinenService },
-  { label: 'Restocking & supplies', icon: iconRestocking },
-  { label: 'Hot tub & exterior checks', icon: iconHotTub },
-  { label: 'Photo documentation', icon: iconPhotoDocumentation },
-  { label: 'Maintenance flagging', icon: iconMaintenanceFlag },
-  { label: 'Direct booking intake (Tier 2+)', icon: iconBookingIntake },
+const inclusions: { label: string; icon: LucideIcon }[] = [
+  { label: 'Turnover cleaning & linen service', icon: BedDouble },
+  { label: 'Restocking & supplies', icon: PackageCheck },
+  { label: 'Hot tub & exterior checks', icon: Waves },
+  { label: 'Photo documentation', icon: Camera },
+  { label: 'Maintenance flagging', icon: Flag },
+  { label: 'Direct booking intake (Tier 2+)', icon: Inbox },
 ]
 
-const platformFeatures = [
+const platformFeatures: {
+  title: string
+  description: string
+  icon: LucideIcon
+}[] = [
   {
     title: 'Calendar sync',
-    icon: iconCalendarSync,
+    icon: CalendarSync,
     description:
       'iCal integration keeps cleaning jobs aligned with confirmed stays.',
   },
   {
     title: 'Guest-ready standard',
-    icon: iconGuestReady,
+    icon: ClipboardCheck,
     description: 'Consistent checklists and photo records for every turnover.',
   },
   {
     title: 'Owner visibility',
-    icon: iconOwnerVisibility,
+    icon: LayoutDashboard,
     description:
       'Tier 3 owners get statements, breakdowns, and a dedicated portal as the platform rolls out.',
   },
@@ -105,77 +110,81 @@ export default function PropertyManagement() {
         </p>
       </PageHero>
 
-      <Band tone="cream">
+      <ThreeColumnFeaturesWithImage
+        kicker="Service tiers"
+        title="Choose how involved we are."
+        features={tiers}
+      />
+
+      <Band tone="white" className="pt-0! split:pt-0!">
         <Container>
-          <FadeInStagger className="grid gap-6 split:grid-cols-[1fr_1fr_1.35fr]">
-            {tiers.map((tier) => (
-              <FadeIn
-                key={tier.label}
-                className={clsx(
-                  'flex min-h-[24rem] flex-col rounded-[2.75rem] p-10',
-                  tier.tone,
-                )}
-              >
-                <p className="text-sm font-bold tracking-[0.1em] uppercase">
-                  {tier.label}
-                </p>
-                <CardIcon src={tier.icon} className="mt-6" />
-                <h2 className="mt-auto pt-10 type-display text-[clamp(2.375rem,3.4vw,3.125rem)]">
-                  {tier.title}
-                </h2>
-                <p className="mt-4 text-[1.0625rem]/[1.55] opacity-90">
-                  {tier.description}
-                </p>
-              </FadeIn>
-            ))}
-          </FadeInStagger>
+          <div className="grid gap-14 border-t border-line pt-24 split:grid-cols-[1fr_1.1fr] split:gap-20 split:pt-36">
+            <SectionHead kicker="Included" title="What every visit covers.">
+              <p>
+                Our cleaning checklists are built from real turnover workflows —
+                not generic templates — so nothing gets missed before the next
+                guest arrives.
+              </p>
+            </SectionHead>
+
+            <FadeIn>
+              <ul role="list" className="border-b border-line">
+                {inclusions.map(({ label, icon: Icon }) => (
+                  <li
+                    key={label}
+                    className="flex items-center gap-5 border-t border-line py-5 split:py-6"
+                  >
+                    <Icon
+                      aria-hidden="true"
+                      strokeWidth={1.5}
+                      className="size-6 flex-none text-accent"
+                    />
+                    <span className="text-[1.125rem] font-medium tracking-[-0.01em] text-ink">
+                      {label}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </FadeIn>
+          </div>
         </Container>
       </Band>
 
-      <Band tone="sand">
+      <Band tone="white" className="pt-0! split:pt-0!">
         <Container>
-          <SectionHead kicker="Included" title="What every visit covers">
-            <p>
-              Our cleaning checklists are built from real turnover workflows —
-              not generic templates — so nothing gets missed before the next
-              guest arrives.
-            </p>
-          </SectionHead>
-          <FadeIn>
-            <ul role="list" className="mt-16 flex flex-wrap gap-4">
-              {inclusions.map((item) => (
-                <li
-                  key={item.label}
-                  className="flex items-center gap-3 rounded-full bg-warm-cream py-3 pr-7 pl-3.5 text-lg font-semibold"
-                >
-                  <CardIcon src={item.icon} size="sm" />
-                  {item.label}
-                </li>
+          <div className="border-t border-line pt-24 split:pt-36">
+            <SectionHead
+              kicker="Platforms"
+              title="Works with how you already book."
+            >
+              <p>
+                We sync with Airbnb and VRBO calendars and can coordinate direct
+                bookings through {site.shortName} as your portfolio grows.
+              </p>
+            </SectionHead>
+
+            <FadeInStagger className="mt-14 grid gap-12 split:mt-20 split:grid-cols-3 split:gap-10">
+              {platformFeatures.map(({ title, description, icon: Icon }) => (
+                <FadeIn key={title} className="border-t border-line pt-8">
+                  <Icon
+                    aria-hidden="true"
+                    strokeWidth={1.5}
+                    className="size-6 text-accent"
+                  />
+                  <h3 className="mt-5 text-[1.375rem] font-semibold tracking-[-0.02em] text-ink">
+                    {title}
+                  </h3>
+                  <p className="mt-2 max-w-sm text-base/[1.6] text-muted">
+                    {description}
+                  </p>
+                </FadeIn>
               ))}
-            </ul>
-          </FadeIn>
+            </FadeInStagger>
+          </div>
         </Container>
       </Band>
 
-      <Band tone="forest">
-        <Container>
-          <SectionHead
-            tone="dark"
-            kicker="Platforms"
-            title="Works with how you already book."
-          >
-            <p>
-              We sync with Airbnb and VRBO calendars and can coordinate direct
-              bookings through {site.shortName} as your portfolio grows.
-            </p>
-          </SectionHead>
-          <ValueCards items={platformFeatures} />
-        </Container>
-      </Band>
-
-      <PhotoBand src={site.images.hero} alt="" />
-
-      <ContactSection />
+      <PropertiesCta audience="owners" />
     </RootLayout>
   )
 }

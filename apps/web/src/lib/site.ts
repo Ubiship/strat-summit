@@ -9,6 +9,7 @@ export const site = {
   phone: '(250) 000-0000',
   logos: {
     icon: '/STRATLOGO-ICON.png',
+    mark: '/logo-mark.png',
     full: '/STRAT.LOGO.png',
   },
   images: {

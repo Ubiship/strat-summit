@@ -1,0 +1,55 @@
+/*
+ * Public site palette: predominantly white. The sky-blue accent carries
+ * structure — buttons, links, icons, rules. Highlight is the brighter sky blue
+ * for small decorative marks only: dots, stars, a single rule. It is too light
+ * for text on white or for white text on top of it.
+ */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display--font-variation-settings: normal;
+  --breakpoint-split: 56.25rem;
+
+  --color-ink: #141c22;
+  --color-muted: #5b6670;
+  --color-line: #e2e8ee;
+  --color-mist: #f5f8fa;
+  --color-tint: #eef7fd;
+
+  /* White text on accent is 5:1; on the lighter sky-600 it would fail AA. */
+  --color-accent: #0a74b3;
+  --color-accent-deep: #075985;
+
+  --color-highlight: #38bdf8;
+
+  /* The shared theme maps neutral-* to the old warm/green brand for the admin
+     app. Restore Tailwind's own greys here so imported blocks render as
+     designed. */
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e5e5e5;
+  --color-neutral-300: #d4d4d4;
+  --color-neutral-400: #a3a3a3;
+  --color-neutral-500: #737373;
+  --color-neutral-600: #525252;
+  --color-neutral-700: #404040;
+  --color-neutral-800: #262626;
+  --color-neutral-900: #171717;
+  --color-neutral-950: #0a0a0a;
+}
+
+@utility type-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+
+/* Legible text over photography without tinting the photo itself. */
+@utility photo-scrim {
+  background: linear-gradient(
+    180deg,
+    rgb(10 20 15 / 0) 35%,
+    rgb(10 20 15 / 0.55) 100%
+  );
+}

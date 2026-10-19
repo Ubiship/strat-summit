@@ -1,16 +1,27 @@
 import { type Metadata } from 'next'
+import { Check, Mail, Phone } from 'lucide-react'
 
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
-import { FadeIn } from '@/components/FadeIn'
+import { FadeIn, FadeInStagger } from '@/components/FadeIn'
+import { Kicker } from '@/components/Kicker'
 import { PageHero } from '@/components/PageHero'
+import { PropertiesCta } from '@/components/PropertiesCta'
 import { RootLayout } from '@/components/RootLayout'
+import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Booking Confirmation',
   description: 'Your booking has been confirmed. Check your email for details.',
 }
+
+const nextSteps = [
+  'Check your email for the confirmation message',
+  'Review your check-in instructions',
+  'Add our contact number to your phone',
+  'Arrive at your scheduled check-in time',
+]
 
 export default async function BookingConfirmation({
   searchParams,
@@ -22,113 +33,110 @@ export default async function BookingConfirmation({
 
   return (
     <RootLayout>
-      <PageHero size="short" title="Thank you for your booking!">
-        <p>We're excited to host you. Your confirmation details have been sent to your email.</p>
+      <PageHero
+        size="short"
+        kicker="Booking confirmed"
+        title="Thank you for your booking!"
+        image={{
+          src: site.images.hero,
+          alt: 'Snow-capped Mount Washington above the forest',
+          position: 'center 35%',
+        }}
+      >
+        <p>
+          We&apos;re excited to host you. Your confirmation details have been
+          sent to your email.
+        </p>
       </PageHero>
 
-      <Band tone="apricot">
-        <Container className="grid gap-8 split:grid-cols-2 split:gap-12">
-          <FadeIn>
-            <div className="rounded-[2rem] bg-warm-cream p-8 split:p-10">
-              <h2 className="text-lg font-bold text-warm-ink">Confirmation Details</h2>
+      <Band tone="white" className="pt-16 split:pt-24">
+        <Container>
+          <FadeInStagger className="grid items-start gap-5 split:grid-cols-[1.25fr_0.75fr]">
+            <FadeIn className="rounded-[1.5rem] border border-line bg-white p-8 split:p-10">
+              <h2 className="text-[1.375rem] font-semibold tracking-[-0.02em] text-ink">
+                Confirmation details
+              </h2>
 
               {reservationId ? (
                 <>
-                  <div className="mt-6 space-y-4">
-                    <div>
-                      <dt className="text-sm font-semibold uppercase tracking-wide text-warm-muted">
-                        Confirmation Number
-                      </dt>
-                      <dd className="mt-2 font-mono text-2xl font-bold text-warm-ink">
-                        {reservationId}
-                      </dd>
-                    </div>
-                  </div>
-
-                  <p className="mt-6 text-base text-warm-muted">
-                    Please save your confirmation number for your records. You'll need it for check-in.
+                  <dl className="mt-6">
+                    <dt className="text-sm font-medium text-muted">
+                      Confirmation number
+                    </dt>
+                    <dd className="mt-2 font-mono text-[1.75rem] font-semibold tracking-tight text-ink">
+                      {reservationId}
+                    </dd>
+                  </dl>
+                  <p className="mt-4 text-base/[1.6] text-muted">
+                    Please save your confirmation number for your records.
+                    You&apos;ll need it for check-in.
                   </p>
                 </>
               ) : (
-                <p className="mt-6 text-base text-warm-muted">
-                  Your booking has been confirmed. Please check your email for your confirmation
-                  number and booking details.
+                <p className="mt-4 text-base/[1.6] text-muted">
+                  Your booking has been confirmed. Please check your email for
+                  your confirmation number and booking details.
                 </p>
               )}
 
-              <div className="mt-8 border-t-2 border-warm-cream pt-8">
-                <h3 className="font-semibold text-warm-ink">What's next?</h3>
-                <ul className="mt-4 space-y-3 text-base text-warm-muted">
-                  <li className="flex gap-3">
-                    <span className="text-sun">✓</span>
-                    <span>Check your email for the confirmation message</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-sun">✓</span>
-                    <span>Review your check-in instructions</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-sun">✓</span>
-                    <span>Add our contact number to your phone</span>
-                  </li>
-                  <li className="flex gap-3">
-                    <span className="text-sun">✓</span>
-                    <span>Arrive at your scheduled check-in time</span>
-                  </li>
-                </ul>
+              <div className="mt-10 border-t border-line pt-8">
+                <Kicker as="h3">What&apos;s next?</Kicker>
+                <ol className="mt-5 space-y-4 text-base text-ink">
+                  {nextSteps.map((step) => (
+                    <li key={step} className="flex gap-3">
+                      <Check
+                        aria-hidden="true"
+                        strokeWidth={1.5}
+                        className="mt-0.5 size-5 flex-none text-accent"
+                      />
+                      <span>{step}</span>
+                    </li>
+                  ))}
+                </ol>
               </div>
-            </div>
-          </FadeIn>
+            </FadeIn>
 
-          <FadeIn>
-            <div className="rounded-[2rem] bg-warm-cream p-8 split:p-10">
-              <h2 className="text-lg font-bold text-warm-ink">Need Help?</h2>
-
-              <div className="mt-6 space-y-6">
-                <div>
-                  <h3 className="font-semibold text-warm-ink">Frequently Asked Questions</h3>
-                  <p className="mt-2 text-base text-warm-muted">
-                    Check your confirmation email for answers to common questions about your stay.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-semibold text-warm-ink">Contact Us</h3>
-                  <p className="mt-2 text-base text-warm-muted">
-                    If you have any questions before your arrival, don't hesitate to reach out to
-                    our team.
-                  </p>
-                </div>
-
-                <div className="flex flex-col gap-3">
-                  <Button href="/contact" tone="sun" size="sm">
-                    Contact us
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </FadeIn>
+            <FadeIn className="rounded-[1.5rem] border border-line bg-white p-8 split:p-10">
+              <h2 className="text-[1.375rem] font-semibold tracking-[-0.02em] text-ink">
+                Need help?
+              </h2>
+              <p className="mt-4 text-base/[1.6] text-muted">
+                Check your confirmation email for answers to common questions
+                about your stay. If you have any questions before your arrival,
+                don&apos;t hesitate to reach out to our team.
+              </p>
+              <ul className="mt-6 space-y-3 text-base">
+                <li className="flex items-center gap-3">
+                  <Mail
+                    aria-hidden="true"
+                    strokeWidth={1.5}
+                    className="size-5 flex-none text-accent"
+                  />
+                  <a
+                    href={`mailto:${site.contactEmail}`}
+                    className="text-accent underline decoration-accent/30 decoration-1 underline-offset-4 transition hover:text-accent-deep hover:decoration-accent"
+                  >
+                    {site.contactEmail}
+                  </a>
+                </li>
+                <li className="flex items-center gap-3 text-muted">
+                  <Phone
+                    aria-hidden="true"
+                    strokeWidth={1.5}
+                    className="size-5 flex-none text-accent"
+                  />
+                  {site.phone}
+                </li>
+              </ul>
+              <Button href="/contact" tone="outline" size="sm" className="mt-8">
+                Contact us
+              </Button>
+            </FadeIn>
+          </FadeInStagger>
         </Container>
       </Band>
 
-      <Band tone="cream">
-        <Container className="text-center">
-          <FadeIn className="mx-auto max-w-[50ch]">
-            <h2 className="text-2xl font-bold text-warm-ink">Explore more properties</h2>
-            <p className="mt-4 text-base text-warm-muted">
-              Interested in exploring other properties for future stays?
-            </p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Button href="/stays/" tone="forest">
-                Browse properties
-              </Button>
-              <Button href="/" tone="cream" className="text-warm-ink">
-                Back to home
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </Band>
+      <PropertiesCta audience="guests" />
     </RootLayout>
   )
 }

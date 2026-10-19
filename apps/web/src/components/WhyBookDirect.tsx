@@ -1,76 +1,85 @@
-import Image from 'next/image'
 import Link from 'next/link'
+import clsx from 'clsx'
+import { CalendarCheck, MapPin, MessageCircle, Tag } from 'lucide-react'
+
 import { Band } from '@/components/Band'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { SectionHead } from '@/components/SectionHead'
-import iconBestPrice from '@/images/benefits/icon-best-price.jpg'
-import iconDirectCommunication from '@/images/benefits/icon-direct-communication.jpg'
-import iconFlexibleCancellation from '@/images/benefits/icon-flexible-cancellation.jpg'
-import iconLocalHosts from '@/images/benefits/icon-local-hosts.jpg'
 
 const benefits = [
   {
-    title: 'Best Price Guarantee',
-    icon: iconBestPrice,
+    title: 'Best rate guarantee',
+    icon: Tag,
     description:
-      'No third-party booking fees means more savings for you. Our direct rates are always the lowest available.',
+      'No third-party booking fees. Our direct rates are always the best available.',
   },
   {
-    title: 'Direct Communication',
-    icon: iconDirectCommunication,
+    title: 'Direct communication',
+    icon: MessageCircle,
     description:
-      'Connect directly with local property managers who know the area and can help make your stay exceptional.',
+      'Talk to the local team who manage your stay, before you arrive and while you are here.',
   },
   {
-    title: 'Flexible Cancellation',
-    icon: iconFlexibleCancellation,
+    title: 'Clear cancellation',
+    icon: CalendarCheck,
     description:
-      'Book with confidence knowing our flexible cancellation policy protects your travel plans.',
+      'A straightforward 30-day policy, so you know exactly where you stand.',
   },
   {
-    title: 'Local Hosts',
-    icon: iconLocalHosts,
+    title: 'Local hosts',
+    icon: MapPin,
     description:
-      'Based on Mount Washington, we provide personalized recommendations and responsive support throughout your stay.',
+      'We live and work on Mount Washington, with recommendations and support throughout your stay.',
   },
 ]
 
-export function WhyBookDirect() {
+// The accent tone is the one place on the homepage where colour fills a whole
+// section; the mist tone keeps the page almost entirely white.
+export function WhyBookDirect({ tone = 'mist' }: { tone?: 'mist' | 'accent' }) {
+  let dark = tone === 'accent'
+
   return (
-    <Band tone="cream">
+    <Band tone={tone}>
       <Container>
-        <SectionHead kicker="Why book direct" title="More value. Better service.">
+        <SectionHead
+          kicker="Why book direct"
+          title="More value. Better service."
+          tone={dark ? 'dark' : 'light'}
+        >
           <p>
-            When you book directly with us, you get the best rates, personalized
-            service, and support from a team that lives and works on Mount
-            Washington.{' '}
+            Book with us directly for the best rates, personal service, and a
+            team that lives on the mountain.{' '}
             <Link
               href="/why-book-direct"
-              className="font-bold text-forest-warm underline decoration-2 underline-offset-2 transition hover:text-forest-deep"
+              className={clsx(
+                'font-medium underline decoration-1 underline-offset-4 transition',
+                dark ? 'text-white hover:decoration-2' : 'text-accent hover:text-accent-deep',
+              )}
             >
               Learn more
             </Link>
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-2 split:gap-10">
-          {benefits.map((benefit) => (
-            <FadeIn
-              key={benefit.title}
-              className="flex flex-col rounded-[2.75rem] bg-white p-10 shadow-[0_8px_24px_rgb(42_24_10/0.06)]"
-            >
-              <Image
-                src={benefit.icon}
-                alt=""
-                sizes="6rem"
-                className="-ml-2 size-24 flex-none mix-blend-multiply"
+        <FadeInStagger className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 split:mt-20 split:grid-cols-4">
+          {benefits.map(({ title, icon: Icon, description }) => (
+            <FadeIn key={title}>
+              <Icon
+                aria-hidden="true"
+                strokeWidth={1.5}
+                className={clsx('size-7', dark ? 'text-highlight' : 'text-accent')}
               />
-              <h3 className="mt-8 type-display text-[2.25rem] text-warm-ink">
-                {benefit.title}
+              <h3 className="mt-5 text-[1.1875rem] font-semibold tracking-[-0.015em]">
+                {title}
               </h3>
-              <p className="mt-4 text-[1.0625rem]/[1.6] text-warm-muted">
-                {benefit.description}
+              <p
+                className={clsx(
+                  'mt-2 text-base/[1.6]',
+                  dark ? 'text-white/75' : 'text-muted',
+                )}
+              >
+                {description}
               </p>
             </FadeIn>
           ))}
