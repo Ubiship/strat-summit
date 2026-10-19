@@ -22,9 +22,9 @@ import {
 } from '@/lib/hostaway'
 
 export const metadata: Metadata = {
-  title: 'Find Your Stay',
+  title: 'Mount Washington Vacation Rentals',
   description:
-    'Browse our collection of vacation rentals on Vancouver Island. Comfortable, well-maintained properties in beautiful locations.',
+    'Browse our collection of vacation rentals on Mount Washington, Vancouver Island. Chalets and condos professionally cleaned and ready to welcome you.',
 }
 
 type SearchParams = Promise<{
@@ -33,6 +33,7 @@ type SearchParams = Promise<{
   guests?: string
   bedrooms?: string
   amenities?: string
+  propertyType?: string
 }>
 
 // Cache property list for 1 hour
@@ -56,12 +57,25 @@ async function filterProperties(
     filtered = filtered.filter((p) => p.bedrooms >= minBedrooms)
   }
 
-  // Filter by amenities
+  // Filter by property type, using the same rule as the card labels
+  if (filters.propertyType) {
+    filtered = filtered.filter(
+      (p) => getPropertyHighlights(p).type === filters.propertyType,
+    )
+  }
+
+  // Filter by amenities. Hot tub and pets go through the highlight detection
+  // so listings that say "Jacuzzi" or "Pets allowed" still match.
   if (filters.amenities) {
     const requiredAmenities = filters.amenities.split(',')
-    filtered = filtered.filter((p) =>
-      requiredAmenities.every((amenity) => p.amenities?.includes(amenity)),
-    )
+    filtered = filtered.filter((p) => {
+      let highlights = getPropertyHighlights(p)
+      return requiredAmenities.every((amenity) => {
+        if (amenity === 'Hot tub') return highlights.hotTub
+        if (amenity === 'Pet friendly') return highlights.petFriendly
+        return p.amenities?.includes(amenity)
+      })
+    })
   }
 
   // If dates provided, keep only properties available for every night
@@ -113,7 +127,7 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
     return {
       id: property.id,
       name: property.name,
-      address: property.address,
+      address: site.propertyArea,
       description: property.description,
       href: `/stays/${property.id}${detailQuery ? `?${detailQuery}` : ''}`,
       rating: property.rating,
@@ -127,18 +141,13 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
     <RootLayout>
       <PageHero
         kicker="Vacation rentals"
-        title="Find your perfect stay on Vancouver Island."
+        title="Mount Washington Vacation Rentals"
+        size="short"
         image={{
           src: site.images.hero,
           alt: 'Snow-capped mountain peak above Vancouver Island forest',
         }}
-      >
-        <p>
-          Browse our collection of well-maintained properties in beautiful
-          locations. Each rental is professionally cleaned and ready to welcome
-          you.
-        </p>
-      </PageHero>
+      />
 
       {/* Search and filters: a calm toolbar directly under the hero. */}
       <section

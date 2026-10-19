@@ -76,7 +76,7 @@ export function ReviewsWithHoverAndTextAnimation({
           {intro}
         </p>
 
-        <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-[1.5rem] border border-line bg-line split:mt-16 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-14 grid grid-cols-1 gap-px overflow-hidden rounded-[1.5rem] border border-line bg-line md:grid-cols-2 split:mt-16 lg:grid-cols-3">
           {reviews.map((review) => (
             <figure
               key={review.id}
@@ -106,6 +106,20 @@ export function ReviewsWithHoverAndTextAnimation({
               </figcaption>
             </figure>
           ))}
+          {/* Fill the last row so no grey gap shows through the grid lines. */}
+          {reviews.length % 2 === 1 && (
+            <div
+              aria-hidden="true"
+              className="hidden bg-white md:block lg:hidden"
+            />
+          )}
+          {reviews.length % 3 !== 0 && (
+            <div
+              aria-hidden="true"
+              className="hidden bg-white lg:block"
+              style={{ gridColumn: `span ${3 - (reviews.length % 3)}` }}
+            />
+          )}
         </div>
       </div>
     </section>

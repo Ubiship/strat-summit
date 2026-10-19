@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import clsx from 'clsx'
-import { CalendarCheck, MapPin, MessageCircle, Tag } from 'lucide-react'
+import { HeartHandshake, MapPin, Wallet } from 'lucide-react'
 
 import { Band } from '@/components/Band'
 import { Container } from '@/components/Container'
@@ -9,28 +9,22 @@ import { SectionHead } from '@/components/SectionHead'
 
 const benefits = [
   {
-    title: 'Best rate guarantee',
-    icon: Tag,
+    title: 'Better value',
+    icon: Wallet,
     description:
-      'No third-party booking fees. Our direct rates are always the best available.',
+      'Skip third-party booking fees and put more of your budget towards your mountain getaway.',
   },
   {
-    title: 'Direct communication',
-    icon: MessageCircle,
+    title: 'Personal service',
+    icon: HeartHandshake,
     description:
-      'Talk to the local team who manage your stay, before you arrive and while you are here.',
+      'From your first question to your final morning, connect directly with our team for thoughtful, attentive support.',
   },
   {
-    title: 'Clear cancellation',
-    icon: CalendarCheck,
-    description:
-      'A straightforward 30-day policy, so you know exactly where you stand.',
-  },
-  {
-    title: 'Local hosts',
+    title: 'Local knowledge',
     icon: MapPin,
     description:
-      'We live and work on Mount Washington, with recommendations and support throughout your stay.',
+      "From mountain adventures to favourite local spots, we'll help you make the most of your time here.",
   },
 ]
 
@@ -44,12 +38,12 @@ export function WhyBookDirect({ tone = 'mist' }: { tone?: 'mist' | 'accent' }) {
       <Container>
         <SectionHead
           kicker="Why book direct"
-          title="More value. Better service."
+          title="Book direct. Feel right at home."
           tone={dark ? 'dark' : 'light'}
         >
           <p>
-            Book with us directly for the best rates, personal service, and a
-            team that lives on the mountain.{' '}
+            Book your Mount Washington getaway with local hosts who care for
+            every detail of your stay.{' '}
             <Link
               href="/why-book-direct"
               className={clsx(
@@ -62,7 +56,7 @@ export function WhyBookDirect({ tone = 'mist' }: { tone?: 'mist' | 'accent' }) {
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 split:mt-20 split:grid-cols-4">
+        <FadeInStagger className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 split:mt-20 split:grid-cols-3">
           {benefits.map(({ title, icon: Icon, description }) => (
             <FadeIn key={title}>
               <Icon

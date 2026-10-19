@@ -6,27 +6,9 @@ import { FadeIn } from '@/components/FadeIn'
 import { SearchBar } from '@/components/SearchBar'
 import { HeroWithBackground } from '@/components/ui/hero-with-background'
 
-const PARTNERS = [
-  'Airbnb',
-  'VRBO',
-  'Booking.com',
-  'Expedia',
-  'TripAdvisor',
-  'Google',
-]
-
-const title = 'Your mountain escape. Book direct.'
+const title = 'Stay close to adventure. Settle into comfort.'
 const intro =
-  'Thoughtfully managed vacation rentals on Mount Washington, cared for by a local team. Book directly with us for the best rates.'
-
-function Partners({ className }: { className?: string }) {
-  return (
-    <p className={className}>
-      <span className="text-muted">Calendars synced with</span>{' '}
-      {PARTNERS.join(' · ')}
-    </p>
-  )
-}
+  'Discover Mount Washington chalets and condos, thoughtfully prepared and hosted by a local team who know and love the mountain.'
 
 function Search({ className }: { className?: string }) {
   return (
@@ -51,7 +33,6 @@ function WhiteHero() {
         <Container>
           <FadeIn>
             <Search className="mx-auto max-w-4xl" />
-            <Partners className="mt-8 text-center text-sm text-ink/70" />
           </FadeIn>
         </Container>
       </section>
@@ -87,7 +68,6 @@ function PhotoHero() {
       </div>
       <Container className="relative -mt-12">
         <Search className="mx-auto max-w-4xl" />
-        <Partners className="mt-8 text-center text-sm text-ink/70" />
       </Container>
     </section>
   )

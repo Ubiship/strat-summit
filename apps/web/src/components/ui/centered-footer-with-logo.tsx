@@ -48,7 +48,7 @@ export function CenteredFooterWithLogo({
   copyright,
 }: {
   pages: FooterLink[]
-  socials: SocialLink[]
+  socials?: SocialLink[]
   copyright: React.ReactNode
 }) {
   return (
@@ -82,19 +82,21 @@ export function CenteredFooterWithLogo({
 
         <div className="mt-8 flex w-full flex-col items-center justify-between gap-6 sm:flex-row">
           <p className="text-center sm:text-left">{copyright}</p>
-          <ul role="list" className="flex gap-4">
-            {socials.map(({ title, href, icon: Icon }) => (
-              <li key={title}>
-                <Link
-                  href={href}
-                  aria-label={title}
-                  className="text-muted transition-colors hover:text-accent"
-                >
-                  <Icon className="size-6 fill-current" />
-                </Link>
-              </li>
-            ))}
-          </ul>
+          {socials && socials.length > 0 && (
+            <ul role="list" className="flex gap-4">
+              {socials.map(({ title, href, icon: Icon }) => (
+                <li key={title}>
+                  <Link
+                    href={href}
+                    aria-label={title}
+                    className="text-muted transition-colors hover:text-accent"
+                  >
+                    <Icon className="size-6 fill-current" />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </footer>

@@ -7,6 +7,8 @@ export const site = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://strathconasummit.com',
   contactEmail: 'hello@strathconasummit.com',
   phone: '(250) 000-0000',
+  // Shown instead of a property's street address, which guests get after booking
+  propertyArea: 'Mount Washington, Vancouver Island',
   logos: {
     icon: '/STRATLOGO-ICON.png',
     mark: '/logo-mark.png',

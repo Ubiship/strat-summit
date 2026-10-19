@@ -29,10 +29,10 @@ export function SearchBar({ className }: { className?: string }) {
   }
 
   const fieldClasses =
-    'flex flex-col rounded-xl px-4 py-2.5 transition focus-within:bg-mist hover:bg-mist'
+    'flex min-w-0 flex-col rounded-xl px-4 py-2.5 transition focus-within:bg-mist hover:bg-mist'
   const labelClasses = 'text-xs font-semibold text-ink'
   const inputClasses =
-    'mt-0.5 w-full bg-transparent text-[0.9375rem] text-muted focus:outline-none'
+    'mt-0.5 w-full min-w-0 bg-transparent text-[0.9375rem] text-muted focus:outline-none'
 
   return (
     <form

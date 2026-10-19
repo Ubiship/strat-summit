@@ -71,7 +71,14 @@ export function HeroWithBackground({
             <div className="absolute inset-x-0 bottom-0 h-3/5 bg-linear-to-t from-white via-white/85 to-transparent md:hidden" />
             {/* On wider screens only the copy's corner is lifted, so the rest of
                 the photo keeps its full strength. */}
-            <div className="absolute bottom-0 left-0 hidden h-3/5 w-3/4 bg-[radial-gradient(ellipse_farthest-side_at_bottom_left,white_45%,rgb(255_255_255/0.6)_65%,transparent_95%)] md:block" />
+            <div
+              className={cn(
+                'absolute bottom-0 left-0 hidden w-3/4 bg-[radial-gradient(ellipse_farthest-side_at_bottom_left,white_45%,rgb(255_255_255/0.6)_65%,transparent_95%)] md:block',
+                // Shorter heroes hold proportionally more copy, so the wash
+                // runs the full height of the photo there.
+                size === 'full' ? 'h-3/5' : 'h-full',
+              )}
+            />
           </motion.div>
         )}
         <Scales />

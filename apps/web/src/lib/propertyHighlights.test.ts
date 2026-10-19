@@ -72,6 +72,17 @@ describe('getPropertyHighlights', () => {
     expect(getPropertyHighlights(property({ propertyType: 'Townhome' })).type).toBe('townhouse')
   })
 
+  it('falls back to the listing name when no type is set', () => {
+    expect(getPropertyHighlights(property({ name: 'Cozy Bear Chalet' })).type).toBe('chalet')
+    expect(getPropertyHighlights(property({ name: 'Black Dog Condo #12' })).type).toBe('condo')
+  })
+
+  it('prefers the explicit type over the name', () => {
+    expect(
+      getPropertyHighlights(property({ name: 'Chalet View Condo', propertyType: 'Condominium' })).type,
+    ).toBe('condo')
+  })
+
   it('omits the type when it is missing or unrecognised', () => {
     expect(getPropertyHighlights(property()).type).toBeUndefined()
     expect(getPropertyHighlights(property({ propertyType: 'Yurt' })).type).toBeUndefined()

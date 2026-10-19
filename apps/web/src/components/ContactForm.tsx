@@ -11,6 +11,15 @@ const initialState: ContactFormState = {
   message: '',
 }
 
+const serviceOptions = [
+  { value: '', label: 'Select an option' },
+  { value: 'booking', label: 'Booking a vacation rental' },
+  { value: 'pm', label: 'Property management' },
+  { value: 'cleaning', label: 'Cleaning services' },
+  { value: 'reno', label: 'Renovations' },
+  { value: 'other', label: 'Something else' },
+]
+
 function TextInput({
   label,
   required,
@@ -83,19 +92,33 @@ function TextArea({
   )
 }
 
-function RadioInput({
+function SelectInput({
   label,
+  options,
   ...props
-}: React.ComponentPropsWithoutRef<'input'> & { label: string }) {
+}: React.ComponentPropsWithoutRef<'select'> & {
+  label: string
+  options: { value: string; label: string }[]
+}) {
+  let id = useId()
+
   return (
-    <label className="flex gap-x-3">
-      <input
-        type="radio"
+    <div className="rounded-2xl border border-line bg-white px-5 pt-3 pb-2 transition focus-within:border-accent focus-within:ring-3 focus-within:ring-accent/15 hover:border-ink/25">
+      <label htmlFor={id} className="block text-xs font-medium text-muted">
+        {label}
+      </label>
+      <select
+        id={id}
         {...props}
-        className="mt-0.5 size-5 flex-none appearance-none rounded-full border border-ink/25 bg-white transition checked:border-[0.35rem] checked:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-      />
-      <span className="text-base/6 text-ink">{label}</span>
-    </label>
+        className="mt-0.5 block w-full bg-transparent py-1 text-base/6 text-ink focus:outline-none"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+    </div>
   )
 }
 
@@ -122,7 +145,9 @@ export function ContactForm() {
               state.success ? 'bg-tint text-accent-deep' : 'bg-red-50 text-red-800'
             }`}
           >
-            {state.message}
+            {state.success
+              ? "Thanks for getting in touch. We'll be in contact soon."
+              : state.message}
           </p>
         ) : null}
 
@@ -139,31 +164,18 @@ export function ContactForm() {
             autoComplete="email"
             required
           />
-          <TextInput label="Phone" type="tel" name="phone" autoComplete="tel" />
-          <TextInput label="Property location" name="location" />
+          <TextInput
+            label="Phone (optional)"
+            type="tel"
+            name="phone"
+            autoComplete="tel"
+          />
           <TextArea label="Message" name="message" required />
-          <div className="rounded-2xl border border-line bg-white px-5 py-6">
-            <fieldset>
-              <legend className="text-base/6 font-medium text-ink">
-                What can we help with?
-              </legend>
-              <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <RadioInput
-                  label="Property management / cleaning"
-                  name="service"
-                  value="pm"
-                  defaultChecked
-                />
-                <RadioInput
-                  label="Renovation / construction"
-                  name="service"
-                  value="reno"
-                />
-                <RadioInput label="Both" name="service" value="both" />
-                <RadioInput label="Not sure yet" name="service" value="other" />
-              </div>
-            </fieldset>
-          </div>
+          <SelectInput
+            label="What can we help with?"
+            name="service"
+            options={serviceOptions}
+          />
         </div>
 
         <Button

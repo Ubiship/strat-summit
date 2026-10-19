@@ -9,10 +9,11 @@ import {
 } from '@/components/ui/expandable-property-cards'
 import { getProperties } from '@/lib/hostaway'
 import { getPropertyHighlights } from '@/lib/propertyHighlights'
+import { site } from '@/lib/site'
 
 export async function PropertyShowcase() {
   const allProperties = await getProperties()
-  const featuredProperties = allProperties.slice(0, 4)
+  const featuredProperties = allProperties.slice(0, 6)
 
   if (featuredProperties.length === 0) {
     return null
@@ -24,7 +25,7 @@ export async function PropertyShowcase() {
     return {
       id: property.id,
       name: property.name,
-      address: property.address,
+      address: site.propertyArea,
       description: property.description,
       href: `/stays/${property.id}`,
       rating: property.rating,
@@ -38,12 +39,12 @@ export async function PropertyShowcase() {
     <Band tone="white">
       <Container>
         <SectionHead
-          kicker="Featured properties"
-          title="Find your perfect mountain retreat."
+          kicker="Our properties"
+          title="Find your mountain stay."
         >
           <p>
-            Condos, chalets, and townhouses on Mount Washington, each one
-            cleaned, cared for, and ready for your stay.
+            Explore our collection of Mount Washington vacation rentals and find
+            the right fit for your getaway.
           </p>
         </SectionHead>
 

@@ -1,14 +1,12 @@
 import { type Metadata } from 'next'
-import { Mail, MapPin, Phone } from 'lucide-react'
+import { Mail, MapPin, Phone, Send } from 'lucide-react'
 
 import { Band } from '@/components/Band'
 import { ContactForm } from '@/components/ContactForm'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
-import { Kicker } from '@/components/Kicker'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
-import { SocialMedia } from '@/components/SocialMedia'
 import { site } from '@/lib/site'
 
 function DetailRow({
@@ -42,7 +40,7 @@ function ContactDetails() {
         Other ways to reach us
       </h2>
       <dl className="mt-8 space-y-7">
-        <DetailRow icon={Mail} label="General inquiries">
+        <DetailRow icon={Mail} label="Email">
           <a
             href={`mailto:${site.contactEmail}`}
             className="text-accent underline decoration-accent/30 decoration-1 underline-offset-4 transition hover:text-accent-deep hover:decoration-accent"
@@ -54,23 +52,25 @@ function ContactDetails() {
           {site.phone}
         </DetailRow>
         <DetailRow icon={MapPin} label="Service area">
-          Based on Mount Washington, serving properties across the Comox
-          Valley and Vancouver Island. Reach out to confirm coverage for your
-          address.
+          Serving Mount Washington and the surrounding Comox Valley.
+        </DetailRow>
+        <DetailRow icon={Send} label="Mailing address">
+          <address className="not-italic">
+            P.O. Box 3866, Station Main
+            <br />
+            Courtenay, BC V9N 7P2
+            <br />
+            Canada
+          </address>
         </DetailRow>
       </dl>
-
-      <div className="mt-10 border-t border-line pt-8">
-        <Kicker as="h2">Follow us</Kicker>
-        <SocialMedia className="mt-5" />
-      </div>
     </FadeIn>
   )
 }
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: `Contact ${site.shortName} about property management, cleaning, or renovations.`,
+  description: `Contact ${site.shortName} about vacation rentals, property management, cleaning, or renovations.`,
 }
 
 export default function Contact() {
@@ -79,7 +79,7 @@ export default function Contact() {
       <PageHero
         size="short"
         kicker="Contact"
-        title="Let's talk about your property."
+        title="Let's chat."
         image={{
           src: site.images.hero,
           alt: 'Snow-capped mountain peak above Vancouver Island forest',
@@ -87,8 +87,9 @@ export default function Contact() {
         }}
       >
         <p>
-          Tell us a bit about your property and what you need — we will get back
-          to you shortly.
+          Whether you have questions about a booking, want to discuss property
+          management, or are thinking about a renovation, we would love to hear
+          from you.
         </p>
       </PageHero>
 

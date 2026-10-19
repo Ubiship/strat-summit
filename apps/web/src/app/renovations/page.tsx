@@ -1,76 +1,48 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
 
-import { Fence, HardHat, House, Quote, ShowerHead } from 'lucide-react'
+import { Quote } from 'lucide-react'
 
 import { Band } from '@/components/Band'
-import { PropertiesCta } from '@/components/PropertiesCta'
+import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
+import { Kicker } from '@/components/Kicker'
 import { NumberBadge } from '@/components/NumberBadge'
 import { PageHero } from '@/components/PageHero'
+import { PropertiesCta } from '@/components/PropertiesCta'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Renovations & Construction',
+  title: 'Renovations on Mount Washington',
   description:
-    'Renovation and construction services on Vancouver Island — estimates, contracts, and seasonal project delivery.',
+    'Thoughtful renovation updates for your Mount Washington home. Joel takes on a limited number of projects, planned for spring through fall.',
 }
 
 const steps = [
   {
     title: 'Estimate',
     description:
-      'Line-item breakdowns for materials, labour, and margin — no mystery allowances.',
+      'We discuss your project and provide an estimate based on the agreed scope.',
   },
   {
     title: 'Contract',
-    description:
-      'Fixed-price, cost-plus, or time & materials — we match the agreement to how well-defined the scope is.',
+    description: 'We agree on the scope, costs, and timing before work begins.',
   },
   {
     title: 'Build',
     description:
-      'In-progress updates, change orders when scope shifts, and milestone billing tied to real progress.',
+      'Joel keeps you updated as work progresses. Changes to the scope are discussed and documented through change orders.',
   },
   {
     title: 'Complete',
     description:
-      'Final walkthrough, punch list, and documentation for your records.',
+      'We complete a final walk-through with you before sending the final invoice.',
   },
 ]
 
-const projectTypes = [
-  {
-    title: 'Kitchens & bathrooms',
-    icon: ShowerHead,
-    description:
-      'Layout updates, cabinetry, tile, fixtures, and ventilation — the rooms guests and owners notice first.',
-  },
-  {
-    title: 'Decks & exteriors',
-    icon: Fence,
-    description:
-      'Weather-ready materials suited for coastal conditions and strata requirements where applicable.',
-  },
-  {
-    title: 'Whole-home refresh',
-    icon: House,
-    description:
-      'Flooring, paint, trim, and lighting packages to reset a property between seasons or before sale.',
-  },
-  {
-    title: 'Subtrade coordination',
-    icon: HardHat,
-    description:
-      'Licensed trades brought in as needed — one point of contact for the owner.',
-  },
-]
-
-// Numbered steps joined by a hairline: across on wide screens, down the
-// badges on narrow ones.
 function ProcessSteps({
   steps,
 }: {
@@ -112,25 +84,55 @@ export default function Renovations() {
   return (
     <RootLayout>
       <PageHero
-        kicker="Renovations"
-        title="Seasonal construction with clear estimates and honest timelines."
+        kicker="Renovations on Mount Washington"
+        title="Thoughtful updates for your mountain home."
+        size="short"
         image={{
           src: site.images.renovations,
           alt: 'Interior renovation framing and construction in progress',
           position: 'center 55%',
         }}
+        actions={
+          <Button href="/contact" arrow>
+            Enquire about a project
+          </Button>
+        }
       >
         <p>
-          Summer-heavy renovation work across Vancouver Island — from kitchen
-          refreshes to full interior updates. We walk you through scope, budget,
-          and contract type before a single hammer swings.
+          Joel takes on a limited number of renovation projects, drawing on his
+          construction background and experience living and working on Mount
+          Washington. He enjoys helping owners make their spaces work better,
+          with a clear understanding of the work involved.
+        </p>
+        <p>
+          Most projects are planned for spring through fall, around the
+          mountain&apos;s busy ski season.
         </p>
       </PageHero>
 
       <Band tone="white">
         <Container>
-          <SectionHead kicker="Process" title="From estimate to walkthrough." />
-          <ProcessSteps steps={steps} />
+          <FadeIn className="grid gap-10 split:grid-cols-[0.9fr_1.1fr] split:gap-20">
+            <div>
+              <Kicker>Joel&apos;s approach</Kicker>
+              <h2 className="mt-4 type-display text-[clamp(2.5rem,5vw,4rem)] text-balance text-ink">
+                Good work starts with the right fit.
+              </h2>
+            </div>
+            <div className="space-y-5 text-[1.125rem]/[1.7] text-muted split:pt-2">
+              <p>
+                Renovations are something Joel enjoys, and we keep this part of
+                the business small. He takes on projects that suit his skills,
+                interests, and availability, with time to give each one the
+                attention it needs.
+              </p>
+              <p>
+                Living on the mountain, we know finding someone to take on your
+                project can be a challenge. We&apos;re happy to talk through
+                what you have in mind and see whether it&apos;s a good fit.
+              </p>
+            </div>
+          </FadeIn>
         </Container>
       </Band>
 
@@ -138,35 +140,10 @@ export default function Renovations() {
         <Container>
           <div className="border-t border-line pt-24 split:pt-36">
             <SectionHead
-              kicker="Project types"
-              title="What we typically take on."
-            >
-              <p>
-                Renovation demand peaks in summer — we plan capacity so your
-                project gets focused attention during the window that works for
-                Island properties.
-              </p>
-            </SectionHead>
-            <FadeInStagger className="mt-14 grid gap-5 split:mt-20 split:grid-cols-2">
-              {projectTypes.map(({ title, description, icon: Icon }) => (
-                <FadeIn
-                  key={title}
-                  className="flex flex-col rounded-[1.5rem] border border-line bg-white p-8 split:p-10"
-                >
-                  <Icon
-                    aria-hidden="true"
-                    strokeWidth={1.5}
-                    className="size-7 text-accent"
-                  />
-                  <h3 className="mt-8 text-[1.375rem] font-semibold tracking-[-0.02em] text-ink">
-                    {title}
-                  </h3>
-                  <p className="mt-2 max-w-md text-base/[1.6] text-muted">
-                    {description}
-                  </p>
-                </FadeIn>
-              ))}
-            </FadeInStagger>
+              kicker="Process"
+              title="From estimate to walkthrough."
+            />
+            <ProcessSteps steps={steps} />
           </div>
         </Container>
       </Band>
@@ -209,7 +186,13 @@ export default function Renovations() {
         </Container>
       </Band>
 
-      <PropertiesCta audience="owners" />
+      <PropertiesCta
+        audience="owners"
+        title="Planning a project for next season?"
+        description="Winter is a good time to get in touch about spring, summer, or fall renovations. Joel's availability is limited, so an early conversation gives us time to discuss your plans and see how they might fit into the calendar."
+        primaryLabel="Enquire about a project"
+        secondaryAction={null}
+      />
     </RootLayout>
   )
 }

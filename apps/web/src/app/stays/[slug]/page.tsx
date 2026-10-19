@@ -7,6 +7,8 @@ import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { RootLayout } from '@/components/RootLayout'
 import { PhotoGallery } from '@/components/PhotoGallery'
 import { BookingCard } from '@/components/BookingCard'
+import { Button } from '@/components/Button'
+import { MobileBookingCTA } from '@/components/MobileBookingCTA'
 import { AvailabilityCalendar } from '@/components/AvailabilityCalendar'
 import {
   PropertyHighlights,
@@ -19,6 +21,7 @@ import {
   getReviews,
 } from '@/lib/hostaway'
 import { getPropertyHighlights } from '@/lib/propertyHighlights'
+import { site } from '@/lib/site'
 
 type PageProps = {
   params: Promise<{ slug: string }>
@@ -154,7 +157,7 @@ export default async function PropertyDetailPage(props: PageProps) {
                 {property.name}
               </h1>
               <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 text-base text-muted">
-                <span>{property.address}</span>
+                <span>{site.propertyArea}</span>
                 {averageRating && (
                   <span className="flex items-center gap-1 text-ink">
                     <span aria-hidden="true" className="text-highlight">
@@ -197,7 +200,10 @@ export default async function PropertyDetailPage(props: PageProps) {
             </FadeIn>
 
             <DetailSection title="Location">
-              <p className="text-base text-ink/85">{property.address}</p>
+              <p className="text-base text-ink/85">{site.propertyArea}, BC</p>
+              <p className="mt-1 text-sm text-muted">
+                Exact address provided after booking confirmation
+              </p>
               {/* Future task: Add map integration */}
               <div className="mt-6 grid aspect-[16/9] place-items-center rounded-[1.5rem] bg-mist">
                 <p className="text-base text-muted">Map coming soon</p>
@@ -212,9 +218,7 @@ export default async function PropertyDetailPage(props: PageProps) {
               <BulletList
                 items={[
                   ...houseRules,
-                  highlights.petFriendly
-                    ? 'Pets welcome'
-                    : 'Pets may be allowed (check with host)',
+                  `Pet friendly: ${highlights.petFriendly ? 'Yes' : 'No'}`,
                 ]}
               />
             </DetailSection>
@@ -256,10 +260,24 @@ export default async function PropertyDetailPage(props: PageProps) {
                 </div>
               </div>
             </DetailSection>
+
+            <FadeIn className="border-t border-line pt-12">
+              <div className="rounded-[1.5rem] bg-mist p-8 text-center">
+                <h2 className="text-[1.5rem] font-semibold tracking-[-0.02em]">
+                  Ready to book?
+                </h2>
+                <p className="mx-auto mt-2 max-w-md text-base text-muted">
+                  Select your dates and secure your stay at {property.name}.
+                </p>
+                <Button href="#booking-card" className="mt-6" arrow>
+                  Check availability
+                </Button>
+              </div>
+            </FadeIn>
           </FadeInStagger>
 
           {/* Right column - Booking card (sticky on desktop) */}
-          <div>
+          <div id="booking-card" className="scroll-mt-24">
             <BookingCard
               listingId={property.id.toString()}
               maxGuests={property.maxGuests}
@@ -270,6 +288,9 @@ export default async function PropertyDetailPage(props: PageProps) {
           </div>
         </div>
       </Container>
+
+      {/* Mobile sticky booking prompt */}
+      <MobileBookingCTA />
     </RootLayout>
   )
 }

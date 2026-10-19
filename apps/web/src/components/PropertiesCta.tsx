@@ -37,8 +37,17 @@ const copy = {
 // and rating come from the properties we manage, so nothing here is made up.
 export async function PropertiesCta({
   audience,
+  title,
+  description,
+  primaryLabel,
+  secondaryAction,
 }: {
   audience: keyof typeof copy
+  // Optional page-specific wording; the defaults suit most pages.
+  title?: string
+  description?: string
+  primaryLabel?: string
+  secondaryAction?: { label: string; href: string } | null
 }) {
   const properties = await getProperties()
   let text = copy[audience]
@@ -65,10 +74,17 @@ export async function PropertiesCta({
   return (
     <SimpleCtaWithImages
       kicker={text.kicker}
-      title={text.title}
-      description={text.description}
-      primaryAction={text.primaryAction}
-      secondaryAction={text.secondaryAction}
+      title={title ?? text.title}
+      description={description ?? text.description}
+      primaryAction={{
+        ...text.primaryAction,
+        label: primaryLabel ?? text.primaryAction.label,
+      }}
+      secondaryAction={
+        secondaryAction === null
+          ? undefined
+          : (secondaryAction ?? text.secondaryAction)
+      }
       images={images}
       caption={
         properties.length > 0

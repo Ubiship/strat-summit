@@ -11,22 +11,21 @@ const bedroomOptions = [
   { value: '4', label: '4+' },
 ]
 
-const commonAmenities = [
-  'WiFi',
-  'Kitchen',
-  'Parking',
-  'Hot tub',
-  'Washer/Dryer',
-  'Pet friendly',
-  'Air conditioning',
-  'Heating',
+const propertyTypes = [
+  { value: '', label: 'All types' },
+  { value: 'condo', label: 'Condo' },
+  { value: 'chalet', label: 'Chalet' },
+  { value: 'townhouse', label: 'Townhouse' },
 ]
+
+const amenityFilters = ['Hot tub', 'Pet friendly']
 
 export function PropertyFilters() {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const currentBedrooms = searchParams.get('bedrooms') || ''
+  const currentPropertyType = searchParams.get('propertyType') || ''
   const currentAmenities = searchParams.get('amenities')?.split(',') || []
 
   function updateFilters(updates: Record<string, string | null>) {
@@ -88,16 +87,41 @@ export function PropertyFilters() {
         </select>
       </div>
 
+      <div className="split:w-48">
+        <label
+          htmlFor="property-type"
+          className="text-sm font-medium text-muted"
+        >
+          Property type
+        </label>
+        <select
+          id="property-type"
+          value={currentPropertyType}
+          onChange={(e) =>
+            updateFilters({ propertyType: e.target.value || null })
+          }
+          className={clsx(selectClasses, 'mt-2 w-full')}
+        >
+          {propertyTypes.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="flex-auto">
         <p className="text-sm font-medium text-muted">Amenities</p>
         <div className="mt-2 flex flex-wrap gap-2">
-          {commonAmenities.map((amenity) => (
+          {amenityFilters.map((amenity) => (
             <button
               key={amenity}
               type="button"
               aria-pressed={currentAmenities.includes(amenity)}
               onClick={() => toggleAmenity(amenity)}
-              className={amenityButtonClasses(currentAmenities.includes(amenity))}
+              className={amenityButtonClasses(
+                currentAmenities.includes(amenity),
+              )}
             >
               {amenity}
             </button>

@@ -15,7 +15,8 @@ function splitLead(comment: string) {
 
 export async function GuestReviews() {
   const reviews = await getReviews()
-  const featuredReviews = reviews.slice(0, 6)
+  // Show only 5-star reviews, up to 6
+  const featuredReviews = reviews.filter((r) => r.rating === 5).slice(0, 6)
 
   if (featuredReviews.length === 0) {
     return null

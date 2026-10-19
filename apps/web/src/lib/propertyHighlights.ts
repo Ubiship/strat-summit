@@ -22,8 +22,14 @@ const TYPES: [RegExp, PropertyType][] = [
   [/chalet|cabin/i, 'chalet'],
 ]
 
+function matchType(text?: string) {
+  return text ? TYPES.find(([pattern]) => pattern.test(text))?.[1] : undefined
+}
+
 // Highlights are read from the listing's own amenities, so they reflect what
-// the owner has actually set in Hostaway rather than marketing copy.
+// the owner has actually set in Hostaway rather than marketing copy. Hostaway
+// listings carry no usable type field, so the type falls back to the listing
+// name ("… Chalet", "… Condo"), the same rule the stays filter uses.
 export function getPropertyHighlights(
   property: HostawayProperty,
 ): PropertyHighlights {
@@ -36,7 +42,7 @@ export function getPropertyHighlights(
     hotTub: amenities.some((a) => HOT_TUB.test(a) && !SHARED.test(a)),
     petFriendly: amenities.some((a) => PETS.test(a) && !NO_PETS.test(a)),
     type: property.propertyType
-      ? TYPES.find(([pattern]) => pattern.test(property.propertyType!))?.[1]
-      : undefined,
+      ? matchType(property.propertyType)
+      : matchType(property.name),
   }
 }

@@ -54,7 +54,31 @@ describe('buildCheckoutUrl', () => {
 
 describe('getProperty', () => {
   it('should fetch a single property successfully', async () => {
-    const mockProperty: HostawayProperty = {
+    // Raw Hostaway listing shape (includeResources=1)
+    const mockApiResponse = {
+      status: 'success',
+      result: {
+        id: 12345,
+        name: 'Ocean View Cabin',
+        description: 'Beautiful beachfront property',
+        address: '123 Beach St',
+        city: 'Vancouver Island',
+        state: 'BC',
+        bedroomsNumber: 3,
+        bathroomsNumber: 2,
+        personCapacity: 6,
+        price: 150,
+        listingImages: [
+          { url: 'https://example.com/photo2.jpg', sortOrder: 2 },
+          { url: 'https://example.com/photo1.jpg', sortOrder: 1 },
+        ],
+        amenities: ['WiFi', 'Kitchen', 'Hot Tub'],
+        starRating: 4.8,
+        reviewsCount: 42,
+      },
+    }
+
+    const expectedProperty: HostawayProperty = {
       id: 12345,
       name: 'Ocean View Cabin',
       description: 'Beautiful beachfront property',
@@ -64,7 +88,8 @@ describe('getProperty', () => {
       maxGuests: 6,
       basePrice: 150,
       photos: [
-        { url: 'https://example.com/photo1.jpg', isCover: true },
+        { url: 'https://example.com/photo1.jpg', caption: undefined, isCover: true },
+        { url: 'https://example.com/photo2.jpg', caption: undefined, isCover: false },
       ],
       amenities: ['WiFi', 'Kitchen', 'Hot Tub'],
       rating: 4.8,
@@ -75,18 +100,18 @@ describe('getProperty', () => {
       Promise.resolve({
         status: 200,
         ok: true,
-        json: () => Promise.resolve(mockProperty),
+        json: () => Promise.resolve(mockApiResponse),
       } as Response)
     )
 
     const result = await getProperty('12345')
 
-    expect(result).toEqual(mockProperty)
+    expect(result).toEqual(expectedProperty)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('/listings/12345'),
       expect.objectContaining({
         headers: expect.objectContaining({
-          Authorization: 'Bearer test-api-key',
+          Authorization: expect.stringMatching(/^Bearer /),
         }),
       })
     )
@@ -188,45 +213,59 @@ describe('getPricing', () => {
 
 describe('getProperties', () => {
   it('should fetch all properties successfully', async () => {
-    const mockProperties: HostawayProperty[] = [
-      {
-        id: 1,
-        name: 'Property 1',
-        description: 'First property',
-        address: '123 Street',
-        bedrooms: 2,
-        bathrooms: 1,
-        maxGuests: 4,
-        basePrice: 100,
-        photos: [],
-        amenities: ['WiFi'],
-      },
-      {
-        id: 2,
-        name: 'Property 2',
-        description: 'Second property',
-        address: '456 Avenue',
-        bedrooms: 3,
-        bathrooms: 2,
-        maxGuests: 6,
-        basePrice: 150,
-        photos: [],
-        amenities: ['Kitchen'],
-      },
-    ]
+    const mockApiResponse = {
+      status: 'success',
+      result: [
+        {
+          id: 1,
+          name: 'Property 1',
+          description: 'First property',
+          address: '123 Street',
+          bedroomsNumber: 2,
+          bathroomsNumber: 1,
+          personCapacity: 4,
+          price: 100,
+          amenities: ['WiFi'],
+        },
+        {
+          id: 2,
+          internalListingName: 'Property 2',
+          bedroomsNumber: 3,
+          bathroomsNumber: 2,
+          personCapacity: 6,
+          amenities: ['Kitchen'],
+        },
+      ],
+    }
 
     global.fetch = vi.fn(() =>
       Promise.resolve({
         status: 200,
         ok: true,
-        json: () => Promise.resolve({ listings: mockProperties }),
+        json: () => Promise.resolve(mockApiResponse),
       } as Response)
     )
 
     const result = await getProperties()
 
-    expect(result).toEqual(mockProperties)
     expect(result).toHaveLength(2)
+    expect(result[0]).toMatchObject({
+      id: 1,
+      name: 'Property 1',
+      address: '123 Street',
+      bedrooms: 2,
+      bathrooms: 1,
+      maxGuests: 4,
+      amenities: ['WiFi'],
+      photos: [],
+    })
+    // Falls back to the internal name and zeroes missing numbers
+    expect(result[1]).toMatchObject({
+      id: 2,
+      name: 'Property 2',
+      description: '',
+      basePrice: 0,
+    })
   })
 
   it('should return empty array on API error', async () => {
@@ -291,12 +330,30 @@ describe('getAvailability', () => {
 
 describe('getReviews', () => {
   it('should fetch reviews for a specific property', async () => {
-    const mockReviews = [
+    // Mock the raw API response format
+    const mockApiResponse = {
+      status: 'success',
+      result: [
+        {
+          id: 1,
+          listingMapId: 12345,
+          guestName: 'John Doe',
+          rating: 10, // Hostaway uses 0-10 scale
+          publicReview: 'Excellent stay!',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-15T10:30:00Z',
+        },
+      ],
+    }
+
+    // Expected transformed output (first name only, rating converted to 5-point scale)
+    const expectedReviews = [
       {
         id: 1,
         listingId: 12345,
-        guestName: 'John Doe',
-        rating: 5,
+        guestName: 'John', // First name only
+        rating: 5, // Converted from 10
         comment: 'Excellent stay!',
         createdAt: '2026-01-15T10:30:00Z',
       },
@@ -306,13 +363,13 @@ describe('getReviews', () => {
       Promise.resolve({
         status: 200,
         ok: true,
-        json: () => Promise.resolve({ reviews: mockReviews }),
+        json: () => Promise.resolve(mockApiResponse),
       } as Response)
     )
 
     const result = await getReviews('12345')
 
-    expect(result).toEqual(mockReviews)
+    expect(result).toEqual(expectedReviews)
     expect(fetch).toHaveBeenCalledWith(
       expect.stringContaining('/reviews'),
       expect.any(Object)
@@ -320,26 +377,22 @@ describe('getReviews', () => {
   })
 
   it('should fetch all reviews when no listingId provided', async () => {
-    const mockReviews: Array<{
-      id: number
-      listingId: number
-      guestName: string
-      rating: number
-      comment: string
-      createdAt: string
-    }> = []
+    const mockApiResponse = {
+      status: 'success',
+      result: [],
+    }
 
     global.fetch = vi.fn(() =>
       Promise.resolve({
         status: 200,
         ok: true,
-        json: () => Promise.resolve({ reviews: mockReviews }),
+        json: () => Promise.resolve(mockApiResponse),
       } as Response)
     )
 
     const result = await getReviews()
 
-    expect(result).toEqual(mockReviews)
+    expect(result).toEqual([])
   })
 
   it('should return empty array on error', async () => {
@@ -350,5 +403,74 @@ describe('getReviews', () => {
     const result = await getReviews('12345')
 
     expect(result).toEqual([])
+  })
+
+  it('should sort reviews by most recent first', async () => {
+    const mockApiResponse = {
+      status: 'success',
+      result: [
+        {
+          id: 1,
+          guestName: 'Alice Smith',
+          rating: 10,
+          publicReview: 'Older review',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-01T10:00:00Z',
+        },
+        {
+          id: 2,
+          guestName: 'Bob Jones',
+          rating: 10,
+          publicReview: 'Newer review',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-15T10:00:00Z',
+        },
+      ],
+    }
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        status: 200,
+        ok: true,
+        json: () => Promise.resolve(mockApiResponse),
+      } as Response)
+    )
+
+    const result = await getReviews()
+
+    // Should be sorted with most recent first
+    expect(result[0].guestName).toBe('Bob')
+    expect(result[1].guestName).toBe('Alice')
+  })
+
+  it('should extract first name only from guest name', async () => {
+    const mockApiResponse = {
+      status: 'success',
+      result: [
+        {
+          id: 1,
+          guestName: 'Mary Jane Watson',
+          rating: 10,
+          publicReview: 'Great place!',
+          status: 'published',
+          type: 'guest-to-host',
+          submittedAt: '2026-01-15T10:00:00Z',
+        },
+      ],
+    }
+
+    global.fetch = vi.fn(() =>
+      Promise.resolve({
+        status: 200,
+        ok: true,
+        json: () => Promise.resolve(mockApiResponse),
+      } as Response)
+    )
+
+    const result = await getReviews()
+
+    expect(result[0].guestName).toBe('Mary')
   })
 })

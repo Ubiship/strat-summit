@@ -10,10 +10,12 @@ export type ContactFormState = {
 }
 
 const serviceLabels: Record<string, string> = {
-  pm: 'Property management / cleaning',
-  reno: 'Renovation / construction',
+  booking: 'Booking a vacation rental',
+  pm: 'Property management',
+  cleaning: 'Cleaning services',
+  reno: 'Renovations',
   both: 'Both',
-  other: 'Not sure yet',
+  other: 'Something else',
 }
 
 function isValidEmail(email: string) {
