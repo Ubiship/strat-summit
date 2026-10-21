@@ -10,9 +10,7 @@ import { Container } from '@/components/Container'
 import { Footer } from '@/components/Footer'
 import { Kicker } from '@/components/Kicker'
 import { Logo } from '@/components/Logo'
-import { NumberBadge } from '@/components/NumberBadge'
 import { Offices } from '@/components/Offices'
-import { SocialMedia } from '@/components/SocialMedia'
 
 type NavItem = {
   href: string
@@ -175,20 +173,22 @@ function MenuPanel({
   onClose: () => void
   closeRef: React.RefObject<HTMLButtonElement | null>
 }) {
+  let pathname = usePathname()
+
   return (
     <motion.div
       id={id}
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-forest-warm text-warm-cream"
+      className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-white text-warm-ink"
       initial={{ opacity: 0, y: -16 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -16 }}
       transition={{ duration: 0.25 }}
     >
-      <Container className="flex flex-auto flex-col">
-        <div className="flex items-center justify-between pt-7">
+      <div className="border-b border-warm-ink/10">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
           <Link href="/" onClick={onClose} className="rounded-full">
             <Logo />
           </Link>
@@ -196,44 +196,57 @@ function MenuPanel({
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="rounded-full bg-sun px-6 py-4 font-bold text-warm-ink focus-visible:-outline-offset-4"
+            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold text-forest-warm ring-2 ring-forest-warm ring-inset transition hover:bg-forest-warm/5"
           >
             Close
           </button>
         </div>
+      </div>
 
-        <nav aria-label="Main" className="mt-10">
-          <ol role="list" className="grid gap-3">
-            {menuLinks.map((link, index) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  onClick={onClose}
-                  className="flex items-center gap-4 rounded-full bg-warm-cream/8 py-2.5 pr-6 pl-2.5 transition hover:bg-warm-cream/15"
-                >
-                  <NumberBadge value={index + 1} tone="sun" />
-                  <span className="type-display text-[clamp(2rem,5vw,3.5rem)]">
-                    {link.label}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
+      <Container className="flex flex-auto flex-col">
+        <nav aria-label="Main" className="mt-6">
+          <ul role="list" className="divide-y divide-warm-ink/10">
+            {menuLinks.map((link) => {
+              let current = pathname === link.href
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    onClick={onClose}
+                    aria-current={current ? 'page' : undefined}
+                    className="group flex items-center justify-between gap-4 py-4.5 text-forest-warm"
+                  >
+                    <span className="flex items-center gap-3 text-[1.375rem] font-semibold tracking-[-0.01em]">
+                      {link.label}
+                      {current && (
+                        <span
+                          aria-hidden="true"
+                          className="size-2 flex-none rounded-full bg-sun"
+                        />
+                      )}
+                    </span>
+                    <span
+                      aria-hidden="true"
+                      className="text-lg text-forest-warm/40 transition group-hover:translate-x-1 group-hover:text-forest-warm"
+                    >
+                      →
+                    </span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
         </nav>
 
-        <div className="mt-auto grid gap-10 py-12 split:grid-cols-2">
-          <div>
-            <Kicker as="h2" tone="dark">
-              Service area
-            </Kicker>
-            <Offices invert className="mt-4" />
-          </div>
-          <div>
-            <Kicker as="h2" tone="dark">
-              Follow us
-            </Kicker>
-            <SocialMedia invert className="mt-5" />
-          </div>
+        <div className="mt-8 mb-10">
+          <Button href="/stays" tone="forest" onClick={onClose} arrow>
+            Book Now
+          </Button>
+        </div>
+
+        <div className="mt-auto border-t border-warm-ink/10 py-10">
+          <Kicker as="h2">Service area</Kicker>
+          <Offices className="mt-4" />
         </div>
       </Container>
     </motion.div>
