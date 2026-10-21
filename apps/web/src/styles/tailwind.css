@@ -2,4 +2,5 @@
 @import '@repo/tailwind-config/theme.css';
 @import './warm.css';
 @import './base.css';
+@import './palette-options.css';
 @import './typography.css' layer(components);
