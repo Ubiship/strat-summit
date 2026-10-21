@@ -39,8 +39,8 @@ export function NotificationBell({
         'relative inline-flex items-center justify-center rounded-full p-2 transition-colors',
         'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         colorScheme === 'dark'
-          ? 'text-white/85 hover:text-white focus-visible:ring-white/60'
-          : 'text-accent hover:text-accent-deep focus-visible:ring-accent',
+          ? 'text-stone hover:text-cream focus-visible:ring-stone'
+          : 'text-forest hover:text-forest/80 focus-visible:ring-forest',
         className
       )}
       aria-label={
@@ -71,7 +71,7 @@ export function NotificationBell({
           className={clsx(
             'absolute -right-0.5 -top-0.5 flex h-5 min-w-5 items-center justify-center',
             'rounded-full px-1 text-xs font-semibold',
-            'bg-accent text-white ring-2 ring-white'
+            'bg-copper text-white'
           )}
           aria-hidden="true"
         >

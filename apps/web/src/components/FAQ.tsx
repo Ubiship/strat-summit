@@ -50,7 +50,7 @@ const faqs = [
           arrival date receive a 50% refund. Cancellations made fewer than 7
           days before your arrival date receive no refund.
         </p>
-        <p className="font-semibold text-ink">
+        <p className="font-semibold text-warm-ink">
           Winter Conditions and Cancellation
         </p>
         <p>
@@ -96,19 +96,17 @@ function AccordionItem({
   onToggle: () => void
 }) {
   return (
-    <div className="border-b border-line">
+    <div className="border-b border-warm-ink/8 last:border-b-0">
       <button
         onClick={onToggle}
-        className="flex w-full items-center justify-between gap-6 py-6 text-left"
+        className="flex w-full items-center justify-between gap-6 py-7 text-left"
         aria-expanded={isOpen}
       >
-        <span className="text-[1.125rem]/[1.4] font-semibold tracking-[-0.01em] text-ink">
-          {question}
-        </span>
+        <span className="text-[1.125rem] font-semibold leading-snug text-warm-ink">{question}</span>
         <span
           className={clsx(
-            'flex size-9 shrink-0 items-center justify-center rounded-full text-accent ring-1 ring-line transition-transform duration-300 ring-inset',
-            isOpen && 'rotate-45',
+            'flex size-10 shrink-0 items-center justify-center rounded-full bg-forest-warm/8 text-forest-warm transition-transform duration-300',
+            isOpen && 'rotate-45 bg-forest-warm text-warm-cream',
           )}
         >
           <svg
@@ -129,7 +127,7 @@ function AccordionItem({
         )}
       >
         <div className="overflow-hidden">
-          <div className="max-w-[62ch] pb-7 text-[1.0625rem]/[1.7] text-muted">
+          <div className="pb-8 text-[1.0625rem]/[1.75] text-warm-muted">
             {answer}
           </div>
         </div>
@@ -142,14 +140,14 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <Band tone="white">
+    <Band tone="cream">
       <Container>
         <SectionHead kicker="FAQs" title="Frequently asked questions.">
           <p>A few helpful details before you book your mountain stay.</p>
         </SectionHead>
 
-        <FadeIn className="mt-14 max-w-3xl split:mt-16">
-          <div className="border-t border-line">
+        <FadeIn className="mx-auto mt-16 max-w-3xl">
+          <div className="rounded-[3rem] bg-white p-8 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] split:p-14">
             {faqs.map((faq, index) => (
               <AccordionItem
                 key={faq.question}
@@ -164,13 +162,15 @@ export function FAQ() {
           </div>
         </FadeIn>
 
-        <FadeIn className="mt-12 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
-          <p className="text-[1.0625rem] text-muted">
+        <FadeIn className="mt-20 text-center">
+          <p className="text-[1.125rem] text-warm-muted">
             Still have a question? We&apos;re happy to help.
           </p>
-          <Button href="/contact" tone="outline" size="sm" arrow>
-            Contact us
-          </Button>
+          <div className="mt-8">
+            <Button href="/contact" tone="forest" arrow>
+              Contact us
+            </Button>
+          </div>
         </FadeIn>
       </Container>
     </Band>

@@ -1,5 +1,5 @@
 import { Band } from '@/components/Band'
-import { PropertiesCta } from '@/components/PropertiesCta'
+import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { MDXComponents } from '@/components/MDXComponents'
@@ -33,7 +33,7 @@ export default async function BlogArticleWrapper({
           </p>
         </PageHero>
 
-        <Band tone="white">
+        <Band tone="cream">
           <Container>
             <FadeIn>
               <MDXComponents.wrapper>{children}</MDXComponents.wrapper>
@@ -46,7 +46,7 @@ export default async function BlogArticleWrapper({
         <PageLinks title="More articles" pages={moreArticles} />
       )}
 
-      <PropertiesCta audience="owners" />
+      <ContactSection />
     </RootLayout>
   )
 }

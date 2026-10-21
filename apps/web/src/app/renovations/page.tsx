@@ -1,18 +1,13 @@
 import { type Metadata } from 'next'
 import Image from 'next/image'
 
-import { Quote } from 'lucide-react'
-
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
-import { Kicker } from '@/components/Kicker'
 import { NumberBadge } from '@/components/NumberBadge'
 import { PageHero } from '@/components/PageHero'
-import { PropertiesCta } from '@/components/PropertiesCta'
 import { RootLayout } from '@/components/RootLayout'
-import { SectionHead } from '@/components/SectionHead'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -29,7 +24,8 @@ const steps = [
   },
   {
     title: 'Contract',
-    description: 'We agree on the scope, costs, and timing before work begins.',
+    description:
+      'We agree on the scope, costs, and timing before work begins.',
   },
   {
     title: 'Build',
@@ -43,46 +39,10 @@ const steps = [
   },
 ]
 
-function ProcessSteps({
-  steps,
-}: {
-  steps: { title: string; description: string }[]
-}) {
-  return (
-    <FadeInStagger>
-      <ol
-        role="list"
-        className="mt-14 grid gap-12 split:mt-20 split:grid-cols-4 split:gap-8"
-      >
-        {steps.map((step, index) => (
-          <li key={step.title} className="relative">
-            {index < steps.length - 1 && (
-              <span
-                aria-hidden="true"
-                className="absolute top-[4.5rem] -bottom-8 left-7 w-px bg-line split:top-7 split:right-[-1rem] split:bottom-auto split:left-[4.5rem] split:h-px split:w-auto"
-              />
-            )}
-            <FadeIn className="flex gap-6 split:flex-col split:gap-8">
-              <NumberBadge value={index + 1} size="lg" />
-              <div className="pt-3 split:pt-0">
-                <h3 className="text-[1.375rem] font-semibold tracking-[-0.02em] text-ink">
-                  {step.title}
-                </h3>
-                <p className="mt-2 text-base/[1.6] text-muted">
-                  {step.description}
-                </p>
-              </div>
-            </FadeIn>
-          </li>
-        ))}
-      </ol>
-    </FadeInStagger>
-  )
-}
-
 export default function Renovations() {
   return (
     <RootLayout>
+      {/* 1. OPENING SECTION */}
       <PageHero
         kicker="Renovations on Mount Washington"
         title="Thoughtful updates for your mountain home."
@@ -92,11 +52,6 @@ export default function Renovations() {
           alt: 'Interior renovation framing and construction in progress',
           position: 'center 55%',
         }}
-        actions={
-          <Button href="/contact" arrow>
-            Enquire about a project
-          </Button>
-        }
       >
         <p>
           Joel takes on a limited number of renovation projects, drawing on his
@@ -104,22 +59,30 @@ export default function Renovations() {
           Washington. He enjoys helping owners make their spaces work better,
           with a clear understanding of the work involved.
         </p>
-        <p>
+        <p className="mt-4">
           Most projects are planned for spring through fall, around the
-          mountain&apos;s busy ski season.
+          mountain's busy ski season.
         </p>
       </PageHero>
 
-      <Band tone="white">
+      <Band tone="cream">
         <Container>
-          <FadeIn className="grid gap-10 split:grid-cols-[0.9fr_1.1fr] split:gap-20">
-            <div>
-              <Kicker>Joel&apos;s approach</Kicker>
-              <h2 className="mt-4 type-display text-[clamp(2.5rem,5vw,4rem)] text-balance text-ink">
-                Good work starts with the right fit.
-              </h2>
-            </div>
-            <div className="space-y-5 text-[1.125rem]/[1.7] text-muted split:pt-2">
+          <FadeIn className="text-center">
+            <Button href="/contact" tone="forest" size="lg" arrow>
+              Enquire About a Project
+            </Button>
+          </FadeIn>
+        </Container>
+      </Band>
+
+      {/* 2. JOEL'S APPROACH */}
+      <Band tone="sand">
+        <Container>
+          <FadeIn className="mx-auto max-w-3xl">
+            <h2 className="type-display text-center text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
+              Good work starts with the right fit.
+            </h2>
+            <div className="mt-10 space-y-6 text-[1.125rem]/[1.7] text-warm-ink/80">
               <p>
                 Renovations are something Joel enjoys, and we keep this part of
                 the business small. He takes on projects that suit his skills,
@@ -128,71 +91,114 @@ export default function Renovations() {
               </p>
               <p>
                 Living on the mountain, we know finding someone to take on your
-                project can be a challenge. We&apos;re happy to talk through
-                what you have in mind and see whether it&apos;s a good fit.
+                project can be a challenge. We're happy to talk through what you
+                have in mind and see whether it's a good fit.
               </p>
             </div>
+          </FadeIn>
+
+          {/* Placeholder for project photos */}
+          <FadeInStagger className="mt-16 grid gap-6 split:grid-cols-3">
+            {[1, 2, 3].map((i) => (
+              <FadeIn
+                key={i}
+                className="aspect-[4/3] rounded-[2.75rem] bg-warm-cream/80"
+              >
+                <div className="flex h-full items-center justify-center text-warm-ink/30">
+                  <span className="text-lg">Project photo {i}</span>
+                </div>
+              </FadeIn>
+            ))}
+          </FadeInStagger>
+        </Container>
+      </Band>
+
+      {/* 3. NUMBERED PROCESS */}
+      <Band tone="cream">
+        <Container>
+          <FadeInStagger className="relative">
+            <FadeIn
+              aria-hidden="true"
+              className="absolute top-[calc(2rem-0.125rem)] right-[calc((100%-6rem)/8)] left-[calc((100%-6rem)/8)] hidden h-1 rounded-full bg-sun/40 split:block"
+            />
+            <ol
+              role="list"
+              className="relative grid gap-12 split:grid-cols-4 split:gap-8"
+            >
+              {steps.map((step, index) => (
+                <li key={step.title}>
+                  <FadeIn className="flex gap-6 split:flex-col split:items-center split:text-center">
+                    <NumberBadge
+                      value={index + 1}
+                      tone="sun"
+                      size="lg"
+                      className="relative"
+                    />
+                    <div>
+                      <h2 className="type-display text-[2.625rem]">{step.title}</h2>
+                      <p className="mt-4 text-[1.0625rem]/[1.6] text-warm-muted">
+                        {step.description}
+                      </p>
+                    </div>
+                  </FadeIn>
+                </li>
+              ))}
+            </ol>
+          </FadeInStagger>
+        </Container>
+      </Band>
+
+      {/* 4. JOEL'S QUOTE */}
+      <Band tone="apricot">
+        <Container className="grid items-center gap-12 split:grid-cols-[0.8fr_1.2fr] split:gap-20">
+          <FadeIn className="relative aspect-4/5 overflow-hidden rounded-[2.75rem]">
+            <Image
+              src={site.images.renovations}
+              alt=""
+              fill
+              sizes="(min-width: 75rem) 27.25rem, (min-width: 56.25rem) 36vw, 100vw"
+              className="object-cover photo-warm"
+            />
+          </FadeIn>
+          <FadeIn>
+            <figure>
+              <blockquote className="type-display text-[clamp(2.25rem,4vw,3.5rem)] text-balance">
+                <p>
+                  <span aria-hidden="true">"</span>We would rather set
+                  expectations early than surprise you mid-project — clear scope
+                  up front keeps everyone aligned.
+                  <span aria-hidden="true">"</span>
+                </p>
+              </blockquote>
+              <figcaption className="mt-8 text-lg font-bold">
+                Joel, Co-founder
+              </figcaption>
+            </figure>
           </FadeIn>
         </Container>
       </Band>
 
-      <Band tone="white" className="pt-0! split:pt-0!">
+      {/* 5. ENQUIRY SECTION */}
+      <Band tone="cream" last>
         <Container>
-          <div className="border-t border-line pt-24 split:pt-36">
-            <SectionHead
-              kicker="Process"
-              title="From estimate to walkthrough."
-            />
-            <ProcessSteps steps={steps} />
-          </div>
+          <FadeIn className="mx-auto max-w-3xl text-center">
+            <h2 className="type-display text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
+              Planning a project for next season?
+            </h2>
+            <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
+              Winter is a good time to get in touch about spring, summer, or
+              fall renovations. Joel's availability is limited, so an early
+              conversation gives us time to discuss your plans and see how they
+              might fit into the calendar.
+            </p>
+            <div className="mt-12">
+              <Button href="/contact" tone="forest" size="lg" arrow>
+                Enquire About a Project
+              </Button>
+            </div>
+          </FadeIn>
         </Container>
       </Band>
-
-      <Band tone="white" className="pt-0! split:pt-0!">
-        <Container>
-          <div className="grid items-center gap-12 border-t border-line pt-24 split:grid-cols-[0.85fr_1.15fr] split:gap-20 split:pt-36">
-            <FadeIn className="rounded-[2rem] border border-line bg-white p-2.5">
-              <div className="relative aspect-4/5 overflow-hidden rounded-[1.5rem]">
-                <Image
-                  src={site.images.renovations}
-                  alt=""
-                  fill
-                  sizes="(min-width: 75rem) 29rem, (min-width: 56.25rem) 38vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
-            </FadeIn>
-            <FadeIn>
-              <figure>
-                <Quote
-                  aria-hidden="true"
-                  strokeWidth={1.5}
-                  className="size-8 text-accent"
-                />
-                <blockquote className="mt-6 text-[clamp(1.75rem,3.2vw,2.625rem)]/[1.18] font-semibold tracking-[-0.03em] text-balance text-ink">
-                  <p>
-                    We would rather set expectations early than surprise you
-                    mid-project — clear scope up front keeps everyone aligned.
-                  </p>
-                </blockquote>
-                <figcaption className="mt-10 flex items-center gap-3 text-base">
-                  <span aria-hidden="true" className="h-px w-8 bg-line" />
-                  <span className="font-semibold text-ink">Joel</span>
-                  <span className="text-muted">Co-founder</span>
-                </figcaption>
-              </figure>
-            </FadeIn>
-          </div>
-        </Container>
-      </Band>
-
-      <PropertiesCta
-        audience="owners"
-        title="Planning a project for next season?"
-        description="Winter is a good time to get in touch about spring, summer, or fall renovations. Joel's availability is limited, so an early conversation gives us time to discuss your plans and see how they might fit into the calendar."
-        primaryLabel="Enquire about a project"
-        secondaryAction={null}
-      />
     </RootLayout>
   )
 }

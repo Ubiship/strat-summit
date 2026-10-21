@@ -64,11 +64,11 @@ export function AvailabilityCalendar({
 
   return (
     <div>
-      <h2 className="text-[1.5rem] font-semibold tracking-[-0.02em]">
+      <h3 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
         Availability
-      </h2>
-      <p className="mt-2 text-base text-muted">
-        Dates that are crossed out are unavailable.
+      </h3>
+      <p className="mt-2 text-base text-warm-ink/70">
+        Choose your check-in and check-out dates in the booking card
       </p>
 
       <div className="mt-6 grid gap-8 split:grid-cols-2">
@@ -77,15 +77,15 @@ export function AvailabilityCalendar({
 
           return (
             <div key={monthIndex}>
-              <h3 className="mb-4 text-center text-base font-semibold">
+              <h4 className="mb-4 text-center text-lg font-bold text-warm-ink">
                 {month.toLocaleDateString('en-US', {
                   month: 'long',
                   year: 'numeric',
                 })}
-              </h3>
+              </h4>
 
               {/* Weekday headers */}
-              <div className="mb-2 grid grid-cols-7 gap-1 text-center text-xs font-medium text-muted">
+              <div className="mb-2 grid grid-cols-7 gap-1 text-center text-xs font-semibold text-warm-ink/60">
                 {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(
                   (day) => (
                     <div key={day}>{day}</div>
@@ -113,10 +113,10 @@ export function AvailabilityCalendar({
                       className={clsx(
                         'grid aspect-square place-items-center rounded-lg text-sm font-medium',
                         {
-                          'text-ink': available && !past,
-                          'text-ink/25 line-through':
+                          'bg-warm-cream text-warm-ink': available && !past,
+                          'bg-warm-ink/10 text-warm-ink/30 line-through':
                             !available || past,
-                          'ring-1 ring-accent': today && available && !past,
+                          'ring-2 ring-forest-warm': today && available && !past,
                         },
                       )}
                     >
@@ -130,6 +130,16 @@ export function AvailabilityCalendar({
         })}
       </div>
 
+      <div className="mt-6 flex flex-wrap gap-4 text-sm text-warm-ink/70">
+        <div className="flex items-center gap-2">
+          <div className="size-4 rounded bg-warm-cream" />
+          <span>Available</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="size-4 rounded bg-warm-ink/10" />
+          <span>Unavailable</span>
+        </div>
+      </div>
     </div>
   )
 }

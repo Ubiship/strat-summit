@@ -5,9 +5,9 @@ import Link from 'next/link'
 import remarkGfm from 'remark-gfm'
 
 import { Band } from '@/components/Band'
+import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
-import { PropertiesCta } from '@/components/PropertiesCta'
 import { RootLayout } from '@/components/RootLayout'
 import { categoryMetadata, getAllGuides, getGuideBySlug } from '@/lib/content'
 import { formatDate } from '@/lib/formatDate'
@@ -20,50 +20,47 @@ type Props = {
 const components = {
   h1: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1
-      className="type-display mt-14 text-[clamp(2.25rem,4vw,3rem)] text-balance first:mt-0"
+      className="type-display mt-12 text-[clamp(2.5rem,5vw,3.5rem)] first:mt-0"
       {...props}
     />
   ),
   h2: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h2
-      className="mt-14 text-[clamp(1.75rem,3vw,2.25rem)]/[1.15] font-semibold tracking-[-0.03em] text-balance first:mt-0"
+      className="type-display mt-10 text-[clamp(2rem,4vw,2.75rem)] first:mt-0"
       {...props}
     />
   ),
   h3: (props: React.HTMLAttributes<HTMLHeadingElement>) => (
-    <h3
-      className="mt-10 text-[1.375rem]/[1.3] font-semibold tracking-[-0.02em] first:mt-0"
-      {...props}
-    />
+    <h3 className="mt-8 text-[1.5rem] font-bold first:mt-0" {...props} />
   ),
   p: (props: React.HTMLAttributes<HTMLParagraphElement>) => (
-    <p className="mt-6 text-[1.125rem]/[1.7] text-ink/85 first:mt-0" {...props} />
+    <p className="mt-6 text-[1.0625rem]/[1.7] first:mt-0" {...props} />
   ),
   ul: (props: React.HTMLAttributes<HTMLUListElement>) => (
-    <ul className="mt-6 space-y-3 text-[1.125rem]/[1.7] text-ink/85" {...props} />
+    <ul className="mt-6 space-y-3 text-[1.0625rem]/[1.7]" {...props} />
   ),
   ol: (props: React.HTMLAttributes<HTMLOListElement>) => (
-    <ol className="mt-6 space-y-3 text-[1.125rem]/[1.7] text-ink/85" {...props} />
+    <ol className="mt-6 space-y-3 text-[1.0625rem]/[1.7]" {...props} />
   ),
   li: (props: React.HTMLAttributes<HTMLLIElement>) => (
-    <li className="ml-6 list-disc pl-2 marker:text-accent" {...props} />
+    <li className="ml-6 list-disc pl-2" {...props} />
   ),
   strong: (props: React.HTMLAttributes<HTMLElement>) => (
-    <strong className="font-semibold text-ink" {...props} />
+    <strong className="font-bold text-warm-ink" {...props} />
   ),
   a: (props: React.AnchorHTMLAttributes<HTMLAnchorElement>) => (
     <a
-      className="font-medium text-accent underline decoration-accent/30 underline-offset-4 transition hover:decoration-accent"
+      className="font-semibold text-forest-warm underline decoration-forest-warm/30 underline-offset-4 transition hover:decoration-forest-warm"
       {...props}
     />
   ),
   blockquote: (props: React.HTMLAttributes<HTMLQuoteElement>) => (
     <blockquote
-      className="mt-8 border-l-2 border-accent pl-6 text-[1.1875rem]/[1.6] text-muted"
+      className="mt-6 border-l-4 border-forest-warm pl-6 italic text-warm-muted"
       {...props}
     />
   ),
-  hr: () => <hr className="my-14 border-t border-line" />,
+  hr: () => <hr className="my-12 border-t border-warm-muted/20" />,
 }
 
 export async function generateStaticParams() {
@@ -107,83 +104,88 @@ export default async function GuidePage(props: Props) {
   return (
     <RootLayout>
       {/* Header */}
-      <section className="bg-white pt-20 split:pt-28">
+      <Band tone="forest">
         <Container>
-          <FadeIn className="mx-auto max-w-3xl">
-            <nav
-              aria-label="Breadcrumb"
-              className="flex flex-wrap items-center gap-2.5 text-[0.9375rem] font-medium text-muted"
-            >
-              <Link
-                href="/mount-washington"
-                className="text-accent transition hover:text-accent-deep"
-              >
-                Mt Washington Info
-              </Link>
-              <span aria-hidden="true" className="text-line">
-                /
-              </span>
-              <Link
-                href={`/mount-washington/category/${guide.category}`}
-                className="text-accent transition hover:text-accent-deep"
-              >
-                {categoryMeta.title}
-              </Link>
-            </nav>
-            <h1 className="mt-6 type-display text-[clamp(2.75rem,6vw,4.75rem)] text-balance">
-              {guide.title}
-            </h1>
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-[0.9375rem] text-muted">
-              {guide.publishedAt && (
-                <>
-                  <time dateTime={guide.publishedAt}>
-                    {formatDate(guide.publishedAt)}
-                  </time>
-                  <span aria-hidden="true">·</span>
-                </>
-              )}
-              <span>{guide.author}</span>
-            </div>
-            <hr className="mt-12 border-t border-line" />
-          </FadeIn>
-        </Container>
-      </section>
-
-      {/* Content */}
-      <Band tone="white" className="pt-12 split:pt-16">
-        <Container>
-          <FadeIn className="mx-auto max-w-3xl">
-            <div className="text-ink">
-              <MDXRemote
-                source={guide.content}
-                components={components}
-                options={{
-                  mdxOptions: {
-                    remarkPlugins: [remarkGfm],
-                  },
-                }}
-              />
-            </div>
-            <div className="mt-16 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-8 text-[0.9375rem] font-medium">
-              <Link
-                href={`/mount-washington/category/${guide.category}`}
-                className="inline-flex items-center gap-2 text-accent transition hover:text-accent-deep"
-              >
-                <span aria-hidden="true">←</span>
-                More in {categoryMeta.title}
-              </Link>
-              <Link
-                href="/mount-washington"
-                className="text-muted transition hover:text-ink"
-              >
-                All Mt Washington Info
-              </Link>
+          <FadeIn>
+            <div className="mx-auto max-w-3xl">
+              <div className="flex flex-wrap items-center gap-3 text-[0.9375rem] font-bold text-warm-cream/80">
+                <Link
+                  href="/mount-washington"
+                  className="transition hover:text-warm-cream"
+                >
+                  Mt Washington Info
+                </Link>
+                <span aria-hidden="true">/</span>
+                <Link
+                  href={`/mount-washington/category/${guide.category}`}
+                  className="transition hover:text-warm-cream"
+                >
+                  {categoryMeta.title}
+                </Link>
+              </div>
+              <h1 className="mt-6 type-display text-[clamp(3rem,7vw,5rem)] text-warm-cream">
+                {guide.title}
+              </h1>
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-[0.9375rem] text-[#f1dfc6]">
+                {guide.publishedAt && (
+                  <>
+                    <time dateTime={guide.publishedAt}>
+                      {formatDate(guide.publishedAt)}
+                    </time>
+                    <span aria-hidden="true">·</span>
+                  </>
+                )}
+                <span>{guide.author}</span>
+              </div>
             </div>
           </FadeIn>
         </Container>
       </Band>
 
-      <PropertiesCta audience="guests" />
+      {/* Content */}
+      <Band tone="sand">
+        <Container>
+          <FadeIn>
+            <div className="mx-auto max-w-3xl">
+              <div className="prose prose-lg text-warm-ink">
+                <MDXRemote
+                  source={guide.content}
+                  components={components}
+                  options={{
+                    mdxOptions: {
+                      remarkPlugins: [remarkGfm],
+                    },
+                  }}
+                />
+              </div>
+            </div>
+          </FadeIn>
+        </Container>
+      </Band>
+
+      {/* CTA Section */}
+      <Band tone="apricot" last>
+        <Container>
+          <FadeIn className="mx-auto max-w-3xl text-center">
+            <h2 className="type-display text-[clamp(2.5rem,5vw,4rem)] text-warm-ink">
+              Book your Mount Washington stay
+            </h2>
+            <p className="mx-auto mt-6 max-w-2xl text-[1.1875rem]/[1.5] text-warm-muted">
+              Experience everything Mount Washington has to offer from the
+              comfort of one of our premium vacation rentals. Book direct for
+              the best rates.
+            </p>
+            <div className="mt-12 flex flex-wrap justify-center gap-5">
+              <Button href="/stays" tone="forest" size="lg" arrow>
+                Browse Properties
+              </Button>
+              <Button href="/mount-washington" tone="cream" size="lg">
+                More Guides
+              </Button>
+            </div>
+          </FadeIn>
+        </Container>
+      </Band>
     </RootLayout>
   )
 }

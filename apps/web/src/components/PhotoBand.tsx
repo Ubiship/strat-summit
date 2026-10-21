@@ -1,21 +1,17 @@
 import Image from 'next/image'
 
-import { Container } from '@/components/Container'
-
 export function PhotoBand({ src, alt }: { src: string; alt: string }) {
   return (
-    <section className="bg-white">
-      <Container>
-        <div className="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] split:aspect-[21/9]">
-          <Image
-            src={src}
-            alt={alt}
-            fill
-            sizes="(min-width: 75rem) 72rem, 100vw"
-            className="object-cover"
-          />
-        </div>
-      </Container>
+    <section className="relative isolate z-10 mt-[calc(var(--band-radius)*-1)] h-[min(70vh,40rem)] overflow-hidden rounded-t-[var(--band-radius)]">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="100vw"
+        className="-z-20 object-cover photo-warm"
+      />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 band-shade" />
+      <div aria-hidden="true" className="absolute inset-0 -z-10 hero-glow" />
     </section>
   )
 }

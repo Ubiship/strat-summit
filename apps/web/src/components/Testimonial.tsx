@@ -12,11 +12,11 @@ export function Testimonial({
   client: { logo?: ImageProps['src'] | null; name: string }
 }) {
   return (
-    <Band tone="mist">
+    <Band tone="apricot">
       <Container>
         <FadeIn>
           <figure className="mx-auto max-w-4xl">
-            <blockquote className="text-[clamp(1.75rem,3.5vw,2.75rem)]/[1.2] font-semibold tracking-[-0.03em] text-balance">
+            <blockquote className="type-display text-[clamp(2.25rem,4.5vw,3.75rem)]/[1.02] text-balance">
               <p>
                 <span aria-hidden="true">“</span>
                 {children}
@@ -27,7 +27,7 @@ export function Testimonial({
               {client.logo ? (
                 <Image src={client.logo} alt={client.name} unoptimized />
               ) : (
-                <p className="text-base font-semibold text-accent">— {client.name}</p>
+                <p className="text-lg font-bold">— {client.name}</p>
               )}
             </figcaption>
           </figure>

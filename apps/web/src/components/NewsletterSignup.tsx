@@ -17,18 +17,18 @@ export function NewsletterSignup() {
   )
 
   return (
-    <div className="text-ink">
-      <div className="mx-auto max-w-2xl text-center">
-        <h2 className="type-display text-[clamp(2.25rem,4.5vw,3.25rem)] text-balance">
-          Mount Washington updates and offers
+    <div className="rounded-[2.75rem] bg-apricot p-8 text-warm-ink shadow-[0_12px_32px_rgb(42_24_10/0.08)] split:p-12">
+      <div className="mx-auto max-w-[52rem] text-center">
+        <h2 className="type-display text-[clamp(2.5rem,5vw,3.5rem)]">
+          Get Mount Washington updates & exclusive offers
         </h2>
-        <p className="mt-4 text-[1.1875rem]/[1.5] text-muted">
+        <p className="mt-4 text-[1.1875rem]/[1.5] text-warm-ink/80">
           Join our newsletter for insider tips, seasonal deals, and the latest
           news from Mount Washington.
         </p>
 
-        <form action={formAction} className="mx-auto mt-10 max-w-lg">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-start">
+        <form action={formAction} className="mt-8">
+          <div className="flex flex-col gap-4 split:flex-row split:items-start">
             <input
               type="email"
               name="email"
@@ -36,16 +36,16 @@ export function NewsletterSignup() {
               required
               disabled={pending || state.success}
               className={clsx(
-                'flex-auto rounded-full border border-line bg-white px-5 py-3.5 text-base text-ink transition placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/15 focus:outline-none disabled:opacity-50',
-                'sm:min-w-0'
+                'flex-auto rounded-2xl border-2 border-warm-ink/10 bg-white px-6 py-4 text-base font-medium text-warm-ink transition placeholder:text-warm-ink/40 focus:border-sun focus:outline-none disabled:opacity-50',
+                'split:min-w-0'
               )}
             />
             <Button
               type="submit"
-              tone="accent"
+              tone="forest"
               size="md"
               disabled={pending || state.success}
-              className="justify-center sm:flex-none"
+              className="split:flex-none"
             >
               {pending
                 ? 'Subscribing...'
@@ -59,7 +59,7 @@ export function NewsletterSignup() {
             <p
               className={clsx(
                 'mt-4 text-sm font-semibold',
-                state.success ? 'text-accent' : 'text-red-700'
+                state.success ? 'text-forest-warm' : 'text-red-700'
               )}
             >
               {state.message}
@@ -67,7 +67,7 @@ export function NewsletterSignup() {
           )}
         </form>
 
-        <p className="mt-5 text-sm text-muted">
+        <p className="mt-6 text-sm text-warm-ink/60">
           We respect your privacy. Unsubscribe anytime.
         </p>
       </div>

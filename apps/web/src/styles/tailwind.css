@@ -1,5 +1,5 @@
 @import 'tailwindcss';
 @import '@repo/tailwind-config/theme.css';
-@import './brand.css';
+@import './warm.css';
 @import './base.css';
 @import './typography.css' layer(components);
