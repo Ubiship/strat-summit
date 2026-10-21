@@ -27,27 +27,25 @@ interface Page {
 
 function PageLink({ page }: { page: Page }) {
   return (
-    <article className="relative flex h-full flex-col items-start rounded-[1.5rem] border border-line bg-white p-8 transition hover:border-accent/40">
-      <h3 className="mt-3 text-[1.375rem] font-semibold tracking-[-0.02em]">
-        {page.title}
-      </h3>
+    <article className="relative flex h-full flex-col items-start rounded-[2.5rem] bg-warm-cream p-8">
+      <h3 className="mt-4 type-display text-3xl">{page.title}</h3>
       <time
         dateTime={page.date}
-        className="order-first text-sm text-muted"
+        className="order-first text-sm font-semibold text-warm-muted"
       >
         {formatDate(page.date)}
       </time>
-      <p className="mt-2 text-base/[1.6] text-muted">
+      <p className="mt-3 text-base/[1.55] text-warm-muted">
         {page.description}
       </p>
       <Link
         href={page.href}
-        className="mt-6 inline-flex items-center gap-2.5 text-[0.9375rem] font-medium text-accent transition hover:text-accent-deep"
+        className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-sun px-4.5 py-3 text-[0.9375rem] font-bold text-warm-ink transition hover:bg-sun-light focus-visible:-outline-offset-4"
         aria-label={`Read more: ${page.title}`}
       >
         Read more
         <ArrowIcon className="w-6 flex-none fill-current" />
-        <span className="absolute inset-0 rounded-[1.5rem]" />
+        <span className="absolute inset-0 rounded-[2.5rem]" />
       </Link>
     </article>
   )
@@ -61,10 +59,10 @@ export function PageLinks({
   pages: Array<Page>
 }) {
   return (
-    <Band tone="mist">
+    <Band tone="sand">
       <Container>
         <SectionHead title={title} />
-        <FadeInStagger className="mt-14 grid gap-5 split:mt-16 split:grid-cols-2">
+        <FadeInStagger className="mt-12 grid gap-4.5 split:grid-cols-2">
           {pages.map((page) => (
             <FadeIn key={page.href}>
               <PageLink page={page} />

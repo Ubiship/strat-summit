@@ -3,18 +3,17 @@ import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
-import { Kicker } from '@/components/Kicker'
 
 export function MeetYourHosts() {
   return (
-    <Band tone="white">
+    <Band tone="sand">
       <Container>
         <div className="grid items-center gap-12 split:grid-cols-2 split:gap-20">
           {/* Photo */}
           <FadeIn>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-mist">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[3rem] bg-warm-ink/5 shadow-[0_8px_32px_rgb(42_24_10/0.1)]">
               {/* Placeholder until photo is added */}
-              <div className="absolute inset-0 flex items-center justify-center text-muted/40">
+              <div className="absolute inset-0 flex items-center justify-center text-warm-ink/20">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"
@@ -40,11 +39,13 @@ export function MeetYourHosts() {
 
           {/* Content */}
           <FadeIn className="split:order-first">
-            <Kicker>Meet your hosts</Kicker>
-            <h2 className="mt-4 type-display text-[clamp(2.5rem,5vw,4rem)] text-ink">
-              Joel and Amanda
+            <p className="text-sm font-bold uppercase tracking-[0.15em] text-forest-warm">
+              Meet your hosts
+            </p>
+            <h2 className="mt-5 type-display text-[clamp(2.5rem,5vw,3.5rem)] text-warm-ink">
+              Joel & Amanda
             </h2>
-            <div className="mt-8 space-y-5 text-[1.0625rem]/[1.7] text-muted">
+            <div className="mt-10 space-y-6 text-[1.0625rem]/[1.75] text-warm-muted">
               <p>
                 A chance meeting while backpacking through Europe more than 16
                 years ago grew into a life built around adventure and
@@ -64,8 +65,8 @@ export function MeetYourHosts() {
                 the mountains, we look forward to welcoming you.
               </p>
             </div>
-            <div className="mt-10">
-              <Button href="/about" tone="outline" arrow>
+            <div className="mt-12">
+              <Button href="/about" tone="forest" arrow>
                 More about us
               </Button>
             </div>

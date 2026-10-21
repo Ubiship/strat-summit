@@ -47,8 +47,8 @@ export function SocialMedia({
             className={clsx(
               'grid size-12 place-items-center rounded-full transition',
               invert
-                ? 'bg-white/10 text-white hover:bg-white/20'
-                : 'bg-white text-accent ring-1 ring-line ring-inset hover:ring-accent/40',
+                ? 'bg-warm-cream/10 text-warm-cream hover:bg-warm-cream/20'
+                : 'bg-warm-cream text-warm-ink hover:bg-white',
             )}
           >
             <socialMediaProfile.icon className="size-5.5 fill-current" />

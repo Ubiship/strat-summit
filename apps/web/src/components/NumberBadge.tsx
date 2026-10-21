@@ -1,18 +1,19 @@
 import clsx from 'clsx'
 
 const tones = {
-  line: 'text-accent ring-1 ring-line ring-inset bg-white',
-  accent: 'bg-accent text-white',
+  cream: 'bg-warm-cream text-warm-ink',
+  ink: 'bg-warm-ink text-warm-cream',
+  sun: 'bg-sun text-warm-ink',
 }
 
 const sizes = {
-  md: 'size-11 text-sm',
-  lg: 'size-14 text-base',
+  md: 'size-14 text-base',
+  lg: 'size-16 text-lg',
 }
 
 export function NumberBadge({
   value,
-  tone = 'line',
+  tone = 'cream',
   size = 'md',
   className,
 }: {
@@ -25,7 +26,7 @@ export function NumberBadge({
     <span
       aria-hidden="true"
       className={clsx(
-        'grid flex-none place-items-center rounded-full font-semibold tabular-nums',
+        'grid flex-none place-items-center rounded-full font-extrabold',
         tones[tone],
         sizes[size],
         className,

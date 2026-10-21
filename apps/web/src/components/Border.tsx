@@ -19,7 +19,7 @@ export function Border<T extends React.ElementType = 'div'>({
     <Component
       className={clsx(
         className,
-        'relative before:absolute before:bg-accent after:absolute after:bg-line',
+        'relative before:absolute before:bg-sun after:absolute after:bg-warm-ink/10',
         position === 'top' &&
           'before:top-0 before:left-0 before:h-px before:w-6 after:top-0 after:right-0 after:left-8 after:h-px',
         position === 'left' &&

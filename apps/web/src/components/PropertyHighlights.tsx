@@ -25,7 +25,7 @@ export function PropertyTypeLabel({
   return (
     <span
       className={clsx(
-        'inline-flex rounded-full bg-tint px-2.5 py-1 text-xs font-semibold text-accent',
+        'inline-flex rounded-full bg-forest-warm/10 px-3 py-1 text-xs font-bold tracking-wide text-forest-warm uppercase',
         className,
       )}
     >
@@ -63,20 +63,21 @@ export function PropertyHighlights({
     <ul
       role="list"
       className={clsx(
-        'flex flex-wrap',
-        size === 'sm'
-          ? 'gap-x-4 gap-y-2 text-[0.875rem] text-muted'
-          : 'gap-x-8 gap-y-4 text-base text-ink',
+        'flex flex-wrap font-semibold text-warm-ink/80',
+        size === 'sm' ? 'gap-2.5 text-sm' : 'gap-3 text-base',
         className,
       )}
     >
       {items.map(({ icon: Icon, label }) => (
-        <li key={label} className="flex items-center gap-1.5">
+        <li
+          key={label}
+          className="flex items-center gap-2 rounded-full bg-sand px-4 py-2.5"
+        >
           <Icon
             aria-hidden="true"
             strokeWidth={1.75}
             className={clsx(
-              'flex-none text-accent',
+              'flex-none text-forest-warm',
               size === 'sm' ? 'size-4' : 'size-5',
             )}
           />

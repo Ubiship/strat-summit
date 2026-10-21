@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
-import { PropertiesCta } from '@/components/PropertiesCta'
+import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
@@ -30,21 +30,21 @@ export default async function Blog() {
         </p>
       </PageHero>
 
-      <Band tone="white">
+      <Band tone="sand">
         <Container>
-          <FadeInStagger className="mx-auto grid max-w-4xl gap-5">
+          <FadeInStagger className="grid gap-4.5">
             {articles.map((article) => (
               <FadeIn key={article.href}>
-                <article className="rounded-[1.5rem] border border-line bg-white p-8 split:p-10">
-                  <h2 className="text-[clamp(1.625rem,2.5vw,2rem)]/[1.2] font-semibold tracking-[-0.025em] text-balance">
+                <article className="rounded-[2.5rem] bg-warm-cream p-8 split:p-10">
+                  <h2 className="type-display text-[clamp(2rem,3.5vw,3rem)]">
                     <Link
                       href={article.href}
-                      className="transition hover:text-accent"
+                      className="transition hover:text-ember-deep"
                     >
                       {article.title}
                     </Link>
                   </h2>
-                  <dl className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-muted">
+                  <dl className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-warm-muted">
                     <dt className="sr-only">Published</dt>
                     <dd>
                       <time dateTime={article.date}>
@@ -57,17 +57,17 @@ export default async function Blog() {
                         alt=""
                         {...article.author.image}
                         sizes="2.75rem"
-                        className="size-11 rounded-full object-cover"
+                        className="size-11 rounded-full object-cover photo-warm"
                       />
                       <span>
-                        <span className="font-semibold text-ink">
+                        <span className="font-semibold text-warm-ink">
                           {article.author.name}
                         </span>
                         , {article.author.role}
                       </span>
                     </dd>
                   </dl>
-                  <p className="mt-5 max-w-2xl text-base/[1.6] text-muted">
+                  <p className="mt-5 max-w-2xl text-base/[1.6] text-warm-muted">
                     {article.description}
                   </p>
                   <Button
@@ -85,7 +85,7 @@ export default async function Blog() {
         </Container>
       </Band>
 
-      <PropertiesCta audience="owners" />
+      <ContactSection />
     </RootLayout>
   )
 }

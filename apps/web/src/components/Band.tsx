@@ -1,13 +1,11 @@
 import clsx from 'clsx'
 
-// Sections are separated by white space, not colour. Mist and tint are for
-// the occasional section that needs a quiet surface; accent is reserved for at
-// most one anchoring section per page.
 const tones = {
-  white: 'bg-white text-ink',
-  mist: 'bg-mist text-ink',
-  tint: 'bg-tint text-ink',
-  accent: 'bg-accent text-white',
+  cream: 'bg-warm-cream text-warm-ink',
+  sand: 'bg-sand text-warm-ink',
+  apricot: 'bg-apricot text-warm-ink',
+  sun: 'bg-sun text-warm-ink',
+  forest: 'bg-forest-warm text-warm-cream',
 }
 
 export type BandTone = keyof typeof tones
@@ -28,8 +26,8 @@ export function Band({
   return (
     <Component
       className={clsx(
-        'relative py-24 split:py-36',
-        last && 'pb-16 split:pb-20',
+        'relative z-10 mt-[calc(var(--band-radius)*-1)] rounded-t-[var(--band-radius)] pt-28 split:pt-36',
+        last ? 'pb-20 split:pb-24' : 'pb-[calc(var(--band-radius)+7rem)]',
         tones[tone],
         className,
       )}

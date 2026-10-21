@@ -2,18 +2,21 @@ import Link from 'next/link'
 import clsx from 'clsx'
 
 // Filled pills draw the focus ring inside, where it contrasts with the fill;
-// outside, it would sit on whatever surface the button is placed on.
+// outside, it would sit on whatever band the button is placed on.
 const tones = {
-  accent: 'bg-accent text-white hover:bg-accent-deep focus-visible:-outline-offset-4',
-  outline: 'bg-white text-ink ring-1 ring-line ring-inset hover:ring-ink/30',
+  sun: 'bg-sun text-warm-ink hover:bg-sun-light focus-visible:-outline-offset-4',
+  forest:
+    'bg-forest-warm text-warm-cream hover:bg-forest-deep focus-visible:-outline-offset-4',
+  cream:
+    'bg-warm-cream text-warm-ink hover:bg-white focus-visible:-outline-offset-4',
   glass:
-    'bg-white/15 text-white ring-1 ring-white/50 ring-inset backdrop-blur hover:bg-white/25',
+    'bg-warm-cream/15 text-warm-cream ring-2 ring-warm-cream/60 ring-inset hover:bg-warm-cream/25',
 }
 
 const sizes = {
-  lg: 'px-8 py-4.5 text-[1.0625rem]',
-  md: 'px-6 py-3.5 text-base',
-  sm: 'px-4.5 py-2.5 text-[0.9375rem]',
+  lg: 'px-10 py-5.5 text-[1.125rem]',
+  md: 'px-6 py-4 text-base',
+  sm: 'px-4.5 py-3 text-[0.9375rem]',
 }
 
 export type ButtonTone = keyof typeof tones
@@ -28,7 +31,7 @@ type ButtonProps = {
 )
 
 export function Button({
-  tone = 'accent',
+  tone = 'sun',
   size = 'md',
   arrow = false,
   className,
@@ -36,7 +39,8 @@ export function Button({
   ...props
 }: ButtonProps) {
   className = clsx(
-    'inline-flex items-center gap-2 rounded-full font-semibold transition disabled:cursor-not-allowed disabled:opacity-50',
+    'inline-flex items-center rounded-full font-bold transition disabled:cursor-not-allowed disabled:opacity-50',
+    size === 'lg' ? 'gap-3' : 'gap-2.5',
     tones[tone],
     sizes[size],
     className,
@@ -46,7 +50,13 @@ export function Button({
     <>
       {children}
       {arrow && (
-        <span aria-hidden="true" className="text-[0.95em]">
+        <span
+          aria-hidden="true"
+          className={clsx(
+            'grid place-items-center rounded-full bg-current/15',
+            size === 'lg' ? 'size-8 text-base' : 'size-7 text-sm',
+          )}
+        >
           →
         </span>
       )}

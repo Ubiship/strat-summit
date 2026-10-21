@@ -1,79 +1,112 @@
 import Link from 'next/link'
-import clsx from 'clsx'
-import { HeartHandshake, MapPin, Wallet } from 'lucide-react'
-
 import { Band } from '@/components/Band'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { SectionHead } from '@/components/SectionHead'
 
+function IconBetterValue({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M12 38V22l12-12 12 12v16a2 2 0 0 1-2 2H14a2 2 0 0 1-2-2Z" />
+      <path d="M20 40v-12h8v12" />
+      <circle cx="24" cy="22" r="3" />
+    </svg>
+  )
+}
+
+function IconPersonalService({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M24 42s-14-8.35-14-19a10 10 0 0 1 14-9.17A10 10 0 0 1 38 23c0 10.65-14 19-14 19Z" />
+    </svg>
+  )
+}
+
+function IconLocalKnowledge({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M24 26c3.314 0 6-2.686 6-6s-2.686-6-6-6-6 2.686-6 6 2.686 6 6 6Z" />
+      <path d="M24 6c-9.941 0-18 8.059-18 18 0 12 18 20 18 20s18-8 18-20c0-9.941-8.059-18-18-18Z" />
+    </svg>
+  )
+}
+
 const benefits = [
   {
     title: 'Better value',
-    icon: Wallet,
+    Icon: IconBetterValue,
     description:
       'Skip third-party booking fees and put more of your budget towards your mountain getaway.',
   },
   {
     title: 'Personal service',
-    icon: HeartHandshake,
+    Icon: IconPersonalService,
     description:
       'From your first question to your final morning, connect directly with our team for thoughtful, attentive support.',
   },
   {
     title: 'Local knowledge',
-    icon: MapPin,
+    Icon: IconLocalKnowledge,
     description:
       "From mountain adventures to favourite local spots, we'll help you make the most of your time here.",
   },
 ]
 
-// The accent tone is the one place on the homepage where colour fills a whole
-// section; the mist tone keeps the page almost entirely white.
-export function WhyBookDirect({ tone = 'mist' }: { tone?: 'mist' | 'accent' }) {
-  let dark = tone === 'accent'
-
+export function WhyBookDirect() {
   return (
-    <Band tone={tone}>
+    <Band tone="cream">
       <Container>
-        <SectionHead
-          kicker="Why book direct"
-          title="Book direct. Feel right at home."
-          tone={dark ? 'dark' : 'light'}
-        >
+        <SectionHead kicker="Why book direct" title="Book direct. Feel right at home.">
           <p>
             Book your Mount Washington getaway with local hosts who care for
             every detail of your stay.{' '}
             <Link
-              href="/why-book-direct"
-              className={clsx(
-                'font-medium underline decoration-1 underline-offset-4 transition',
-                dark ? 'text-white hover:decoration-2' : 'text-accent hover:text-accent-deep',
-              )}
+              href="/stays"
+              className="font-bold text-forest-warm underline decoration-2 underline-offset-2 transition hover:text-forest-deep"
             >
-              Learn more
+              Check availability
             </Link>
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 split:mt-20 split:grid-cols-3">
-          {benefits.map(({ title, icon: Icon, description }) => (
-            <FadeIn key={title}>
-              <Icon
-                aria-hidden="true"
-                strokeWidth={1.5}
-                className={clsx('size-7', dark ? 'text-highlight' : 'text-accent')}
-              />
-              <h3 className="mt-5 text-[1.1875rem] font-semibold tracking-[-0.015em]">
-                {title}
+        <FadeInStagger className="mt-20 grid gap-8 split:grid-cols-3 split:gap-8">
+          {benefits.map((benefit) => (
+            <FadeIn
+              key={benefit.title}
+              className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] split:p-12"
+            >
+              <div className="flex size-16 items-center justify-center rounded-2xl bg-forest-warm/8">
+                <benefit.Icon className="size-10 text-forest-warm" />
+              </div>
+              <h3 className="mt-10 type-display text-[clamp(2rem,3vw,2.375rem)] text-warm-ink">
+                {benefit.title}
               </h3>
-              <p
-                className={clsx(
-                  'mt-2 text-base/[1.6]',
-                  dark ? 'text-white/75' : 'text-muted',
-                )}
-              >
-                {description}
+              <p className="mt-5 text-[1.0625rem]/[1.7] text-warm-muted">
+                {benefit.description}
               </p>
             </FadeIn>
           ))}
