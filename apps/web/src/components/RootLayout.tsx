@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 
-import { Button } from '@/components/Button'
+import { Button, type ButtonTone } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { Footer } from '@/components/Footer'
 import { Kicker } from '@/components/Kicker'
@@ -104,7 +104,7 @@ function NavDropdown({ item }: { item: NavItem }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.15 }}
-            className="absolute left-0 top-full z-50 mt-1 min-w-[200px] rounded-2xl bg-warm-cream p-2 shadow-lg"
+            className="absolute top-full left-0 z-50 mt-1 min-w-[200px] rounded-2xl bg-warm-cream p-2 shadow-lg"
           >
             {item.children.map((child) => (
               <Link
@@ -127,11 +127,13 @@ function SiteHeader({
   menuOpen,
   onOpenMenu,
   openRef,
+  ctaTone,
 }: {
   panelId: string
   menuOpen: boolean
   onOpenMenu: () => void
   openRef: React.RefObject<HTMLButtonElement | null>
+  ctaTone: ButtonTone
 }) {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-warm-ink/10 bg-warm-cream/95 backdrop-blur">
@@ -144,7 +146,7 @@ function SiteHeader({
             <NavDropdown key={link.label} item={link} />
           ))}
           <span className="hidden split:block">
-            <Button href="/stays" size="sm">
+            <Button href="/stays" size="sm" tone={ctaTone}>
               Book Now
             </Button>
           </span>
@@ -154,7 +156,7 @@ function SiteHeader({
             onClick={onOpenMenu}
             aria-expanded={menuOpen}
             aria-controls={panelId}
-            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold ring-2 ring-warm-ink ring-inset transition hover:bg-sand split:hidden"
+            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold ring-2 ring-warm-ink transition ring-inset hover:bg-sand split:hidden"
           >
             Menu
           </button>
@@ -196,7 +198,7 @@ function MenuPanel({
             ref={closeRef}
             type="button"
             onClick={onClose}
-            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold text-forest-warm ring-2 ring-forest-warm ring-inset transition hover:bg-forest-warm/5"
+            className="rounded-full px-5 py-3 text-[0.9375rem] font-bold text-forest-warm ring-2 ring-forest-warm transition ring-inset hover:bg-forest-warm/5"
           >
             Close
           </button>
@@ -253,7 +255,13 @@ function MenuPanel({
   )
 }
 
-function RootLayoutInner({ children }: { children: React.ReactNode }) {
+function RootLayoutInner({
+  children,
+  ctaTone,
+}: {
+  children: React.ReactNode
+  ctaTone: ButtonTone
+}) {
   let panelId = useId()
   let [open, setOpen] = useState(false)
   let openRef = useRef<HTMLButtonElement>(null)
@@ -293,6 +301,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
           menuOpen={open}
           onOpenMenu={() => setOpen(true)}
           openRef={openRef}
+          ctaTone={ctaTone}
         />
         <main className="w-full flex-auto">{children}</main>
         <Footer />
@@ -310,8 +319,18 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
   )
 }
 
-export function RootLayout({ children }: { children: React.ReactNode }) {
+export function RootLayout({
+  children,
+  ctaTone = 'sun',
+}: {
+  children: React.ReactNode
+  ctaTone?: ButtonTone
+}) {
   let pathname = usePathname()
 
-  return <RootLayoutInner key={pathname}>{children}</RootLayoutInner>
+  return (
+    <RootLayoutInner key={pathname} ctaTone={ctaTone}>
+      {children}
+    </RootLayoutInner>
+  )
 }

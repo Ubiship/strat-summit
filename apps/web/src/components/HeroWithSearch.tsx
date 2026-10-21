@@ -4,10 +4,10 @@ import { Suspense, useId, useState } from 'react'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FadeIn } from '@/components/FadeIn'
-import { Button } from '@/components/Button'
+import { Button, type ButtonTone } from '@/components/Button'
 import clsx from 'clsx'
 
-function SearchFormInner() {
+function SearchFormInner({ searchTone }: { searchTone: ButtonTone }) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -30,7 +30,8 @@ function SearchFormInner() {
   const inputClasses =
     'rounded-2xl border-2 border-warm-ink/8 bg-warm-cream/40 px-5 py-4 text-base font-medium text-warm-ink transition placeholder:text-warm-ink/40 focus:border-sun focus:bg-white focus:outline-none'
 
-  const labelClasses = 'text-sm font-bold tracking-wide text-warm-ink/60 uppercase'
+  const labelClasses =
+    'text-sm font-bold tracking-wide text-warm-ink/60 uppercase'
 
   return (
     <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-[3rem] bg-white p-6 shadow-[0_16px_48px_rgb(42_24_10/0.15),0_4px_12px_rgb(42_24_10/0.08)] sm:p-8 split:p-12">
@@ -81,7 +82,7 @@ function SearchFormInner() {
         </div>
 
         <div className="flex items-end">
-          <Button onClick={handleSearch} size="md" tone="sun">
+          <Button onClick={handleSearch} size="md" tone={searchTone}>
             Search
           </Button>
         </div>
@@ -90,15 +91,19 @@ function SearchFormInner() {
   )
 }
 
-function SearchForm() {
+function SearchForm({ searchTone }: { searchTone: ButtonTone }) {
   return (
     <Suspense fallback={<div className="h-[140px]" />}>
-      <SearchFormInner />
+      <SearchFormInner searchTone={searchTone} />
     </Suspense>
   )
 }
 
-export function HeroWithSearch() {
+export function HeroWithSearch({
+  searchTone = 'sun',
+}: {
+  searchTone?: ButtonTone
+}) {
   return (
     <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-forest-warm text-warm-cream">
       {/* Background Image */}
@@ -129,7 +134,7 @@ export function HeroWithSearch() {
         </FadeIn>
 
         <div className="mt-16">
-          <SearchForm />
+          <SearchForm searchTone={searchTone} />
         </div>
       </div>
     </div>

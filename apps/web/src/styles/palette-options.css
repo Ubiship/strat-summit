@@ -1,0 +1,26 @@
+/*
+ * Homepage colour options for client review (/options/a, /options/b).
+ * Each page wraps the site in data-palette and remaps the warm tokens, so
+ * cream surfaces turn white and sand turns a pale green.
+ */
+[data-palette] {
+  --color-warm-cream: #ffffff;
+  --color-sand: #edf3ef;
+  --color-apricot: #cfe1d5;
+  --color-ember-deep: #1f4a35;
+}
+
+/* A: all white, sections separated by hairlines instead of colour. */
+[data-palette='a'] main > section,
+[data-palette='a'] footer {
+  border-top: 1px solid rgb(31 74 53 / 0.12);
+}
+
+/* B: cream sections take a faint sage tint; the header stays white. */
+[data-palette='b'] {
+  --color-warm-cream: #f4f7f5;
+}
+
+[data-palette='b'] header {
+  background-color: rgb(255 255 255 / 0.95);
+}
