@@ -96,7 +96,7 @@ function AccordionItem({
   onToggle: () => void
 }) {
   return (
-    <div className="border-b border-warm-ink/8 last:border-b-0">
+    <div className="border-b border-warm-ink/10">
       <button
         onClick={onToggle}
         className="flex w-full items-center justify-between gap-6 py-7 text-left"
@@ -140,14 +140,14 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <Band tone="cream">
+    <Band tone="white">
       <Container>
         <SectionHead kicker="FAQs" title="Frequently asked questions.">
           <p>A few helpful details before you book your mountain stay.</p>
         </SectionHead>
 
-        <FadeIn className="mx-auto mt-16 max-w-3xl">
-          <div className="rounded-[3rem] bg-white p-8 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] split:p-14">
+        <FadeIn className="mt-16 max-w-3xl split:mt-20">
+          <div className="border-t border-warm-ink/10">
             {faqs.map((faq, index) => (
               <AccordionItem
                 key={faq.question}
@@ -162,7 +162,7 @@ export function FAQ() {
           </div>
         </FadeIn>
 
-        <FadeIn className="mt-20 text-center">
+        <FadeIn className="mt-16 max-w-3xl">
           <p className="text-[1.125rem] text-warm-muted">
             Still have a question? We&apos;re happy to help.
           </p>

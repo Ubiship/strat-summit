@@ -109,17 +109,17 @@ export default async function PropertyDetailPage(props: PageProps) {
 
   return (
     <RootLayout>
-      <Band tone="cream">
-        <Container className="py-16">
+      <Band tone="white">
+        <Container className="pb-8 split:pb-16">
           <FadeIn>
             <PhotoGallery photos={property.photos} propertyName={property.name} />
           </FadeIn>
 
-          <div className="mt-12 grid gap-12 split:grid-cols-[1fr,400px]">
+          <div className="mt-14 grid gap-14 split:mt-20 split:grid-cols-[1fr_380px] split:gap-24">
             {/* Left column - Property details */}
             <FadeInStagger>
               {/* Property header */}
-              <FadeIn>
+              <FadeIn className="pb-14">
                 <PropertyTypeLabel type={highlights.type} className="mb-4" />
                 <h1 className="type-display text-[clamp(2rem,4vw,3rem)] text-warm-ink">
                   {property.name}
@@ -148,7 +148,7 @@ export default async function PropertyDetailPage(props: PageProps) {
               </FadeIn>
 
               {/* Description */}
-              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+              <FadeIn className="border-t border-warm-ink/10 py-14">
                 <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
                   About this property
                 </h2>
@@ -159,7 +159,7 @@ export default async function PropertyDetailPage(props: PageProps) {
 
               {/* Amenities */}
               {property.amenities && property.amenities.length > 0 && (
-                <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+                <FadeIn className="border-t border-warm-ink/10 py-14">
                   <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
                     Amenities
                   </h2>
@@ -178,7 +178,7 @@ export default async function PropertyDetailPage(props: PageProps) {
               )}
 
               {/* Availability Calendar */}
-              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+              <FadeIn className="border-t border-warm-ink/10 py-14">
                 <AvailabilityCalendar
                   listingId={property.id.toString()}
                   initialAvailability={availability}
@@ -186,7 +186,7 @@ export default async function PropertyDetailPage(props: PageProps) {
               </FadeIn>
 
               {/* Location */}
-              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+              <FadeIn className="border-t border-warm-ink/10 py-14">
                 <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
                   Location
                 </h2>
@@ -197,18 +197,18 @@ export default async function PropertyDetailPage(props: PageProps) {
                   Exact address provided after booking confirmation
                 </p>
                 {/* Future task: Add map integration */}
-                <div className="mt-6 grid aspect-[16/9] place-items-center rounded-[2.75rem] bg-sand">
+                <div className="mt-6 grid aspect-[16/9] place-items-center rounded-[2.75rem] bg-warm-cream">
                   <p className="text-lg text-warm-ink/40">Map coming soon</p>
                 </div>
               </FadeIn>
 
               {/* Reviews */}
-              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+              <FadeIn className="border-t border-warm-ink/10 py-14">
                 <ReviewList reviews={reviews} />
               </FadeIn>
 
               {/* House Rules */}
-              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+              <FadeIn className="border-t border-warm-ink/10 py-14">
                 <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
                   House rules
                 </h2>
@@ -237,7 +237,7 @@ export default async function PropertyDetailPage(props: PageProps) {
               </FadeIn>
 
               {/* Cancellation Policy */}
-              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
+              <FadeIn className="border-t border-warm-ink/10 py-14">
                 <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
                   Cancellation policy
                 </h2>
@@ -250,7 +250,7 @@ export default async function PropertyDetailPage(props: PageProps) {
                   arrival date receive no refund.
                 </p>
 
-                <div className="mt-8 max-w-[62ch] rounded-[2.75rem] bg-sand/60 p-8">
+                <div className="mt-8 max-w-[62ch] rounded-[2.75rem] bg-warm-cream p-8">
                   <h3 className="text-lg font-bold text-warm-ink">
                     Winter Conditions and Cancellation
                   </h3>
@@ -277,8 +277,8 @@ export default async function PropertyDetailPage(props: PageProps) {
               </FadeIn>
 
               {/* Bottom Book Now CTA */}
-              <FadeIn className="border-t-2 border-warm-ink/10 pt-8">
-                <div className="rounded-[2.75rem] bg-forest-warm/5 p-8 text-center">
+              <FadeIn className="border-t border-warm-ink/10 py-14">
+                <div className="rounded-[2.75rem] bg-warm-cream p-10 text-center split:p-14">
                   <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
                     Ready to book?
                   </h2>

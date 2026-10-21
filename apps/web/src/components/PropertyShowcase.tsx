@@ -16,7 +16,7 @@ export async function PropertyShowcase() {
   }
 
   return (
-    <Band tone="sand">
+    <Band tone="white">
       <Container>
         <SectionHead
           kicker="Our properties"
@@ -28,7 +28,7 @@ export async function PropertyShowcase() {
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-16 grid gap-8 split:grid-cols-2 split:gap-10">
+        <FadeInStagger className="mt-20 grid gap-10 split:mt-24 split:grid-cols-2 split:gap-14">
           {featuredProperties.map((property) => (
             <FadeIn key={property.id}>
               <PropertyCard property={property} />
@@ -36,7 +36,7 @@ export async function PropertyShowcase() {
           ))}
         </FadeInStagger>
 
-        <FadeIn className="mt-16 text-center">
+        <FadeIn className="mt-20 text-center split:mt-24">
           <Button href="/stays" tone="forest" arrow>
             View all properties
           </Button>

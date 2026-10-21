@@ -102,7 +102,7 @@ const contentCategories = [
 
 function ContentHub() {
   return (
-    <Band tone="sand">
+    <Band tone="cream">
       <Container>
         <SectionHead
           kicker="Explore Mount Washington"
@@ -114,7 +114,7 @@ function ContentHub() {
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-20 grid gap-8 split:grid-cols-3 split:gap-8">
+        <FadeInStagger className="mt-20 grid gap-8 split:mt-24 split:grid-cols-3 split:gap-10">
           {contentCategories.map((category) => (
             <FadeIn
               key={category.title}

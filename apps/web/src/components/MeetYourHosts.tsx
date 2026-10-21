@@ -6,7 +6,7 @@ import { FadeIn } from '@/components/FadeIn'
 
 export function MeetYourHosts() {
   return (
-    <Band tone="sand">
+    <Band tone="white">
       <Container>
         <div className="grid items-center gap-12 split:grid-cols-2 split:gap-20">
           {/* Photo */}
@@ -43,7 +43,8 @@ export function MeetYourHosts() {
               Meet your hosts
             </p>
             <h2 className="mt-5 type-display text-[clamp(2.5rem,5vw,3.5rem)] text-warm-ink">
-              Joel & Amanda
+              {/* The client dislikes Fraunces' looping ampersand */}
+              Joel <span className="font-sans font-semibold">&amp;</span> Amanda
             </h2>
             <div className="mt-10 space-y-6 text-[1.0625rem]/[1.75] text-warm-muted">
               <p>
