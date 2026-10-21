@@ -1,6 +1,7 @@
 import clsx from 'clsx'
 
 const tones = {
+  white: 'bg-white text-warm-ink',
   cream: 'bg-warm-cream text-warm-ink',
   sand: 'bg-sand text-warm-ink',
   apricot: 'bg-apricot text-warm-ink',
@@ -26,8 +27,10 @@ export function Band({
   return (
     <Component
       className={clsx(
-        'relative z-10 mt-[calc(var(--band-radius)*-1)] rounded-t-[var(--band-radius)] pt-28 split:pt-36',
-        last ? 'pb-20 split:pb-24' : 'pb-[calc(var(--band-radius)+7rem)]',
+        'relative z-10 mt-[calc(var(--band-radius)*-1)] rounded-t-[var(--band-radius)] pt-28 split:pt-44',
+        last
+          ? 'pb-20 split:pb-24'
+          : 'pb-[calc(var(--band-radius)+7rem)] split:pb-[calc(var(--band-radius)+9rem)]',
         tones[tone],
         className,
       )}

@@ -34,7 +34,7 @@ export function PropertyCard({
   const detailHref = `/stays/${property.id}${queryString ? `?${queryString}` : ''}`
 
   return (
-    <article className="flex flex-col rounded-[3rem] bg-white shadow-[0_8px_32px_rgb(42_24_10/0.08),0_2px_8px_rgb(42_24_10/0.04)] transition hover:shadow-[0_16px_48px_rgb(42_24_10/0.12),0_4px_12px_rgb(42_24_10/0.06)]">
+    <article className="flex flex-col rounded-[3rem] bg-white ring-1 ring-warm-ink/8 transition hover:shadow-[0_16px_48px_rgb(42_24_10/0.08)]">
       <Link
         href={detailHref}
         className="group relative aspect-[4/3] overflow-hidden rounded-t-[3rem]"
@@ -59,7 +59,7 @@ export function PropertyCard({
         )}
       </Link>
 
-      <div className="flex flex-auto flex-col p-8">
+      <div className="flex flex-auto flex-col p-8 split:p-10">
         <PropertyTypeLabel type={highlights.type} className="mb-3 self-start" />
         <Link href={detailHref}>
           <h3 className="type-display text-[clamp(1.625rem,2.5vw,1.875rem)] text-warm-ink transition hover:text-forest-warm">

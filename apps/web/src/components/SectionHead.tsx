@@ -17,27 +17,20 @@ export function SectionHead({
   children?: React.ReactNode
 }) {
   return (
-    <FadeIn
-      className={clsx(
-        'grid gap-8 split:grid-cols-[1.1fr_0.9fr] split:items-end split:gap-16',
-        className,
-      )}
-    >
-      <div>
-        {kicker && <Kicker tone={tone}>{kicker}</Kicker>}
-        <h2
-          className={clsx(
-            'type-display text-[clamp(3rem,6vw,5rem)] text-balance',
-            kicker && 'mt-5',
-          )}
-        >
-          {title}
-        </h2>
-      </div>
+    <FadeIn className={clsx('max-w-3xl', className)}>
+      {kicker && <Kicker tone={tone}>{kicker}</Kicker>}
+      <h2
+        className={clsx(
+          'type-display text-[clamp(2.75rem,5vw,4.25rem)] text-balance',
+          kicker && 'mt-5',
+        )}
+      >
+        {title}
+      </h2>
       {children && (
         <div
           className={clsx(
-            'max-w-[40ch] space-y-5 text-[1.1875rem]/[1.6]',
+            'mt-7 max-w-[50ch] space-y-5 text-[1.1875rem]/[1.65] text-pretty',
             tone === 'dark' ? 'text-[#f1dfc6]' : 'text-warm-muted',
           )}
         >
