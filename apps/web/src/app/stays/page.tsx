@@ -122,7 +122,7 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
         }}
       />
 
-      <Band tone="cream">
+      <Band>
         <Container>
           <FadeIn>
             <Suspense fallback={<div className="h-[200px]" />}>

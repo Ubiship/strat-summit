@@ -69,7 +69,7 @@ export default function Contact() {
         </p>
       </PageHero>
 
-      <Band tone="apricot">
+      <Band>
         <Container className="grid items-start gap-4.5 split:grid-cols-[1.2fr_0.8fr]">
           <ContactForm />
           <ContactDetails />

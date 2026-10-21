@@ -64,7 +64,7 @@ export function PropertyFilters() {
       'rounded-full px-4 py-2.5 text-sm font-semibold transition',
       active
         ? 'bg-forest-warm text-warm-cream'
-        : 'bg-sand text-warm-ink hover:bg-sun',
+        : 'bg-sand text-warm-ink hover:bg-forest-warm/10',
     )
 
   return (

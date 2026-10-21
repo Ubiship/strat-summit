@@ -142,7 +142,7 @@ export default function MountWashingtonHub() {
       </PageHero>
 
       {/* Categories Section */}
-      <Band tone="sand">
+      <Band>
         <Container>
           <SectionHead kicker="Local guides" title="Plan your visit." />
 
@@ -177,7 +177,7 @@ export default function MountWashingtonHub() {
       </Band>
 
       {/* CTA Section */}
-      <Band tone="apricot" last>
+      <Band last>
         <Container>
           <FadeIn className="mx-auto max-w-3xl text-center">
             <h2 className="type-display text-[clamp(3.25rem,5vw,4.75rem)] text-warm-ink">
@@ -191,7 +191,7 @@ export default function MountWashingtonHub() {
               <Button href="/stays" tone="forest" size="lg" arrow>
                 Browse Properties
               </Button>
-              <Button href="/contact" tone="cream" size="lg">
+              <Button href="/contact" tone="outline" size="lg">
                 Contact Us
               </Button>
             </div>

@@ -78,7 +78,7 @@ const benefits = [
 
 export function WhyBookDirect() {
   return (
-    <Band tone="cream">
+    <Band>
       <Container>
         <SectionHead kicker="Why book direct" title="Book direct. Feel right at home.">
           <p>

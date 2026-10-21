@@ -33,7 +33,7 @@ export default async function BlogArticleWrapper({
           </p>
         </PageHero>
 
-        <Band tone="cream">
+        <Band>
           <Container>
             <FadeIn>
               <MDXComponents.wrapper>{children}</MDXComponents.wrapper>

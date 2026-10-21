@@ -46,7 +46,7 @@ function TextInput({
       >
         {label}
         {required ? (
-          <span className="text-ember-deep" aria-hidden="true">
+          <span className="text-forest-warm" aria-hidden="true">
             {' '}
             *
           </span>
@@ -82,7 +82,7 @@ function TextArea({
       >
         {label}
         {required ? (
-          <span className="text-ember-deep" aria-hidden="true">
+          <span className="text-forest-warm" aria-hidden="true">
             {' '}
             *
           </span>

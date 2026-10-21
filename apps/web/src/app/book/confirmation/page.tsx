@@ -26,7 +26,7 @@ export default async function BookingConfirmation({
         <p>We're excited to host you. Your confirmation details have been sent to your email.</p>
       </PageHero>
 
-      <Band tone="apricot">
+      <Band>
         <Container className="grid gap-8 split:grid-cols-2 split:gap-12">
           <FadeIn>
             <div className="rounded-[2rem] bg-warm-cream p-8 split:p-10">
@@ -101,7 +101,7 @@ export default async function BookingConfirmation({
                 </div>
 
                 <div className="flex flex-col gap-3">
-                  <Button href="/contact" tone="sun" size="sm">
+                  <Button href="/contact" size="sm">
                     Contact us
                   </Button>
                 </div>
@@ -111,7 +111,7 @@ export default async function BookingConfirmation({
         </Container>
       </Band>
 
-      <Band tone="cream">
+      <Band>
         <Container className="text-center">
           <FadeIn className="mx-auto max-w-[50ch]">
             <h2 className="text-2xl font-bold text-warm-ink">Explore more properties</h2>
@@ -122,7 +122,7 @@ export default async function BookingConfirmation({
               <Button href="/stays/" tone="forest">
                 Browse properties
               </Button>
-              <Button href="/" tone="cream" className="text-warm-ink">
+              <Button href="/" tone="outline">
                 Back to home
               </Button>
             </div>

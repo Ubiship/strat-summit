@@ -118,7 +118,7 @@ export default function WhyBookDirect() {
         </p>
       </PageHero>
 
-      <Band tone="cream">
+      <Band>
         <Container>
           <SectionHead kicker="Benefits" title="What you get when you book direct">
             <p>
@@ -150,7 +150,7 @@ export default function WhyBookDirect() {
         </Container>
       </Band>
 
-      <Band tone="sand">
+      <Band>
         <Container>
           <SectionHead kicker="Security" title="Safe and secure booking">
             <p>
@@ -177,10 +177,9 @@ export default function WhyBookDirect() {
         </Container>
       </Band>
 
-      <Band tone="forest">
+      <Band>
         <Container>
           <SectionHead
-            tone="dark"
             kicker="Frequently asked questions"
             title="Common questions about booking direct"
           >
@@ -188,7 +187,7 @@ export default function WhyBookDirect() {
               Still have questions? We are here to help. Reach out anytime at{' '}
               <a
                 href={`mailto:${site.contactEmail}`}
-                className="font-bold underline decoration-2 underline-offset-2"
+                className="font-bold text-forest-warm underline decoration-2 underline-offset-2"
               >
                 {site.contactEmail}
               </a>
@@ -198,12 +197,12 @@ export default function WhyBookDirect() {
             {faqs.map((faq) => (
               <FadeIn
                 key={faq.question}
-                className="rounded-[2.75rem] bg-forest-deep/40 p-10"
+                className="rounded-[2.75rem] bg-sand p-10"
               >
-                <h3 className="type-display text-[1.875rem] text-warm-cream">
+                <h3 className="type-display text-[1.875rem] text-warm-ink">
                   {faq.question}
                 </h3>
-                <p className="mt-4 text-[1.0625rem]/[1.6] text-warm-cream/85">
+                <p className="mt-4 text-[1.0625rem]/[1.6] text-warm-muted">
                   {faq.answer}
                 </p>
               </FadeIn>
@@ -212,7 +211,7 @@ export default function WhyBookDirect() {
         </Container>
       </Band>
 
-      <Band tone="apricot" last>
+      <Band last>
         <Container className="text-center">
           <FadeIn>
             <h2 className="type-display text-[clamp(2.75rem,5vw,4.25rem)] text-warm-ink">

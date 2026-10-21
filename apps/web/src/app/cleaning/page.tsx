@@ -28,7 +28,7 @@ const services = [
     icon: iconTurnoverCleaning,
     description:
       'Complete property reset between guests — kitchen, bathrooms, bedrooms, and common areas cleaned to guest-ready standard.',
-    tone: 'bg-warm-cream text-warm-ink',
+    tone: 'bg-white text-warm-ink ring-1 ring-forest-warm/12',
   },
   {
     title: 'Deep cleaning',
@@ -42,14 +42,14 @@ const services = [
     icon: iconLinenService,
     description:
       'Fresh bed linens and towels for every stay — washed, pressed, and restocked so you never have to think about laundry logistics.',
-    tone: 'bg-sun text-warm-ink',
+    tone: 'bg-sand text-warm-ink',
   },
   {
     title: 'Restocking',
     icon: iconRestocking,
     description:
       'Supplies replenished before each arrival — coffee, paper products, cleaning essentials, and amenities tailored to your property.',
-    tone: 'bg-warm-cream text-warm-ink',
+    tone: 'bg-white text-warm-ink ring-1 ring-forest-warm/12',
   },
 ]
 
@@ -89,7 +89,7 @@ export default function Cleaning() {
         </p>
       </PageHero>
 
-      <Band tone="cream">
+      <Band>
         <Container>
           <SectionHead kicker="Services" title="What we offer">
             <p>
@@ -120,7 +120,7 @@ export default function Cleaning() {
         </Container>
       </Band>
 
-      <Band tone="sand">
+      <Band>
         <Container>
           <SectionHead kicker="How it works" title="Three steps to guest-ready">
             <p>
@@ -143,7 +143,7 @@ export default function Cleaning() {
                   <FadeIn className="flex gap-6 split:flex-col split:items-center split:text-center">
                     <NumberBadge
                       value={index + 1}
-                      tone="ink"
+                      tone="forest"
                       size="lg"
                       className="relative"
                     />
