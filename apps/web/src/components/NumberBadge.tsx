@@ -1,9 +1,8 @@
 import clsx from 'clsx'
 
 const tones = {
-  cream: 'bg-warm-cream text-warm-ink',
-  ink: 'bg-warm-ink text-warm-cream',
-  sun: 'bg-sun text-warm-ink',
+  light: 'bg-sand text-forest-warm',
+  forest: 'bg-forest-warm text-white',
 }
 
 const sizes = {
@@ -13,7 +12,7 @@ const sizes = {
 
 export function NumberBadge({
   value,
-  tone = 'cream',
+  tone = 'light',
   size = 'md',
   className,
 }: {

@@ -30,12 +30,12 @@ export default async function CaseStudyLayout({
           <p>{caseStudy.description}</p>
         </PageHero>
 
-        <Band tone="cream">
+        <Band>
           <Container>
             <FadeIn>
               <dl className="grid gap-3 split:grid-cols-3">
                 <div className="rounded-[2rem] bg-sand px-6 py-4">
-                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                  <dt className="text-sm font-bold tracking-[0.08em] text-forest-warm uppercase">
                     Client
                   </dt>
                   <dd className="mt-1 text-lg font-semibold">
@@ -43,7 +43,7 @@ export default async function CaseStudyLayout({
                   </dd>
                 </div>
                 <div className="rounded-[2rem] bg-sand px-6 py-4">
-                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                  <dt className="text-sm font-bold tracking-[0.08em] text-forest-warm uppercase">
                     Year
                   </dt>
                   <dd className="mt-1 text-lg font-semibold">
@@ -51,7 +51,7 @@ export default async function CaseStudyLayout({
                   </dd>
                 </div>
                 <div className="rounded-[2rem] bg-sand px-6 py-4">
-                  <dt className="text-sm font-bold tracking-[0.08em] text-ember-deep uppercase">
+                  <dt className="text-sm font-bold tracking-[0.08em] text-forest-warm uppercase">
                     Service
                   </dt>
                   <dd className="mt-1 text-lg font-semibold">

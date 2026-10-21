@@ -16,7 +16,7 @@ export async function PropertyShowcase() {
   }
 
   return (
-    <Band tone="white">
+    <Band>
       <Container>
         <SectionHead
           kicker="Our properties"

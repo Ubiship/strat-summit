@@ -27,7 +27,7 @@ const navigation = [
 
 export function Footer() {
   return (
-    <Band tone="cream" as="footer" last>
+    <Band as="footer" last>
       <Container>
         <div className="grid gap-12 split:grid-cols-[1.5fr_repeat(2,1fr)] split:gap-16">
           <Link href="/" className="self-start rounded-full">
@@ -35,7 +35,7 @@ export function Footer() {
           </Link>
           {navigation.map((section) => (
             <nav key={section.title} aria-label={section.title}>
-              <h2 className="text-sm font-bold tracking-[0.12em] text-ember-deep uppercase">
+              <h2 className="text-sm font-bold tracking-[0.12em] text-forest-warm uppercase">
                 {section.title}
               </h2>
               <ul role="list" className="mt-5 space-y-3.5">
@@ -43,7 +43,7 @@ export function Footer() {
                   <li key={link.title}>
                     <Link
                       href={link.href}
-                      className="text-[1.0625rem] font-semibold transition hover:text-ember-deep"
+                      className="text-[1.0625rem] font-semibold transition hover:text-forest-warm"
                     >
                       {link.title}
                     </Link>

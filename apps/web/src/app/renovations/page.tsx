@@ -65,7 +65,7 @@ export default function Renovations() {
         </p>
       </PageHero>
 
-      <Band tone="cream">
+      <Band>
         <Container>
           <FadeIn className="text-center">
             <Button href="/contact" tone="forest" size="lg" arrow>
@@ -76,7 +76,7 @@ export default function Renovations() {
       </Band>
 
       {/* 2. JOEL'S APPROACH */}
-      <Band tone="sand">
+      <Band>
         <Container>
           <FadeIn className="mx-auto max-w-3xl">
             <h2 className="type-display text-center text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
@@ -114,12 +114,12 @@ export default function Renovations() {
       </Band>
 
       {/* 3. NUMBERED PROCESS */}
-      <Band tone="cream">
+      <Band>
         <Container>
           <FadeInStagger className="relative">
             <FadeIn
               aria-hidden="true"
-              className="absolute top-[calc(2rem-0.125rem)] right-[calc((100%-6rem)/8)] left-[calc((100%-6rem)/8)] hidden h-1 rounded-full bg-sun/40 split:block"
+              className="absolute top-[calc(2rem-0.125rem)] right-[calc((100%-6rem)/8)] left-[calc((100%-6rem)/8)] hidden h-1 rounded-full bg-forest-warm/15 split:block"
             />
             <ol
               role="list"
@@ -130,7 +130,6 @@ export default function Renovations() {
                   <FadeIn className="flex gap-6 split:flex-col split:items-center split:text-center">
                     <NumberBadge
                       value={index + 1}
-                      tone="sun"
                       size="lg"
                       className="relative"
                     />
@@ -149,7 +148,7 @@ export default function Renovations() {
       </Band>
 
       {/* 4. JOEL'S QUOTE */}
-      <Band tone="apricot">
+      <Band>
         <Container className="grid items-center gap-12 split:grid-cols-[0.8fr_1.2fr] split:gap-20">
           <FadeIn className="relative aspect-4/5 overflow-hidden rounded-[2.75rem]">
             <Image
@@ -179,7 +178,7 @@ export default function Renovations() {
       </Band>
 
       {/* 5. ENQUIRY SECTION */}
-      <Band tone="cream" last>
+      <Band last>
         <Container>
           <FadeIn className="mx-auto max-w-3xl text-center">
             <h2 className="type-display text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">

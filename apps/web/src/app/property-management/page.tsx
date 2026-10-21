@@ -137,7 +137,7 @@ export default function PropertyManagement() {
         </p>
       </PageHero>
 
-      <Band tone="cream">
+      <Band>
         <Container>
           <FadeIn className="text-center">
             <Button href="/contact" tone="forest" size="lg" arrow>
@@ -148,7 +148,7 @@ export default function PropertyManagement() {
       </Band>
 
       {/* 2. WHAT'S INCLUDED */}
-      <Band tone="sand">
+      <Band>
         <Container>
           <FadeIn>
             <p className="mx-auto max-w-3xl text-center text-[1.25rem]/[1.6] text-warm-ink/80">
@@ -179,7 +179,7 @@ export default function PropertyManagement() {
       </Band>
 
       {/* 3. ONE LOCAL TEAM */}
-      <Band tone="cream">
+      <Band>
         <Container>
           <FadeIn className="mx-auto max-w-3xl">
             <h2 className="type-display text-center text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
@@ -207,7 +207,7 @@ export default function PropertyManagement() {
       </Band>
 
       {/* 4. FINAL CONTACT SECTION */}
-      <Band tone="apricot" last>
+      <Band last>
         <Container>
           <FadeIn className="mx-auto max-w-3xl text-center">
             <h2 className="type-display text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">

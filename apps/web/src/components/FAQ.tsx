@@ -140,7 +140,7 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <Band tone="white">
+    <Band>
       <Container>
         <SectionHead kicker="FAQs" title="Frequently asked questions.">
           <p>A few helpful details before you book your mountain stay.</p>

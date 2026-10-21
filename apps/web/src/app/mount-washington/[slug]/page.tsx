@@ -104,29 +104,29 @@ export default async function GuidePage(props: Props) {
   return (
     <RootLayout>
       {/* Header */}
-      <Band tone="forest">
+      <Band>
         <Container>
           <FadeIn>
             <div className="mx-auto max-w-3xl">
-              <div className="flex flex-wrap items-center gap-3 text-[0.9375rem] font-bold text-warm-cream/80">
+              <div className="flex flex-wrap items-center gap-3 text-[0.9375rem] font-bold text-warm-muted">
                 <Link
                   href="/mount-washington"
-                  className="transition hover:text-warm-cream"
+                  className="transition hover:text-forest-warm"
                 >
                   Mt Washington Info
                 </Link>
                 <span aria-hidden="true">/</span>
                 <Link
                   href={`/mount-washington/category/${guide.category}`}
-                  className="transition hover:text-warm-cream"
+                  className="transition hover:text-forest-warm"
                 >
                   {categoryMeta.title}
                 </Link>
               </div>
-              <h1 className="mt-6 type-display text-[clamp(3rem,7vw,5rem)] text-warm-cream">
+              <h1 className="mt-6 type-display text-[clamp(3rem,7vw,5rem)] text-warm-ink">
                 {guide.title}
               </h1>
-              <div className="mt-6 flex flex-wrap items-center gap-4 text-[0.9375rem] text-[#f1dfc6]">
+              <div className="mt-6 flex flex-wrap items-center gap-4 text-[0.9375rem] text-warm-muted">
                 {guide.publishedAt && (
                   <>
                     <time dateTime={guide.publishedAt}>
@@ -143,7 +143,7 @@ export default async function GuidePage(props: Props) {
       </Band>
 
       {/* Content */}
-      <Band tone="sand">
+      <Band>
         <Container>
           <FadeIn>
             <div className="mx-auto max-w-3xl">
@@ -164,7 +164,7 @@ export default async function GuidePage(props: Props) {
       </Band>
 
       {/* CTA Section */}
-      <Band tone="apricot" last>
+      <Band last>
         <Container>
           <FadeIn className="mx-auto max-w-3xl text-center">
             <h2 className="type-display text-[clamp(2.5rem,5vw,4rem)] text-warm-ink">
@@ -179,7 +179,7 @@ export default async function GuidePage(props: Props) {
               <Button href="/stays" tone="forest" size="lg" arrow>
                 Browse Properties
               </Button>
-              <Button href="/mount-washington" tone="cream" size="lg">
+              <Button href="/mount-washington" tone="outline" size="lg">
                 More Guides
               </Button>
             </div>

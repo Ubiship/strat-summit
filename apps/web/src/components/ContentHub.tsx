@@ -87,7 +87,7 @@ const contentCategories = [
 
 export function ContentHub() {
   return (
-    <Band tone="cream">
+    <Band>
       <Container>
         <SectionHead
           kicker="Explore Mount Washington"

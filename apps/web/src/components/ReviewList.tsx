@@ -91,7 +91,7 @@ export function ReviewList({ reviews }: ReviewListProps) {
         <div className="mt-6 text-center">
           <Button
             onClick={() => setShowAll(!showAll)}
-            tone="cream"
+            tone="outline"
             size="sm"
           >
             {showAll ? 'Show less' : `Show all ${reviews.length} reviews`}

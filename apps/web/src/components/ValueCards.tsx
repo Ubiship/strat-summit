@@ -2,7 +2,7 @@ import { type StaticImageData } from 'next/image'
 import { CardIcon } from '@/components/CardIcon'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 
-// Styled for forest bands: translucent cream cards, cream headings.
+// Pale green cards on white bands.
 export function ValueCards({
   items,
 }: {
@@ -13,16 +13,18 @@ export function ValueCards({
       {items.map((item) => (
         <FadeIn
           key={item.title}
-          className="flex min-h-[16rem] flex-col rounded-[2.5rem] bg-warm-cream/8 p-8"
+          className="flex min-h-[16rem] flex-col rounded-[2.5rem] bg-sand p-8"
         >
           {item.icon && (
             <CardIcon
               src={item.icon}
-              className="mb-10 drop-shadow-[0_12px_20px_rgb(22_56_38/0.45)]"
+              className="mb-10 drop-shadow-[0_12px_20px_rgb(22_56_38/0.15)]"
             />
           )}
-          <h3 className="type-display text-[2.125rem]">{item.title}</h3>
-          <p className="mt-2.5 text-base/[1.5] text-[#f1dfc6]">
+          <h3 className="type-display text-[2.125rem] text-warm-ink">
+            {item.title}
+          </h3>
+          <p className="mt-2.5 text-base/[1.5] text-warm-muted">
             {item.description}
           </p>
         </FadeIn>

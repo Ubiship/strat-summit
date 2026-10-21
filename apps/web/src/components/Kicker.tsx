@@ -34,7 +34,7 @@ export function Kicker({
     <Component
       className={clsx(
         'flex items-center gap-3 text-sm font-bold tracking-[0.12em] uppercase',
-        tone === 'dark' ? 'text-apricot' : 'text-ember-deep',
+        tone === 'dark' ? 'text-apricot' : 'text-forest-warm',
         className,
       )}
     >

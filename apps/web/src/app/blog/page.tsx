@@ -30,7 +30,7 @@ export default async function Blog() {
         </p>
       </PageHero>
 
-      <Band tone="sand">
+      <Band>
         <Container>
           <FadeInStagger className="grid gap-4.5">
             {articles.map((article) => (
@@ -39,7 +39,7 @@ export default async function Blog() {
                   <h2 className="type-display text-[clamp(2rem,3.5vw,3rem)]">
                     <Link
                       href={article.href}
-                      className="transition hover:text-ember-deep"
+                      className="transition hover:text-forest-warm"
                     >
                       {article.title}
                     </Link>

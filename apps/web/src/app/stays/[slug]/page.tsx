@@ -109,7 +109,7 @@ export default async function PropertyDetailPage(props: PageProps) {
 
   return (
     <RootLayout>
-      <Band tone="white">
+      <Band>
         <Container className="pb-8 split:pb-16">
           <FadeIn>
             <PhotoGallery photos={property.photos} propertyName={property.name} />

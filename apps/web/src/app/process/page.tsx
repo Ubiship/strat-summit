@@ -46,7 +46,7 @@ function Section({
         />
       </FadeIn>
       <FadeIn>
-        <NumberBadge value={index} tone="sun" />
+        <NumberBadge value={index} />
         <h2 className="mt-5 type-display text-[clamp(2.75rem,5vw,4.5rem)]">
           {title}
         </h2>
@@ -218,10 +218,9 @@ const values = [
 
 function Values() {
   return (
-    <Band tone="forest">
+    <Band>
       <Container>
         <SectionHead
-          tone="dark"
           kicker="Our values"
           title="Balancing reliability and innovation"
         >
@@ -255,7 +254,7 @@ export default function Process() {
         </p>
       </PageHero>
 
-      <Band tone="cream">
+      <Band>
         <Container className="space-y-24 split:space-y-32">
           <Discover />
           <Build />

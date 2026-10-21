@@ -12,7 +12,7 @@ export function Testimonial({
   client: { logo?: ImageProps['src'] | null; name: string }
 }) {
   return (
-    <Band tone="apricot">
+    <Band>
       <Container>
         <FadeIn>
           <figure className="mx-auto max-w-4xl">

@@ -70,10 +70,12 @@
   --font-display--font-variation-settings: normal;
   --font-display-length: 2;
 
-  /* Warm palette for the public site (additive; apps/admin does not use these) */
-  --color-warm-cream: #fdf5e8;
-  --color-sand: #f7e3c4;
-  --color-apricot: #f3c98f;
+  /* Public site palette (additive; apps/admin does not use these).
+     Predominantly white: cream surfaces are white, sand and apricot are pale
+     greens, and sun is kept as a sparing accent. */
+  --color-warm-cream: #ffffff;
+  --color-sand: #edf3ef;
+  --color-apricot: #cfe1d5;
   --color-sun: #f2a33a;
   --color-sun-light: #f5b458;
   --color-ember: #d9772f;

@@ -28,7 +28,7 @@ function CaseStudies({
   caseStudies: Array<MDXEntry<CaseStudy>>
 }) {
   return (
-    <Band tone="cream">
+    <Band>
       <Container>
         <FadeIn>
           <h2 className="type-display text-[clamp(3.25rem,6vw,5.5rem)]">
@@ -60,7 +60,7 @@ function CaseStudies({
                   <p className="type-display text-[clamp(2.25rem,3.6vw,3.25rem)]">
                     <Link
                       href={caseStudy.href}
-                      className="transition hover:text-ember-deep"
+                      className="transition hover:text-forest-warm"
                     >
                       {caseStudy.title}
                     </Link>
@@ -109,7 +109,7 @@ const clients = [
 
 function Clients() {
   return (
-    <Band tone="sand">
+    <Band>
       <Container>
         <FadeIn>
           <h2 className="type-display text-[clamp(3.25rem,6vw,5.5rem)]">

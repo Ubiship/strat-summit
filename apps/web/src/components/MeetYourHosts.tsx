@@ -6,7 +6,7 @@ import { FadeIn } from '@/components/FadeIn'
 
 export function MeetYourHosts() {
   return (
-    <Band tone="white">
+    <Band>
       <Container>
         <div className="grid items-center gap-12 split:grid-cols-2 split:gap-20">
           {/* Photo */}

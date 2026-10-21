@@ -40,7 +40,7 @@ function PageLink({ page }: { page: Page }) {
       </p>
       <Link
         href={page.href}
-        className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-sun px-4.5 py-3 text-[0.9375rem] font-bold text-warm-ink transition hover:bg-sun-light focus-visible:-outline-offset-4"
+        className="mt-6 inline-flex items-center gap-2.5 rounded-full bg-forest-warm px-4.5 py-3 text-[0.9375rem] font-bold text-white transition hover:bg-forest-deep focus-visible:-outline-offset-4"
         aria-label={`Read more: ${page.title}`}
       >
         Read more
@@ -59,7 +59,7 @@ export function PageLinks({
   pages: Array<Page>
 }) {
   return (
-    <Band tone="sand">
+    <Band>
       <Container>
         <SectionHead title={title} />
         <FadeInStagger className="mt-12 grid gap-4.5 split:grid-cols-2">

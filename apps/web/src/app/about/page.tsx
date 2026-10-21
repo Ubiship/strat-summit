@@ -81,7 +81,7 @@ export default function About() {
         </p>
       </PageHero>
 
-      <Band tone="sand">
+      <Band>
         <Container>
           <FadeInStagger>
             <dl className="grid gap-16 split:grid-cols-3">
@@ -93,7 +93,7 @@ export default function About() {
                   <dt className="mt-6 text-lg font-semibold text-warm-muted">
                     {stat.label}
                   </dt>
-                  <dd className="grid size-44 place-items-center rounded-full bg-sun type-display text-[5.75rem] text-warm-ink shadow-[0_24px_50px_rgb(217_119_47/0.3)] split:size-52 split:text-[6.75rem]">
+                  <dd className="grid size-44 place-items-center rounded-full bg-sand type-display text-[5.75rem] text-forest-warm split:size-52 split:text-[6.75rem]">
                     {stat.value}
                   </dd>
                 </FadeIn>
@@ -103,10 +103,9 @@ export default function About() {
         </Container>
       </Band>
 
-      <Band tone="forest">
+      <Band>
         <Container>
           <SectionHead
-            tone="dark"
             kicker="Our values"
             title="Professional, approachable, and Pacific Northwest at heart."
           >
@@ -119,7 +118,7 @@ export default function About() {
         </Container>
       </Band>
 
-      <Band tone="cream">
+      <Band>
         <Container>
           <FadeInStagger>
             <FadeIn>

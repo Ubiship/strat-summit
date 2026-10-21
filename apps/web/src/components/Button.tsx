@@ -7,8 +7,8 @@ const tones = {
   sun: 'bg-sun text-warm-ink hover:bg-sun-light focus-visible:-outline-offset-4',
   forest:
     'bg-forest-warm text-warm-cream hover:bg-forest-deep focus-visible:-outline-offset-4',
-  cream:
-    'bg-warm-cream text-warm-ink hover:bg-white focus-visible:-outline-offset-4',
+  outline:
+    'text-forest-warm ring-2 ring-forest-warm ring-inset hover:bg-forest-warm/5',
   glass:
     'bg-warm-cream/15 text-warm-cream ring-2 ring-warm-cream/60 ring-inset hover:bg-warm-cream/25',
 }
@@ -31,7 +31,7 @@ type ButtonProps = {
 )
 
 export function Button({
-  tone = 'sun',
+  tone = 'forest',
   size = 'md',
   arrow = false,
   className,

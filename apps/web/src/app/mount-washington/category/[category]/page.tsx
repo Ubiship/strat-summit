@@ -58,23 +58,23 @@ export default async function CategoryPage(props: Props) {
   return (
     <RootLayout>
       {/* Hero Section */}
-      <Band tone="forest">
+      <Band>
         <Container>
           <FadeIn>
             <div className="mx-auto max-w-3xl">
               <Link
                 href="/mount-washington"
-                className="inline-flex items-center gap-2 text-[0.9375rem] font-bold text-warm-cream/80 transition hover:text-warm-cream"
+                className="inline-flex items-center gap-2 text-[0.9375rem] font-bold text-warm-muted transition hover:text-forest-warm"
               >
                 <span aria-hidden="true" className="text-base">
                   ←
                 </span>
                 Back to all guides
               </Link>
-              <h1 className="mt-6 type-display text-[clamp(3.5rem,8vw,6rem)] text-warm-cream">
+              <h1 className="mt-6 type-display text-[clamp(3.5rem,8vw,6rem)] text-warm-ink">
                 {meta.title}
               </h1>
-              <p className="mt-6 text-[1.25rem]/[1.6] text-[#f1dfc6]">
+              <p className="mt-6 text-[1.25rem]/[1.6] text-warm-muted">
                 {meta.description}
               </p>
             </div>
@@ -83,7 +83,7 @@ export default async function CategoryPage(props: Props) {
       </Band>
 
       {/* Guides List */}
-      <Band tone="sand">
+      <Band>
         <Container>
           {guides.length === 0 ? (
             <FadeIn className="py-12 text-center">
@@ -138,7 +138,7 @@ export default async function CategoryPage(props: Props) {
       </Band>
 
       {/* CTA Section */}
-      <Band tone="apricot" last>
+      <Band last>
         <Container>
           <FadeIn className="mx-auto max-w-3xl text-center">
             <h2 className="type-display text-[clamp(2.5rem,5vw,4rem)] text-warm-ink">

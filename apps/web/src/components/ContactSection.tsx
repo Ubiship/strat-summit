@@ -7,7 +7,7 @@ import { Offices } from '@/components/Offices'
 
 export function ContactSection() {
   return (
-    <Band tone="sun">
+    <Band>
       <Container className="grid gap-10 split:grid-cols-[1.3fr_0.7fr] split:items-end">
         <FadeIn>
           <h2 className="max-w-[12ch] type-display text-[clamp(3.25rem,6vw,5.5rem)] text-balance">

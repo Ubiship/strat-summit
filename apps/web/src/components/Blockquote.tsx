@@ -59,7 +59,7 @@ function BlockquoteWithoutImage({
         <blockquote className="text-warm-muted *:relative *:first:before:absolute *:first:before:right-full *:first:before:content-['“'_/_''] *:last:after:content-['”'_/_'']">
           {typeof children === 'string' ? <p>{children}</p> : children}
         </blockquote>
-        <figcaption className="mt-5 font-bold text-ember-deep">
+        <figcaption className="mt-5 font-bold text-forest-warm">
           {author.name}, {author.role}
         </figcaption>
       </figure>
