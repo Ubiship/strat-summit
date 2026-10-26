@@ -98,19 +98,8 @@ export default function Renovations() {
             </div>
           </FadeIn>
 
-          {/* Placeholder for project photos */}
-          <FadeInStagger className="mt-16 grid gap-6 split:grid-cols-3">
-            {[1, 2, 3].map((i) => (
-              <FadeIn
-                key={i}
-                className="aspect-[4/3] rounded-[2.5rem] bg-sand"
-              >
-                <div className="flex h-full items-center justify-center text-warm-ink/30">
-                  <span className="text-lg">Project photo {i}</span>
-                </div>
-              </FadeIn>
-            ))}
-          </FadeInStagger>
+          {/* A three-up grid of project photos goes here once the client
+              supplies them; empty labelled boxes read as unfinished. */}
         </Container>
       </Band>
 

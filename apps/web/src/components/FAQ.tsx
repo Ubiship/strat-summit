@@ -141,25 +141,14 @@ export function FAQ() {
 
   return (
     <Band>
-      <Container className="grid gap-14 split:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] split:gap-20">
-        <div className="split:sticky split:top-32 split:self-start">
-          <SectionHead kicker="FAQs" title="Frequently asked questions.">
-            <p>A few helpful details before you book your mountain stay.</p>
-          </SectionHead>
+      {/* Phones read heading, questions, then the contact prompt; wider
+          screens put the prompt under the heading beside the questions. */}
+      <Container className="grid gap-x-20 gap-y-12 split:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] split:grid-rows-[auto_1fr]">
+        <SectionHead kicker="FAQs" title="Frequently asked questions.">
+          <p>A few helpful details before you book your mountain stay.</p>
+        </SectionHead>
 
-          <FadeIn className="mt-10">
-            <p className="text-[1.0625rem] text-warm-muted">
-              Still have a question? We&apos;re happy to help.
-            </p>
-            <div className="mt-6">
-              <Button href="/contact" tone="outline" arrow>
-                Contact us
-              </Button>
-            </div>
-          </FadeIn>
-        </div>
-
-        <FadeIn>
+        <FadeIn className="split:col-start-2 split:row-span-2 split:row-start-1">
           <div className="border-t border-warm-ink/10">
             {faqs.map((faq, index) => (
               <AccordionItem
@@ -172,6 +161,17 @@ export function FAQ() {
                 }
               />
             ))}
+          </div>
+        </FadeIn>
+
+        <FadeIn className="split:col-start-1 split:row-start-2">
+          <p className="text-[1.0625rem] text-warm-muted">
+            Still have a question? We&apos;re happy to help.
+          </p>
+          <div className="mt-6">
+            <Button href="/contact" tone="outline" arrow>
+              Contact us
+            </Button>
           </div>
         </FadeIn>
       </Container>
