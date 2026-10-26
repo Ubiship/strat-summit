@@ -8,7 +8,7 @@ export function LogoMark({ className }: { className?: string }) {
   return (
     <span
       className={clsx(
-        'relative block size-13 flex-none overflow-hidden rounded-full bg-white shadow-[0_8px_20px_rgb(42_24_10/0.08)]',
+        'relative block size-13 flex-none overflow-hidden rounded-full bg-white shadow-[0_8px_20px_rgb(22_56_38/0.08)]',
         className,
       )}
     >

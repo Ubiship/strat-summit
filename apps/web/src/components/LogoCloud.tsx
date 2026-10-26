@@ -181,7 +181,7 @@ function LogoMark({ item }: { item: LogoTile }) {
     )
   }
 
-  const darkSrc = `https://cdn.simpleicons.org/${item.slug}/fdf5e8`
+  const darkSrc = `https://cdn.simpleicons.org/${item.slug}/ffffff`
 
   return (
     <>

@@ -12,7 +12,7 @@ export function HeroSearch() {
         fill
         priority
         sizes="100vw"
-        className="-z-20 object-cover photo-warm"
+        className="-z-20 object-cover photo-grade"
       />
       <div
         aria-hidden="true"

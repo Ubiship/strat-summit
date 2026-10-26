@@ -130,7 +130,7 @@ export default function WhyBookDirect() {
             {benefits.map((benefit) => (
               <FadeIn
                 key={benefit.title}
-                className="flex flex-col rounded-[2.75rem] bg-white p-10 shadow-[0_8px_24px_rgb(42_24_10/0.06)]"
+                className="flex flex-col rounded-[2.75rem] bg-white p-10 shadow-[0_8px_24px_rgb(22_56_38/0.06)]"
               >
                 <Image
                   src={benefit.icon}

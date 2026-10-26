@@ -72,7 +72,8 @@
 
   /* Public site palette (additive; apps/admin does not use these).
      Predominantly white: cream surfaces are white, sand and apricot are pale
-     greens, and sun is kept as a sparing accent. */
+     greens, and sun is kept as a sparing accent. Ink and muted are
+     green-tinted neutrals (names kept from the original warm palette). */
   --color-warm-cream: #ffffff;
   --color-sand: #edf3ef;
   --color-apricot: #cfe1d5;
@@ -82,6 +83,6 @@
   --color-ember-deep: #9a4a16;
   --color-forest-warm: #1f4a35;
   --color-forest-deep: #163826;
-  --color-warm-ink: #2a2118;
-  --color-warm-muted: #6a5646;
+  --color-warm-ink: #16231c;
+  --color-warm-muted: #55645b;
 }

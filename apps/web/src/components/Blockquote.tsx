@@ -31,7 +31,7 @@ function BlockquoteWithImage({
           alt=""
           {...image}
           sizes="(min-width: 1024px) 17.625rem, (min-width: 768px) 16rem, (min-width: 640px) 40vw, 3rem"
-          className="h-12 w-12 object-cover photo-warm sm:aspect-7/9 sm:h-auto sm:w-full"
+          className="h-12 w-12 object-cover photo-grade sm:aspect-7/9 sm:h-auto sm:w-full"
         />
       </div>
       <figcaption className="text-sm text-warm-ink sm:col-span-7 sm:row-start-3 sm:text-base">

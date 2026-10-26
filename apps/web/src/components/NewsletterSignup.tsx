@@ -17,7 +17,7 @@ export function NewsletterSignup() {
   )
 
   return (
-    <div className="rounded-[2.75rem] bg-apricot p-8 text-warm-ink shadow-[0_12px_32px_rgb(42_24_10/0.08)] split:p-12">
+    <div className="rounded-[2.75rem] bg-apricot p-8 text-warm-ink shadow-[0_12px_32px_rgb(22_56_38/0.08)] split:p-12">
       <div className="mx-auto max-w-[52rem] text-center">
         <h2 className="type-display text-[clamp(2.5rem,5vw,3.5rem)]">
           Get Mount Washington updates & exclusive offers

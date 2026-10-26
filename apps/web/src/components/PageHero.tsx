@@ -46,21 +46,20 @@ export function PageHero({
           fill
           preload
           sizes="100vw"
-          className="-z-20 object-cover photo-warm"
+          className="-z-20 object-cover photo-grade"
           style={{ objectPosition: image.position ?? 'center 42%' }}
         />
       ) : (
         <div aria-hidden="true" className="absolute inset-0 -z-20 hero-fill" />
       )}
       <div aria-hidden="true" className="absolute inset-0 -z-10 hero-shade" />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 hero-glow" />
 
       <Container className="mt-auto pt-40 pb-[calc(var(--band-radius)+4.5rem)]">
         <FadeIn>
           {kicker && <Kicker bubble>{kicker}</Kicker>}
           <h1
             className={clsx(
-              'type-display text-balance [text-shadow:0_4px_30px_rgb(42_24_10/0.25)]',
+              'type-display text-balance [text-shadow:0_4px_30px_rgb(22_56_38/0.25)]',
               kicker && 'mt-5.5',
               titleSizes[size],
             )}
@@ -70,7 +69,7 @@ export function PageHero({
           {(children || actions) && (
             <div className="mt-8 flex flex-col gap-8 split:flex-row split:items-end split:justify-between">
               {children && (
-                <div className="max-w-[44ch] space-y-5 text-[1.1875rem]/[1.5] text-[#fbeedd]">
+                <div className="max-w-[44ch] space-y-5 text-[1.1875rem]/[1.5] text-white/85">
                   {children}
                 </div>
               )}

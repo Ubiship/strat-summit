@@ -28,7 +28,7 @@ export function SearchBar() {
   const labelClasses = 'text-sm font-bold text-warm-ink/70'
 
   return (
-    <div className="overflow-hidden rounded-[2.75rem] bg-white p-6 shadow-[0_12px_32px_rgb(42_24_10/0.12)] sm:p-8">
+    <div className="overflow-hidden rounded-[2.75rem] bg-white p-6 shadow-[0_12px_32px_rgb(22_56_38/0.12)] sm:p-8">
       <div className="grid gap-4 sm:gap-5 split:grid-cols-[1fr_1fr_auto_auto]">
         <div className="min-w-0">
           <label htmlFor="check-in" className={labelClasses}>

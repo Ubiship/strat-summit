@@ -42,7 +42,7 @@ function Section({
           alt=""
           fill
           sizes="(min-width: 1200px) 34rem, (min-width: 900px) 50vw, 100vw"
-          className="object-cover photo-warm"
+          className="object-cover photo-grade"
         />
       </FadeIn>
       <FadeIn>

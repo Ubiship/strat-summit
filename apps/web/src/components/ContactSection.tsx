@@ -13,7 +13,7 @@ export function ContactSection() {
           <h2 className="max-w-[12ch] type-display text-[clamp(3.25rem,6vw,5.5rem)] text-balance">
             Ready to simplify property ownership?
           </h2>
-          <p className="mt-5 max-w-[38ch] text-[1.1875rem]/[1.5] text-[#4a2f14]">
+          <p className="mt-5 max-w-[38ch] text-[1.1875rem]/[1.5] text-warm-muted">
             Whether you&apos;re looking for property management, local property
             support, or renovation services, we&apos;d love to learn more about
             your property and how we can help.

@@ -31,7 +31,7 @@ function ShimmerChip({ children }: { children: React.ReactNode }) {
       className="mx-1 inline-block rounded-full bg-white/20 px-3 py-1 font-bold"
       style={{
         backgroundImage:
-          'linear-gradient(100deg, #fdf5e8 40%, #f2a33a 50%, #fdf5e8 60%)',
+          'linear-gradient(100deg, #ffffff 40%, #f2a33a 50%, #ffffff 60%)',
         backgroundSize: '250% 100%',
         WebkitBackgroundClip: 'text',
         backgroundClip: 'text',
@@ -128,7 +128,7 @@ export function PageHeroWithMarquee({
         fill
         priority
         sizes="100vw"
-        className="-z-20 object-cover photo-warm"
+        className="-z-20 object-cover photo-grade"
       />
 
       {/* Overlay */}
