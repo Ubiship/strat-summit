@@ -2,6 +2,7 @@ import clsx from 'clsx'
 
 import { FadeIn } from '@/components/FadeIn'
 import { Kicker } from '@/components/Kicker'
+import { SansAmpersand } from '@/components/SansAmpersand'
 
 // stack: kicker, title and intro in one column.
 // split: title on the left, intro on the right from the split breakpoint.
@@ -46,7 +47,7 @@ export function SectionHead({
             kicker && 'mt-5',
           )}
         >
-          {title}
+          <SansAmpersand>{title}</SansAmpersand>
         </h2>
       </div>
       {children && (

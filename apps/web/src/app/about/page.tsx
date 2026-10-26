@@ -1,7 +1,8 @@
 import { type Metadata } from 'next'
-import Image from 'next/image'
+import clsx from 'clsx'
 
 import { Band } from '@/components/Band'
+import { cardClasses } from '@/components/Card'
 import { ContactSection } from '@/components/ContactSection'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
@@ -9,7 +10,6 @@ import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
 import { ValueCards } from '@/components/ValueCards'
-import imageMeeting from '@/images/meeting.jpg'
 import iconLocalAccountability from '@/images/values/icon-local-accountability.png'
 import iconReliability from '@/images/values/icon-reliability.png'
 import iconTransparency from '@/images/values/icon-transparency.png'
@@ -121,24 +121,27 @@ export default function About() {
       <Band>
         <Container>
           <FadeInStagger>
-            <FadeIn>
-              <h2 className="type-display text-[clamp(3.5rem,6vw,5.75rem)]">
-                Leadership
-              </h2>
-            </FadeIn>
+            <SectionHead title="Leadership" />
             <ul role="list" className="mt-14 grid gap-6 split:grid-cols-2">
               {founders.map((person) => (
                 <li key={person.name}>
-                  <FadeIn className="overflow-hidden rounded-[2.75rem] bg-sand">
-                    <Image
-                      src={imageMeeting}
-                      alt=""
-                      sizes="(min-width: 1200px) 36rem, (min-width: 900px) 50vw, 100vw"
-                      className="aspect-4/3 w-full object-cover photo-grade"
-                    />
-                    <div className="p-10">
-                      <h3 className="type-display text-[2.625rem]">{person.name}</h3>
-                      <p className="mt-3 text-[1.0625rem] text-warm-muted">
+                  <FadeIn
+                    className={clsx(
+                      cardClasses({ tone: 'tint' }),
+                      'flex items-center gap-7 p-8 split:p-10',
+                    )}
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="grid size-20 flex-none place-items-center rounded-full bg-white type-display text-[2.5rem] text-forest-warm ring-1 ring-forest-warm/12"
+                    >
+                      {person.name[0]}
+                    </span>
+                    <div>
+                      <h3 className="type-display text-[2.625rem]">
+                        {person.name}
+                      </h3>
+                      <p className="mt-2 text-[1.0625rem] text-warm-muted">
                         {person.role}
                       </p>
                     </div>
@@ -146,10 +149,6 @@ export default function About() {
                 </li>
               ))}
             </ul>
-            <p className="mt-10 text-sm text-warm-muted">
-              Replace placeholder photos with Joel and Amanda headshots when
-              available.
-            </p>
           </FadeInStagger>
         </Container>
       </Band>

@@ -58,16 +58,6 @@
   }
 }
 
-@utility hero-fill {
-  background:
-    radial-gradient(
-      60% 80% at 85% 0%,
-      rgb(255 255 255 / 0.12),
-      rgb(255 255 255 / 0) 70%
-    ),
-    linear-gradient(160deg, #2c6148 0%, #1f4a35 50%, #163826 100%);
-}
-
 @utility band-shade {
   background: linear-gradient(
     180deg,

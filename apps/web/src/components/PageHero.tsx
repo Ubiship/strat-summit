@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { Kicker } from '@/components/Kicker'
+import { SansAmpersand } from '@/components/SansAmpersand'
 
 const heights = {
   full: 'min-h-svh',
@@ -32,6 +33,41 @@ export function PageHero({
   actions?: React.ReactNode
   children?: React.ReactNode
 }) {
+  // Without a photo the hero is white with dark type, so pages never open
+  // on a large solid green area.
+  if (!image) {
+    return (
+      <section className="relative bg-white text-warm-ink">
+        <Container className="pt-40 pb-16 split:pt-48 split:pb-20">
+          <FadeIn>
+            {kicker && <Kicker>{kicker}</Kicker>}
+            <h1
+              className={clsx(
+                'type-display text-balance',
+                kicker && 'mt-5.5',
+                titleSizes[size],
+              )}
+            >
+              <SansAmpersand>{title}</SansAmpersand>
+            </h1>
+            {(children || actions) && (
+              <div className="mt-8 flex flex-col gap-8 split:flex-row split:items-end split:justify-between">
+                {children && (
+                  <div className="max-w-[52ch] space-y-5 text-[1.1875rem]/[1.6] text-warm-muted">
+                    {children}
+                  </div>
+                )}
+                {actions && (
+                  <div className="flex flex-wrap gap-3">{actions}</div>
+                )}
+              </div>
+            )}
+          </FadeIn>
+        </Container>
+      </section>
+    )
+  }
+
   return (
     <section
       className={clsx(
@@ -39,19 +75,15 @@ export function PageHero({
         heights[size],
       )}
     >
-      {image ? (
-        <Image
-          src={image.src}
-          alt={image.alt}
-          fill
-          preload
-          sizes="100vw"
-          className="-z-20 object-cover photo-grade"
-          style={{ objectPosition: image.position ?? 'center 42%' }}
-        />
-      ) : (
-        <div aria-hidden="true" className="absolute inset-0 -z-20 hero-fill" />
-      )}
+      <Image
+        src={image.src}
+        alt={image.alt}
+        fill
+        preload
+        sizes="100vw"
+        className="-z-20 object-cover photo-grade"
+        style={{ objectPosition: image.position ?? 'center 42%' }}
+      />
       <div aria-hidden="true" className="absolute inset-0 -z-10 hero-shade" />
 
       <Container className="mt-auto pt-40 pb-[calc(var(--band-radius)+4.5rem)]">
@@ -64,7 +96,7 @@ export function PageHero({
               titleSizes[size],
             )}
           >
-            {title}
+            <SansAmpersand>{title}</SansAmpersand>
           </h1>
           {(children || actions) && (
             <div className="mt-8 flex flex-col gap-8 split:flex-row split:items-end split:justify-between">

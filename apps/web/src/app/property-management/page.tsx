@@ -9,6 +9,7 @@ import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
+import { SansAmpersand } from '@/components/SansAmpersand'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -132,6 +133,11 @@ export default function PropertyManagement() {
           src: site.images.hero,
           alt: 'Mount Washington alpine landscape',
         }}
+        actions={
+          <Button href="/contact" tone="light" size="lg" arrow>
+            Let&apos;s Talk About Your Property
+          </Button>
+        }
       >
         <p>
           Full-service short-term rental management from Joel, Amanda, and our
@@ -139,16 +145,6 @@ export default function PropertyManagement() {
           that keep your Mount Washington home ready to welcome them.
         </p>
       </PageHero>
-
-      <Band>
-        <Container>
-          <FadeIn className="text-center">
-            <Button href="/contact" tone="forest" size="lg" arrow>
-              Let's Talk About Your Property
-            </Button>
-          </FadeIn>
-        </Container>
-      </Band>
 
       {/* 2. WHAT'S INCLUDED */}
       <Band>
@@ -168,7 +164,7 @@ export default function PropertyManagement() {
               >
                 <IconTile icon={service.Icon} />
                 <h3 className="mt-8 type-display text-[clamp(1.75rem,2.5vw,2.125rem)] text-warm-ink">
-                  {service.title}
+                  <SansAmpersand>{service.title}</SansAmpersand>
                 </h3>
                 <p className="mt-4 text-[1.0625rem]/[1.7] text-warm-muted">
                   {service.description}
