@@ -11,6 +11,7 @@ import { NumberBadge } from '@/components/NumberBadge'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
+import { SansAmpersand } from '@/components/SansAmpersand'
 import iconDeepCleaning from '@/images/icons/icon-deep-cleaning.png'
 import iconLinenService from '@/images/icons/icon-linen-service.png'
 import iconRestocking from '@/images/icons/icon-restocking.png'
@@ -149,7 +150,9 @@ export default function Cleaning() {
                       className="relative"
                     />
                     <div>
-                      <h2 className="type-display text-[2.625rem]">{step.title}</h2>
+                      <h2 className="type-display text-[2.625rem]">
+                        <SansAmpersand>{step.title}</SansAmpersand>
+                      </h2>
                       <p className="mt-4 text-[1.0625rem]/[1.6] text-warm-muted">
                         {step.description}
                       </p>

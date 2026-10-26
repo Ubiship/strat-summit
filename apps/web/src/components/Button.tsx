@@ -7,6 +7,8 @@ const tones = {
   sun: 'bg-sun text-warm-ink hover:bg-sun-light focus-visible:-outline-offset-4',
   forest:
     'bg-forest-warm text-warm-cream hover:bg-forest-deep focus-visible:-outline-offset-4',
+  light:
+    'bg-white text-forest-warm hover:bg-sand focus-visible:-outline-offset-4',
   outline:
     'text-forest-warm ring-2 ring-forest-warm ring-inset hover:bg-forest-warm/5',
   glass:
