@@ -1,4 +1,7 @@
+import clsx from 'clsx'
+
 import { Band } from '@/components/Band'
+import { cardClasses } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
 import { SectionHead } from '@/components/SectionHead'
@@ -32,7 +35,10 @@ export async function ReviewCarousel() {
             {featuredReviews.map((review) => (
               <FadeIn
                 key={review.id}
-                className="flex w-[min(28rem,85vw)] flex-none flex-col rounded-[2.5rem] bg-sand p-8 split:p-10"
+                className={clsx(
+                  cardClasses({ tone: 'tint' }),
+                  'flex w-[min(28rem,85vw)] flex-none flex-col p-8 split:p-10',
+                )}
               >
                 <div className="flex items-center gap-2 text-lg text-sun">
                   {Array.from({ length: 5 }).map((_, i) => (

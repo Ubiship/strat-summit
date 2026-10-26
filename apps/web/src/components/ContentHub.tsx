@@ -1,6 +1,8 @@
+import clsx from 'clsx'
 import Link from 'next/link'
 
 import { Band } from '@/components/Band'
+import { CardLinkCover, cardClasses, IconTile } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { SectionHead } from '@/components/SectionHead'
@@ -104,11 +106,12 @@ export function ContentHub() {
           {contentCategories.map((category) => (
             <FadeIn
               key={category.title}
-              className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(22_56_38/0.06),0_2px_8px_rgb(22_56_38/0.03)] transition hover:shadow-[0_16px_48px_rgb(22_56_38/0.1)] split:p-12"
+              className={clsx(
+                cardClasses({ linked: true }),
+                'flex flex-col p-8 split:p-10',
+              )}
             >
-              <div className="flex size-16 items-center justify-center rounded-2xl bg-forest-warm/8">
-                <category.Icon className="size-10 text-forest-warm" />
-              </div>
+              <IconTile icon={category.Icon} />
               <h3 className="mt-10 type-display text-[clamp(2rem,3vw,2.5rem)] text-warm-ink">
                 {category.title}
               </h3>
@@ -123,6 +126,7 @@ export function ContentHub() {
                 <span aria-hidden="true" className="text-lg">
                   →
                 </span>
+                <CardLinkCover />
               </Link>
             </FadeIn>
           ))}

@@ -1,5 +1,7 @@
+import clsx from 'clsx'
 import Link from 'next/link'
 import { Band } from '@/components/Band'
+import { cardClasses, IconTile } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { SectionHead } from '@/components/SectionHead'
@@ -101,11 +103,9 @@ export function WhyBookDirect() {
           {benefits.map((benefit) => (
             <FadeIn
               key={benefit.title}
-              className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(22_56_38/0.06),0_2px_8px_rgb(22_56_38/0.03)] split:p-12"
+              className={clsx(cardClasses(), 'flex flex-col p-8 split:p-10')}
             >
-              <div className="flex size-16 items-center justify-center rounded-2xl bg-forest-warm/8">
-                <benefit.Icon className="size-10 text-forest-warm" />
-              </div>
+              <IconTile icon={benefit.Icon} />
               <h3 className="mt-10 type-display text-[clamp(2rem,3vw,2.375rem)] text-warm-ink">
                 {benefit.title}
               </h3>
