@@ -3,6 +3,7 @@ import { type Metadata } from 'next'
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
+import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
@@ -207,25 +208,20 @@ export default function PropertyManagement() {
       </Band>
 
       {/* 4. FINAL CONTACT SECTION */}
-      <Band last>
-        <Container>
-          <FadeIn className="mx-auto max-w-3xl text-center">
-            <h2 className="type-display text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
-              Let's talk about your mountain home.
-            </h2>
-            <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
-              Maybe it's your family's weekend escape, an investment, or a bit
-              of both. Tell us how you use it and what you'd like renting it to
-              look like. We'll start there.
-            </p>
-            <div className="mt-12">
-              <Button href="/contact" tone="forest" size="lg" arrow>
-                Let's Talk About Your Property
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </Band>
+      <CtaPanel
+        title="Let's talk about your mountain home."
+        actions={
+          <Button href="/contact" tone="forest" size="lg" arrow>
+            Let's Talk About Your Property
+          </Button>
+        }
+      >
+        <p>
+          Maybe it&apos;s your family&apos;s weekend escape, an investment, or a bit of
+          both. Tell us how you use it and what you&apos;d like renting it to look
+          like. We&apos;ll start there.
+        </p>
+      </CtaPanel>
     </RootLayout>
   )
 }

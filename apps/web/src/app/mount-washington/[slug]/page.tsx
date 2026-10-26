@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm'
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
+import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn } from '@/components/FadeIn'
 import { RootLayout } from '@/components/RootLayout'
 import { categoryMetadata, getAllGuides, getGuideBySlug } from '@/lib/content'
@@ -164,28 +165,25 @@ export default async function GuidePage(props: Props) {
       </Band>
 
       {/* CTA Section */}
-      <Band last>
-        <Container>
-          <FadeIn className="mx-auto max-w-3xl text-center">
-            <h2 className="type-display text-[clamp(2.5rem,5vw,4rem)] text-warm-ink">
-              Book your Mount Washington stay
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-[1.1875rem]/[1.5] text-warm-muted">
-              Experience everything Mount Washington has to offer from the
-              comfort of one of our premium vacation rentals. Book direct for
-              the best rates.
-            </p>
-            <div className="mt-12 flex flex-wrap justify-center gap-5">
-              <Button href="/stays" tone="forest" size="lg" arrow>
-                Browse Properties
-              </Button>
-              <Button href="/mount-washington" tone="outline" size="lg">
-                More Guides
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </Band>
+      <CtaPanel
+        title="Book your Mount Washington stay"
+        actions={
+          <>
+            <Button href="/stays" tone="forest" size="lg" arrow>
+              Browse Properties
+            </Button>
+            <Button href="/mount-washington" tone="outline" size="lg">
+              More Guides
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Experience everything Mount Washington has to offer from the comfort
+          of one of our premium vacation rentals. Book direct for the best
+          rates.
+        </p>
+      </CtaPanel>
     </RootLayout>
   )
 }

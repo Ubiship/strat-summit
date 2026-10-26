@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
+import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
@@ -177,27 +178,24 @@ export default function MountWashingtonHub() {
       </Band>
 
       {/* CTA Section */}
-      <Band last>
-        <Container>
-          <FadeIn className="mx-auto max-w-3xl text-center">
-            <h2 className="type-display text-[clamp(3.25rem,5vw,4.75rem)] text-warm-ink">
-              Ready to book your stay?
-            </h2>
-            <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
-              Browse our Mount Washington vacation rentals and find your
-              mountain stay.
-            </p>
-            <div className="mt-14 flex flex-wrap justify-center gap-5">
-              <Button href="/stays" tone="forest" size="lg" arrow>
-                Browse Properties
-              </Button>
-              <Button href="/contact" tone="outline" size="lg">
-                Contact Us
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </Band>
+      <CtaPanel
+        title="Ready to book your stay?"
+        actions={
+          <>
+            <Button href="/stays" tone="forest" size="lg" arrow>
+              Browse Properties
+            </Button>
+            <Button href="/contact" tone="outline" size="lg">
+              Contact Us
+            </Button>
+          </>
+        }
+      >
+        <p>
+          Browse our Mount Washington vacation rentals and find your mountain
+          stay.
+        </p>
+      </CtaPanel>
     </RootLayout>
   )
 }

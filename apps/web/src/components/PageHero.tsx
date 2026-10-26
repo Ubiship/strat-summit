@@ -35,7 +35,7 @@ export function PageHero({
   return (
     <section
       className={clsx(
-        'relative isolate z-0 flex flex-col overflow-hidden text-warm-cream',
+        'relative isolate z-0 flex flex-col overflow-hidden text-warm-cream hero-cap',
         heights[size],
       )}
     >

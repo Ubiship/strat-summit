@@ -84,3 +84,21 @@
     rgb(14 32 23 / 0.72) 100%
   );
 }
+
+/* The rounded white lip at the foot of a photo hero, which the first white
+   section continues. Heroes reserve --band-radius of bottom padding for it. */
+@utility hero-cap {
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    height: calc(var(--band-radius) + 1px);
+    border-radius: var(--band-radius) var(--band-radius) 0 0;
+    background: white;
+  }
+}
+
+.hero-cap + .band > .band-rule {
+  display: none;
+}

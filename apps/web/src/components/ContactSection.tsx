@@ -22,7 +22,7 @@ export function ContactSection() {
             Contact us
           </Button>
         </FadeIn>
-        <FadeIn className="rounded-[2.5rem] bg-warm-cream p-7.5">
+        <FadeIn className="rounded-[2.5rem] bg-sand p-7.5">
           <Kicker as="h3">Service area</Kicker>
           <Offices className="mt-4" />
         </FadeIn>
