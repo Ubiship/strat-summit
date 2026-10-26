@@ -1,4 +1,6 @@
 import { type StaticImageData } from 'next/image'
+import clsx from 'clsx'
+import { cardClasses } from '@/components/Card'
 import { CardIcon } from '@/components/CardIcon'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 
@@ -13,7 +15,10 @@ export function ValueCards({
       {items.map((item) => (
         <FadeIn
           key={item.title}
-          className="flex min-h-[16rem] flex-col rounded-[2.5rem] bg-sand p-8"
+          className={clsx(
+            cardClasses({ tone: 'tint' }),
+            'flex min-h-[16rem] flex-col p-8 split:p-10',
+          )}
         >
           {item.icon && (
             <CardIcon

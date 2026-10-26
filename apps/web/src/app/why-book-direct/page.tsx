@@ -1,9 +1,11 @@
+import clsx from 'clsx'
 import { type Metadata } from 'next'
 import Image from 'next/image'
 
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { CardIcon } from '@/components/CardIcon'
+import { cardClasses } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
@@ -131,7 +133,7 @@ export default function WhyBookDirect() {
             {benefits.map((benefit) => (
               <FadeIn
                 key={benefit.title}
-                className="flex flex-col rounded-[2.75rem] bg-white p-10 shadow-[0_8px_24px_rgb(22_56_38/0.06)]"
+                className={clsx(cardClasses(), 'flex flex-col p-8 split:p-10')}
               >
                 <Image
                   src={benefit.icon}
@@ -163,7 +165,10 @@ export default function WhyBookDirect() {
             {securityPoints.map((point) => (
               <FadeIn
                 key={point.title}
-                className="flex flex-col rounded-[2.75rem] bg-warm-cream p-10"
+                className={clsx(
+                  cardClasses({ tone: 'tint' }),
+                  'flex flex-col p-8 split:p-10',
+                )}
               >
                 <CardIcon src={point.icon} />
                 <h3 className="mt-8 type-display text-[2rem] text-warm-ink">
@@ -198,7 +203,7 @@ export default function WhyBookDirect() {
             {faqs.map((faq) => (
               <FadeIn
                 key={faq.question}
-                className="rounded-[2.75rem] bg-sand p-10"
+                className={clsx(cardClasses({ tone: 'tint' }), 'p-8 split:p-10')}
               >
                 <h3 className="type-display text-[1.875rem] text-warm-ink">
                   {faq.question}
