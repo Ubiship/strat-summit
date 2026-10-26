@@ -21,6 +21,7 @@ export async function PropertyShowcase() {
         <SectionHead
           kicker="Our properties"
           title="Find your mountain stay."
+          layout="split"
         >
           <p>
             Explore our collection of Mount Washington vacation rentals and find
@@ -28,7 +29,7 @@ export async function PropertyShowcase() {
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-20 grid gap-10 split:mt-24 split:grid-cols-2 split:gap-14">
+        <FadeInStagger className="mt-14 grid gap-10 split:mt-16 split:grid-cols-2 split:gap-12">
           {featuredProperties.map((property) => (
             <FadeIn key={property.id}>
               <PropertyCard property={property} />
@@ -36,7 +37,7 @@ export async function PropertyShowcase() {
           ))}
         </FadeInStagger>
 
-        <FadeIn className="mt-20 text-center split:mt-24">
+        <FadeIn className="mt-14 text-center split:mt-16">
           <Button href="/stays" tone="forest" arrow>
             View all properties
           </Button>

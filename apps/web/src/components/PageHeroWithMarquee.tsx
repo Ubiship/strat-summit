@@ -120,7 +120,7 @@ export function PageHeroWithMarquee({
   children,
 }: PageHeroWithMarqueeProps) {
   return (
-    <div className="relative isolate flex min-h-[85vh] flex-col overflow-hidden bg-forest-warm text-warm-cream">
+    <div className="relative isolate flex min-h-[85vh] flex-col overflow-hidden bg-forest-warm text-warm-cream hero-cap">
       {/* Background Image */}
       <Image
         src={image}

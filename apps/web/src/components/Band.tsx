@@ -1,26 +1,39 @@
 import clsx from 'clsx'
 
+import { Container } from '@/components/Container'
+
+// White sections divided by a container-width hairline. The rule is hidden
+// directly after a hero, whose rounded white lip (hero-cap) already marks
+// the edge.
 export function Band({
   as: Component = 'section',
   last = false,
+  rule = true,
   className,
   children,
 }: {
   as?: 'section' | 'footer' | 'div'
   last?: boolean
+  rule?: boolean
   className?: string
   children: React.ReactNode
 }) {
   return (
     <Component
       className={clsx(
-        'relative z-10 mt-[calc(var(--band-radius)*-1)] rounded-t-[var(--band-radius)] border-t border-forest-warm/12 bg-white pt-28 text-warm-ink split:pt-44',
-        last
-          ? 'pb-20 split:pb-24'
-          : 'pb-[calc(var(--band-radius)+7rem)] split:pb-[calc(var(--band-radius)+9rem)]',
+        'band relative bg-white text-warm-ink',
+        last ? 'pt-20 pb-10 split:pt-24 split:pb-12' : 'py-24 split:py-32',
         className,
       )}
     >
+      {rule && (
+        <Container
+          aria-hidden="true"
+          className="band-rule pointer-events-none absolute inset-x-0 top-0"
+        >
+          <div className="border-t border-forest-warm/12" />
+        </Container>
+      )}
       {children}
     </Component>
   )

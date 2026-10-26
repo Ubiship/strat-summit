@@ -19,6 +19,7 @@ export async function ReviewCarousel() {
         <SectionHead
           kicker="Guest reviews"
           title="What our guests are saying."
+          layout="split"
         >
           <p>
             Real experiences from guests who&apos;ve stayed at our Mount
@@ -26,7 +27,7 @@ export async function ReviewCarousel() {
           </p>
         </SectionHead>
 
-        <div className="mt-16 overflow-x-auto pb-8 -mx-6 px-6 split:-mx-12 split:px-12">
+        <div className="mt-14 overflow-x-auto pb-8 split:mt-16 -mx-6 px-6 split:-mx-12 split:px-12">
           <div className="flex gap-6 min-w-min split:gap-8">
             {featuredReviews.map((review) => (
               <FadeIn

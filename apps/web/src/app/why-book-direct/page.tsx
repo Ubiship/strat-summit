@@ -5,6 +5,7 @@ import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { CardIcon } from '@/components/CardIcon'
 import { Container } from '@/components/Container'
+import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
@@ -211,24 +212,19 @@ export default function WhyBookDirect() {
         </Container>
       </Band>
 
-      <Band last>
-        <Container className="text-center">
-          <FadeIn>
-            <h2 className="type-display text-[clamp(2.75rem,5vw,4.25rem)] text-warm-ink">
-              Ready to book your stay?
-            </h2>
-            <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
-              Browse our available properties on Mount Washington and book
-              direct for the best rates and service.
-            </p>
-            <div className="mt-12">
-              <Button href="/stays" tone="forest" arrow>
-                Browse properties
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </Band>
+      <CtaPanel
+        title="Ready to book your stay?"
+        actions={
+          <Button href="/stays" tone="forest" arrow>
+            Browse properties
+          </Button>
+        }
+      >
+        <p>
+          Browse our available properties on Mount Washington and book direct
+          for the best rates and service.
+        </p>
+      </CtaPanel>
     </RootLayout>
   )
 }

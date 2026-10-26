@@ -92,6 +92,7 @@ export function ContentHub() {
         <SectionHead
           kicker="Explore Mount Washington"
           title="Your guide to the mountain."
+          layout="split"
         >
           <p>
             Explore Mount Washington, Strathcona Provincial Park, and the Comox
@@ -99,7 +100,7 @@ export function ContentHub() {
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-20 grid gap-8 split:mt-24 split:grid-cols-3 split:gap-10">
+        <FadeInStagger className="mt-14 grid gap-8 split:mt-16 split:grid-cols-3">
           {contentCategories.map((category) => (
             <FadeIn
               key={category.title}

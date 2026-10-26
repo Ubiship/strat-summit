@@ -100,7 +100,7 @@ function SearchForm() {
 
 export function HeroWithSearch() {
   return (
-    <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-forest-warm text-warm-cream">
+    <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-forest-warm text-warm-cream hero-cap">
       {/* Background Image */}
       <Image
         src="/HeroImage.jpg"

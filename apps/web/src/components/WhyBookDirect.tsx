@@ -80,7 +80,11 @@ export function WhyBookDirect() {
   return (
     <Band>
       <Container>
-        <SectionHead kicker="Why book direct" title="Book direct. Feel right at home.">
+        <SectionHead
+          kicker="Why book direct"
+          title="Book direct. Feel right at home."
+          layout="center"
+        >
           <p>
             Book your Mount Washington getaway with local hosts who care for
             every detail of your stay.{' '}
@@ -93,7 +97,7 @@ export function WhyBookDirect() {
           </p>
         </SectionHead>
 
-        <FadeInStagger className="mt-20 grid gap-8 split:grid-cols-3 split:gap-8">
+        <FadeInStagger className="mt-14 grid gap-8 split:mt-16 split:grid-cols-3">
           {benefits.map((benefit) => (
             <FadeIn
               key={benefit.title}

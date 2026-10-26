@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
+import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
@@ -138,24 +139,19 @@ export default async function CategoryPage(props: Props) {
       </Band>
 
       {/* CTA Section */}
-      <Band last>
-        <Container>
-          <FadeIn className="mx-auto max-w-3xl text-center">
-            <h2 className="type-display text-[clamp(2.5rem,5vw,4rem)] text-warm-ink">
-              Ready for your mountain adventure?
-            </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-[1.1875rem]/[1.5] text-warm-muted">
-              Browse our vacation rentals and start planning your perfect Mount
-              Washington getaway.
-            </p>
-            <div className="mt-10">
-              <Button href="/stays" tone="forest" arrow>
-                View Properties
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </Band>
+      <CtaPanel
+        title="Ready for your mountain adventure?"
+        actions={
+          <Button href="/stays" tone="forest" arrow>
+            View Properties
+          </Button>
+        }
+      >
+        <p>
+          Browse our vacation rentals and start planning your perfect Mount
+          Washington getaway.
+        </p>
+      </CtaPanel>
     </RootLayout>
   )
 }

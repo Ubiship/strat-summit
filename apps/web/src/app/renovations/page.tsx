@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
+import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { NumberBadge } from '@/components/NumberBadge'
 import { PageHero } from '@/components/PageHero'
@@ -178,26 +179,21 @@ export default function Renovations() {
       </Band>
 
       {/* 5. ENQUIRY SECTION */}
-      <Band last>
-        <Container>
-          <FadeIn className="mx-auto max-w-3xl text-center">
-            <h2 className="type-display text-[clamp(2.5rem,4vw,3.5rem)] text-warm-ink">
-              Planning a project for next season?
-            </h2>
-            <p className="mx-auto mt-8 max-w-2xl text-[1.25rem]/[1.55] text-warm-muted">
-              Winter is a good time to get in touch about spring, summer, or
-              fall renovations. Joel's availability is limited, so an early
-              conversation gives us time to discuss your plans and see how they
-              might fit into the calendar.
-            </p>
-            <div className="mt-12">
-              <Button href="/contact" tone="forest" size="lg" arrow>
-                Enquire About a Project
-              </Button>
-            </div>
-          </FadeIn>
-        </Container>
-      </Band>
+      <CtaPanel
+        title="Planning a project for next season?"
+        actions={
+          <Button href="/contact" tone="forest" size="lg" arrow>
+            Enquire About a Project
+          </Button>
+        }
+      >
+        <p>
+          Winter is a good time to get in touch about spring, summer, or fall
+          renovations. Joel&apos;s availability is limited, so an early conversation
+          gives us time to discuss your plans and see how they might fit into
+          the calendar.
+        </p>
+      </CtaPanel>
     </RootLayout>
   )
 }

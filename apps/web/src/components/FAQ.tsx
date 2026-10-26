@@ -141,12 +141,25 @@ export function FAQ() {
 
   return (
     <Band>
-      <Container>
-        <SectionHead kicker="FAQs" title="Frequently asked questions.">
-          <p>A few helpful details before you book your mountain stay.</p>
-        </SectionHead>
+      <Container className="grid gap-14 split:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] split:gap-20">
+        <div className="split:sticky split:top-32 split:self-start">
+          <SectionHead kicker="FAQs" title="Frequently asked questions.">
+            <p>A few helpful details before you book your mountain stay.</p>
+          </SectionHead>
 
-        <FadeIn className="mt-16 max-w-3xl split:mt-20">
+          <FadeIn className="mt-10">
+            <p className="text-[1.0625rem] text-warm-muted">
+              Still have a question? We&apos;re happy to help.
+            </p>
+            <div className="mt-6">
+              <Button href="/contact" tone="outline" arrow>
+                Contact us
+              </Button>
+            </div>
+          </FadeIn>
+        </div>
+
+        <FadeIn>
           <div className="border-t border-warm-ink/10">
             {faqs.map((faq, index) => (
               <AccordionItem
@@ -159,17 +172,6 @@ export function FAQ() {
                 }
               />
             ))}
-          </div>
-        </FadeIn>
-
-        <FadeIn className="mt-16 max-w-3xl">
-          <p className="text-[1.125rem] text-warm-muted">
-            Still have a question? We&apos;re happy to help.
-          </p>
-          <div className="mt-8">
-            <Button href="/contact" tone="forest" arrow>
-              Contact us
-            </Button>
           </div>
         </FadeIn>
       </Container>
