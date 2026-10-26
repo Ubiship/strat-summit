@@ -18,7 +18,7 @@ export function CtaPanel({
     <Band rule={false} className="pt-0 split:pt-0">
       <Container>
         <FadeIn className="rounded-[2.5rem] bg-sand px-7 py-16 text-center split:rounded-[3.5rem] split:px-16 split:py-24">
-          <h2 className="mx-auto max-w-[18ch] type-display text-[clamp(2.5rem,4.5vw,3.75rem)] text-balance text-forest-warm">
+          <h2 className="mx-auto max-w-[18ch] type-display text-[clamp(2.125rem,4.5vw,3.75rem)] text-balance text-forest-warm">
             <SansAmpersand>{title}</SansAmpersand>
           </h2>
           {children && (

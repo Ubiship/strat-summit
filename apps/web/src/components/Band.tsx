@@ -22,7 +22,7 @@ export function Band({
     <Component
       className={clsx(
         'band relative bg-white text-warm-ink',
-        last ? 'pt-20 pb-10 split:pt-24 split:pb-12' : 'py-24 split:py-32',
+        last ? 'pt-16 pb-10 split:pt-24 split:pb-12' : 'py-18 split:py-32',
         className,
       )}
     >

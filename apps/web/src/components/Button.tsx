@@ -16,7 +16,7 @@ const tones = {
 }
 
 const sizes = {
-  lg: 'px-10 py-5.5 text-[1.125rem]',
+  lg: 'px-7 py-4.5 text-base split:px-10 split:py-5.5 split:text-[1.125rem]',
   md: 'px-6 py-4 text-base',
   sm: 'px-4.5 py-3 text-[0.9375rem]',
 }
