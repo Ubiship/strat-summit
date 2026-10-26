@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import clsx from 'clsx'
 import { Button } from '@/components/Button'
+import { cardClasses } from '@/components/Card'
 import {
   PropertyHighlights,
   PropertyTypeLabel,
@@ -34,10 +35,10 @@ export function PropertyCard({
   const detailHref = `/stays/${property.id}${queryString ? `?${queryString}` : ''}`
 
   return (
-    <article className="flex flex-col rounded-[3rem] bg-white ring-1 ring-warm-ink/8 transition hover:shadow-[0_16px_48px_rgb(22_56_38/0.08)]">
+    <article className={clsx(cardClasses({ linked: true }), 'flex flex-col')}>
       <Link
         href={detailHref}
-        className="group relative aspect-[4/3] overflow-hidden rounded-t-[3rem]"
+        className="group relative aspect-[4/3] overflow-hidden rounded-t-[2.5rem]"
       >
         {coverPhoto && (
           <Image

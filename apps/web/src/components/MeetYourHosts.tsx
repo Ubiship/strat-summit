@@ -11,9 +11,9 @@ export function MeetYourHosts() {
         <div className="grid items-center gap-12 split:grid-cols-2 split:gap-20">
           {/* Photo */}
           <FadeIn>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[3rem] bg-warm-ink/5 shadow-[0_8px_32px_rgb(22_56_38/0.1)]">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem] bg-sand">
               {/* Placeholder until photo is added */}
-              <div className="absolute inset-0 flex items-center justify-center text-warm-ink/20">
+              <div className="absolute inset-0 flex items-center justify-center text-forest-warm/25">
                 <svg
                   viewBox="0 0 24 24"
                   fill="none"

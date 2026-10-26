@@ -1,9 +1,11 @@
+import clsx from 'clsx'
 import { type Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
+import { CardLinkCover, cardClasses } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
@@ -106,7 +108,10 @@ export default async function CategoryPage(props: Props) {
                 {guides.map((guide) => (
                   <FadeIn
                     key={guide.slug}
-                    className="group flex flex-col rounded-3xl bg-white p-8 shadow-[0_8px_24px_rgb(22_56_38/0.06)] transition hover:shadow-[0_12px_32px_rgb(22_56_38/0.12)]"
+                    className={clsx(
+                      cardClasses({ linked: true }),
+                      'flex flex-col p-8 split:p-10',
+                    )}
                   >
                     <div className="mb-3 flex items-center gap-3 text-sm text-warm-muted">
                       <time dateTime={guide.publishedAt}>
@@ -129,6 +134,7 @@ export default async function CategoryPage(props: Props) {
                       <span aria-hidden="true" className="text-base">
                         →
                       </span>
+                      <CardLinkCover />
                     </Link>
                   </FadeIn>
                 ))}

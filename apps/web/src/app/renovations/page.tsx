@@ -103,7 +103,7 @@ export default function Renovations() {
             {[1, 2, 3].map((i) => (
               <FadeIn
                 key={i}
-                className="aspect-[4/3] rounded-[2.75rem] bg-warm-cream/80"
+                className="aspect-[4/3] rounded-[2.5rem] bg-sand"
               >
                 <div className="flex h-full items-center justify-center text-warm-ink/30">
                   <span className="text-lg">Project photo {i}</span>

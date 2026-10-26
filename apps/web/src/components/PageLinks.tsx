@@ -27,7 +27,7 @@ interface Page {
 
 function PageLink({ page }: { page: Page }) {
   return (
-    <article className="relative flex h-full flex-col items-start rounded-[2.5rem] bg-warm-cream p-8">
+    <article className="relative flex h-full flex-col items-start rounded-[2.5rem] bg-white p-8 ring-1 ring-forest-warm/12">
       <h3 className="mt-4 type-display text-3xl">{page.title}</h3>
       <time
         dateTime={page.date}

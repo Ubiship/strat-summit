@@ -4,6 +4,7 @@ import clsx from 'clsx'
 import { Band } from '@/components/Band'
 import { CardIcon } from '@/components/CardIcon'
 import { ContactSection } from '@/components/ContactSection'
+import { cardClasses } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { NumberBadge } from '@/components/NumberBadge'
@@ -28,28 +29,28 @@ const services = [
     icon: iconTurnoverCleaning,
     description:
       'Complete property reset between guests — kitchen, bathrooms, bedrooms, and common areas cleaned to guest-ready standard.',
-    tone: 'bg-white text-warm-ink ring-1 ring-forest-warm/12',
+    tone: 'outline' as const,
   },
   {
     title: 'Deep cleaning',
     icon: iconDeepCleaning,
     description:
       'Seasonal deep cleans for baseboards, windows, appliances, and high-touch surfaces that need attention beyond regular turnovers.',
-    tone: 'bg-sand text-warm-ink',
+    tone: 'tint' as const,
   },
   {
     title: 'Linen service',
     icon: iconLinenService,
     description:
       'Fresh bed linens and towels for every stay — washed, pressed, and restocked so you never have to think about laundry logistics.',
-    tone: 'bg-sand text-warm-ink',
+    tone: 'tint' as const,
   },
   {
     title: 'Restocking',
     icon: iconRestocking,
     description:
       'Supplies replenished before each arrival — coffee, paper products, cleaning essentials, and amenities tailored to your property.',
-    tone: 'bg-white text-warm-ink ring-1 ring-forest-warm/12',
+    tone: 'outline' as const,
   },
 ]
 
@@ -103,8 +104,8 @@ export default function Cleaning() {
               <FadeIn
                 key={service.title}
                 className={clsx(
-                  'flex min-h-[18rem] flex-col rounded-[2.75rem] p-10',
-                  service.tone,
+                  cardClasses({ tone: service.tone }),
+                  'flex min-h-[18rem] flex-col p-8 split:p-10',
                 )}
               >
                 <CardIcon src={service.icon} />

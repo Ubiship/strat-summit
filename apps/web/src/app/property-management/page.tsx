@@ -1,7 +1,9 @@
+import clsx from 'clsx'
 import { type Metadata } from 'next'
 
 import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
+import { cardClasses, IconTile } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { CtaPanel } from '@/components/CtaPanel'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
@@ -162,11 +164,9 @@ export default function PropertyManagement() {
             {services.map((service) => (
               <FadeIn
                 key={service.title}
-                className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(22_56_38/0.06),0_2px_8px_rgb(22_56_38/0.03)] split:p-12"
+                className={clsx(cardClasses(), 'flex flex-col p-8 split:p-10')}
               >
-                <div className="flex size-16 items-center justify-center rounded-2xl bg-forest-warm/8">
-                  <service.Icon className="size-10 text-forest-warm" />
-                </div>
+                <IconTile icon={service.Icon} />
                 <h3 className="mt-8 type-display text-[clamp(1.75rem,2.5vw,2.125rem)] text-warm-ink">
                   {service.title}
                 </h3>
