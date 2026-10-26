@@ -150,7 +150,7 @@ export default function MountWashingtonHub() {
             {guideCategories.map((category) => (
               <FadeIn
                 key={category.title}
-                className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(42_24_10/0.06),0_2px_8px_rgb(42_24_10/0.03)] transition hover:shadow-[0_16px_48px_rgb(42_24_10/0.1)] split:p-12"
+                className="flex flex-col rounded-[3rem] bg-white p-10 shadow-[0_8px_32px_rgb(22_56_38/0.06),0_2px_8px_rgb(22_56_38/0.03)] transition hover:shadow-[0_16px_48px_rgb(22_56_38/0.1)] split:p-12"
               >
                 <div className="flex size-16 items-center justify-center rounded-2xl bg-forest-warm/8">
                   <category.Icon className="size-10 text-forest-warm" />

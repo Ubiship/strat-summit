@@ -33,7 +33,7 @@ function SearchFormInner() {
   const labelClasses = 'text-sm font-bold tracking-wide text-warm-ink/60 uppercase'
 
   return (
-    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-[3rem] bg-white p-6 shadow-[0_16px_48px_rgb(42_24_10/0.15),0_4px_12px_rgb(42_24_10/0.08)] sm:p-8 split:p-12">
+    <div className="mx-auto w-full max-w-4xl overflow-hidden rounded-[3rem] bg-white p-6 shadow-[0_16px_48px_rgb(22_56_38/0.15),0_4px_12px_rgb(22_56_38/0.08)] sm:p-8 split:p-12">
       <div className="grid gap-5 sm:gap-8 split:grid-cols-[1fr_1fr_auto_auto] split:gap-6">
         <div className="min-w-0">
           <label htmlFor={checkInId} className={labelClasses}>
@@ -108,7 +108,7 @@ export function HeroWithSearch() {
         fill
         priority
         sizes="100vw"
-        className="-z-20 object-cover photo-warm"
+        className="-z-20 object-cover photo-grade"
       />
 
       {/* Overlay */}

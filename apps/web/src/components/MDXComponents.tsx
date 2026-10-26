@@ -29,7 +29,7 @@ export const MDXComponents = {
           alt={alt}
           {...props}
           sizes="(min-width: 768px) 48rem, 100vw"
-          className="aspect-16/10 w-full object-cover photo-warm"
+          className="aspect-16/10 w-full object-cover photo-grade"
         />
       </div>
     )

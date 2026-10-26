@@ -132,7 +132,7 @@ export function ContactForm() {
   )
 
   return (
-    <FadeIn className="rounded-[2.5rem] bg-warm-cream p-7 shadow-[0_24px_60px_rgb(42_24_10/0.08)] split:p-10">
+    <FadeIn className="rounded-[2.5rem] bg-warm-cream p-7 shadow-[0_24px_60px_rgb(22_56_38/0.08)] split:p-10">
       <form action={formAction}>
         <h2 className="type-display text-4xl">Send us a message</h2>
 

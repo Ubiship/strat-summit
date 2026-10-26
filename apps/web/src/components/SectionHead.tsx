@@ -31,7 +31,7 @@ export function SectionHead({
         <div
           className={clsx(
             'mt-7 max-w-[50ch] space-y-5 text-[1.1875rem]/[1.65] text-pretty',
-            tone === 'dark' ? 'text-[#f1dfc6]' : 'text-warm-muted',
+            tone === 'dark' ? 'text-white/80' : 'text-warm-muted',
           )}
         >
           {children}

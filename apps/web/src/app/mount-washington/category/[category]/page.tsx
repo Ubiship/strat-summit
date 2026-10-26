@@ -105,7 +105,7 @@ export default async function CategoryPage(props: Props) {
                 {guides.map((guide) => (
                   <FadeIn
                     key={guide.slug}
-                    className="group flex flex-col rounded-3xl bg-white p-8 shadow-[0_8px_24px_rgb(42_24_10/0.06)] transition hover:shadow-[0_12px_32px_rgb(42_24_10/0.12)]"
+                    className="group flex flex-col rounded-3xl bg-white p-8 shadow-[0_8px_24px_rgb(22_56_38/0.06)] transition hover:shadow-[0_12px_32px_rgb(22_56_38/0.12)]"
                   >
                     <div className="mb-3 flex items-center gap-3 text-sm text-warm-muted">
                       <time dateTime={guide.publishedAt}>

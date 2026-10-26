@@ -17,7 +17,7 @@ export function Kicker({
     return (
       <Component
         className={clsx(
-          'inline-flex items-center gap-2.5 rounded-full bg-[#2a180a]/40 py-2.5 pr-4.5 pl-2.5 text-sm font-bold tracking-[0.04em] text-warm-cream backdrop-blur-md',
+          'inline-flex items-center gap-2.5 rounded-full bg-forest-deep/45 py-2.5 pr-4.5 pl-2.5 text-sm font-bold tracking-[0.04em] text-warm-cream backdrop-blur-md',
           className,
         )}
       >

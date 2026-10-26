@@ -68,7 +68,7 @@ export function PropertyFilters() {
     )
 
   return (
-    <div className="rounded-[2.75rem] bg-white p-6 shadow-[0_12px_32px_rgb(42_24_10/0.12)] sm:p-8">
+    <div className="rounded-[2.75rem] bg-white p-6 shadow-[0_12px_32px_rgb(22_56_38/0.12)] sm:p-8">
       <div className="flex flex-wrap items-center gap-4 sm:gap-6">
         <div className="min-w-0 flex-1 sm:flex-none">
           <label

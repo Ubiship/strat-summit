@@ -156,7 +156,7 @@ export default function Renovations() {
               alt=""
               fill
               sizes="(min-width: 75rem) 27.25rem, (min-width: 56.25rem) 36vw, 100vw"
-              className="object-cover photo-warm"
+              className="object-cover photo-grade"
             />
           </FadeIn>
           <FadeIn>

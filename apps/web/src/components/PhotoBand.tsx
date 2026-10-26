@@ -8,10 +8,9 @@ export function PhotoBand({ src, alt }: { src: string; alt: string }) {
         alt={alt}
         fill
         sizes="100vw"
-        className="-z-20 object-cover photo-warm"
+        className="-z-20 object-cover photo-grade"
       />
       <div aria-hidden="true" className="absolute inset-0 -z-10 band-shade" />
-      <div aria-hidden="true" className="absolute inset-0 -z-10 hero-glow" />
     </section>
   )
 }

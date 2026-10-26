@@ -57,7 +57,7 @@ export default async function Blog() {
                         alt=""
                         {...article.author.image}
                         sizes="2.75rem"
-                        className="size-11 rounded-full object-cover photo-warm"
+                        className="size-11 rounded-full object-cover photo-grade"
                       />
                       <span>
                         <span className="font-semibold text-warm-ink">

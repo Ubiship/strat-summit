@@ -134,7 +134,7 @@ export default function About() {
                       src={imageMeeting}
                       alt=""
                       sizes="(min-width: 1200px) 36rem, (min-width: 900px) 50vw, 100vw"
-                      className="aspect-4/3 w-full object-cover photo-warm"
+                      className="aspect-4/3 w-full object-cover photo-grade"
                     />
                     <div className="p-10">
                       <h3 className="type-display text-[2.625rem]">{person.name}</h3>

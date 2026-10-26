@@ -65,7 +65,7 @@ export default async function CaseStudyLayout({
                   {...caseStudy.image}
                   sizes="(min-width: 75rem) 72rem, calc(100vw - 3rem)"
                   preload
-                  className="w-full photo-warm"
+                  className="w-full photo-grade"
                 />
               </div>
             </FadeIn>
