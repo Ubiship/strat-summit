@@ -134,8 +134,9 @@ export default function MountWashingtonHub() {
         title="Explore Mount Washington"
         size="short"
         image={{
-          src: site.images.hero,
-          alt: 'Mount Washington alpine landscape',
+          src: site.images.mountWashington,
+          alt: 'Aerial view of the Mount Washington village in winter',
+          position: 'center 45%',
         }}
       >
         <p>

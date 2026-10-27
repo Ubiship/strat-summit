@@ -130,8 +130,9 @@ export default function PropertyManagement() {
         title="Your mountain home. Our everyday care."
         size="short"
         image={{
-          src: site.images.hero,
-          alt: 'Mount Washington alpine landscape',
+          src: site.images.propertyManagement,
+          alt: 'Dining room in a Mount Washington log home, set for a meal with snowy peaks outside',
+          position: 'center 55%',
         }}
         actions={
           <Button href="/contact" tone="light" size="lg" arrow>

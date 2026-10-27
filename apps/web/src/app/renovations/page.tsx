@@ -142,11 +142,12 @@ export default function Renovations() {
         <Container className="grid items-center gap-12 split:grid-cols-[0.8fr_1.2fr] split:gap-20">
           <FadeIn className="relative aspect-4/5 overflow-hidden rounded-[2.75rem]">
             <Image
-              src={site.images.renovations}
-              alt=""
+              src={site.images.joel}
+              alt="Joel, co-founder of Strathcona Summit Solutions"
               fill
               sizes="(min-width: 75rem) 27.25rem, (min-width: 56.25rem) 36vw, 100vw"
               className="object-cover photo-grade"
+              style={{ objectPosition: 'center 30%' }}
             />
           </FadeIn>
           <FadeIn>

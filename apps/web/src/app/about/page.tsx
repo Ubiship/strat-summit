@@ -1,4 +1,5 @@
 import { type Metadata } from 'next'
+import Image from 'next/image'
 import clsx from 'clsx'
 
 import { Band } from '@/components/Band'
@@ -52,10 +53,15 @@ const founders = [
   {
     name: 'Joel',
     role: 'Co-founder — growth & client relationships',
+    image: site.images.joel,
+    // Head-and-shoulders frame; keep his face in the upper half of the crop.
+    position: 'center 32%',
   },
   {
     name: 'Amanda',
     role: 'Co-founder — operations & day-to-day delivery',
+    image: site.images.amanda,
+    position: 'center 28%',
   },
 ]
 
@@ -126,18 +132,19 @@ export default function About() {
               {founders.map((person) => (
                 <li key={person.name}>
                   <FadeIn
-                    className={clsx(
-                      cardClasses({ tone: 'tint' }),
-                      'flex items-center gap-7 p-8 split:p-10',
-                    )}
+                    className={clsx(cardClasses({ tone: 'tint' }), 'overflow-hidden')}
                   >
-                    <span
-                      aria-hidden="true"
-                      className="grid size-20 flex-none place-items-center rounded-full bg-white type-display text-[2.5rem] text-forest-warm ring-1 ring-forest-warm/12"
-                    >
-                      {person.name[0]}
-                    </span>
-                    <div>
+                    <div className="relative aspect-[4/5]">
+                      <Image
+                        src={person.image}
+                        alt=""
+                        fill
+                        sizes="(min-width: 56.25rem) 36rem, 100vw"
+                        className="object-cover photo-grade"
+                        style={{ objectPosition: person.position }}
+                      />
+                    </div>
+                    <div className="p-8 split:p-10">
                       <h3 className="type-display text-[2.625rem]">
                         {person.name}
                       </h3>

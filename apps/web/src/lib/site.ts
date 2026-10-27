@@ -17,5 +17,10 @@ export const site = {
   images: {
     hero: '/HeroImage.jpg',
     renovations: '/Renos.png',
+    hosts: '/Strat summit images/About Us Homepage Image.jpeg',
+    joel: '/Strat summit images/Joel Headshot.JPG',
+    amanda: '/Strat summit images/Amanda Headshot.JPG',
+    propertyManagement: '/Strat summit images/Property Management 1.jpg',
+    mountWashington: '/Strat summit images/Mt Washington Info 1.jpg',
   },
 } as const

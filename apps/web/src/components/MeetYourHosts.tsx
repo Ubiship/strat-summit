@@ -3,6 +3,7 @@ import { Band } from '@/components/Band'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn } from '@/components/FadeIn'
+import { site } from '@/lib/site'
 
 export function MeetYourHosts() {
   return (
@@ -11,29 +12,14 @@ export function MeetYourHosts() {
         <div className="grid items-center gap-12 split:grid-cols-2 split:gap-20">
           {/* Photo */}
           <FadeIn>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-[2.5rem] bg-sand">
-              {/* Placeholder until photo is added */}
-              <div className="absolute inset-0 flex items-center justify-center text-forest-warm/25">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={1}
-                  className="size-28"
-                >
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-              </div>
-              {/* Uncomment and update src when photo is ready:
+            <div className="relative aspect-[5/6] overflow-hidden rounded-[2.5rem] bg-sand">
               <Image
-                src="/hosts-joel-amanda.jpg"
-                alt="Joel and Amanda, your hosts at Strathcona Summit Solutions"
+                src={site.images.hosts}
+                alt="Joel and Amanda on a mountain trail at sunset"
                 fill
-                sizes="(min-width: 960px) 50vw, 100vw"
-                className="object-cover"
+                sizes="(min-width: 56.25rem) 36rem, 100vw"
+                className="object-cover photo-grade"
               />
-              */}
             </div>
           </FadeIn>
 
