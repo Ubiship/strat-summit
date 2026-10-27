@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { FadeIn } from '@/components/FadeIn'
 import { Button } from '@/components/Button'
+import { site } from '@/lib/site'
 import clsx from 'clsx'
 
 function SearchFormInner() {
@@ -103,8 +104,8 @@ export function HeroWithSearch() {
     <div className="relative isolate flex min-h-screen flex-col overflow-hidden bg-forest-warm text-warm-cream hero-cap">
       {/* Background Image */}
       <Image
-        src="/HeroImage.jpg"
-        alt="Mount Washington alpine landscape"
+        src={site.images.homepage}
+        alt="Snow-covered Mount Washington, with chalets among the trees and alpine peaks beyond"
         fill
         priority
         sizes="100vw"

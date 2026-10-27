@@ -16,6 +16,7 @@ export const site = {
   },
   images: {
     hero: '/HeroImage.jpg',
+    homepage: '/Strat summit images/Homepage 1.jpg',
     renovations: '/Renos.png',
     hosts: '/Strat summit images/About Us Homepage Image.jpeg',
     joel: '/Strat summit images/Joel Headshot.JPG',
