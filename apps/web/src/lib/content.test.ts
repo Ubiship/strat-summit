@@ -20,7 +20,7 @@ describe('content utilities', () => {
       expect(guide.title).toBe(
         'Getting Started with Skiing at Mount Washington',
       )
-      expect(guide.category).toBe('skiing')
+      expect(guide.category).toBe('winter')
       expect(guide.slug).toBe('getting-started-skiing')
     }
   })
