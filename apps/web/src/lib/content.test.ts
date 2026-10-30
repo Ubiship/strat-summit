@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import { describe, it, expect } from 'vitest'
 import {
   getAllGuides,
@@ -47,6 +49,23 @@ describe('content utilities', () => {
       expect(
         categoryMetadata[cat as keyof typeof categoryMetadata].description,
       ).toBeTruthy()
+    })
+  })
+
+  it('should have category metadata for every category the hub links to', () => {
+    const hub = fs.readFileSync(
+      path.join(process.cwd(), 'src/app/mount-washington/page.tsx'),
+      'utf8',
+    )
+    const linked = [
+      ...hub.matchAll(/\/mount-washington\/category\/([a-z-]+)/g),
+    ].map((match) => match[1])
+    expect(linked.length).toBeGreaterThan(0)
+    linked.forEach((cat) => {
+      expect(
+        categoryMetadata[cat as keyof typeof categoryMetadata],
+        `hub links to /mount-washington/category/${cat}`,
+      ).toBeDefined()
     })
   })
 

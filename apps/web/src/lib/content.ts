@@ -5,8 +5,11 @@ import matter from 'gray-matter'
 const CONTENT_DIR = path.join(process.cwd(), 'src/content/mount-washington')
 
 export type GuideCategory =
-  | 'skiing'
+  | 'winter'
   | 'summer'
+  | 'dining'
+  | 'planning'
+  | 'skiing'
   | 'families'
   | 'getting-here'
   | 'first-time-visitors'
@@ -131,6 +134,21 @@ export const categoryMetadata: Record<
   GuideCategory,
   { title: string; description: string }
 > = {
+  winter: {
+    title: 'Winter Activities',
+    description:
+      'Discover skiing, snowshoeing, tubing, and more ways to enjoy the snow.',
+  },
+  dining: {
+    title: 'Where to Eat',
+    description:
+      'Find local restaurants, cafés, and favourite spots on the mountain and in the Comox Valley.',
+  },
+  planning: {
+    title: 'Before You Visit',
+    description:
+      'Getting here, what to pack, and practical information for your trip.',
+  },
   skiing: {
     title: 'Skiing & Snowboarding',
     description:
