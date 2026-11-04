@@ -44,11 +44,17 @@ const faqs = [
     answer: (
       <div className="space-y-4">
         <p>
-          We have a 30-day cancellation policy on all bookings. Cancellations
-          made at least 30 days before your arrival date receive a full refund.
-          Cancellations made fewer than 30 days but at least 7 days before your
-          arrival date receive a 50% refund. Cancellations made fewer than 7
-          days before your arrival date receive no refund.
+          For cancellations received 30 or more days before arrival, payments
+          collected will be refunded less a cancellation processing fee equal to
+          4% of the payments collected.
+        </p>
+        <p>
+          For cancellations received 14 to 29 days before arrival, 50% of the
+          total booking price is refundable.
+        </p>
+        <p>
+          For cancellations received fewer than 14 days before arrival, no
+          refund is provided.
         </p>
         <p className="font-semibold text-warm-ink">
           Winter Conditions and Cancellation

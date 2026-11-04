@@ -44,7 +44,7 @@ const benefits = [
     title: 'Clear Cancellation',
     icon: iconFlexibleCancellation,
     description:
-      'A straightforward 30-day policy: a full refund if you cancel 30 or more days before arrival, 50% between 7 and 29 days, and no refund within 7 days of arrival.',
+      'A straightforward policy: cancel 30 or more days before arrival for a refund less a 4% processing fee, 50% between 14 and 29 days, and no refund within 14 days of arrival.',
   },
   {
     title: 'Local Hosts',
@@ -84,7 +84,7 @@ const faqs = [
   {
     question: 'What if I need to cancel or change my booking?',
     answer:
-      'Our cancellation policy is simple: cancel 30 or more days before arrival for a full refund, 7 to 29 days before for a 50% refund. Cancellations within 7 days of arrival are non-refundable. Contact us as soon as your plans change.',
+      'Cancel 30 or more days before arrival and payments collected are refunded less a 4% cancellation processing fee. Cancel 14 to 29 days before arrival and 50% of the total booking price is refundable. Cancellations fewer than 14 days before arrival are non-refundable. Contact us as soon as your plans change.',
   },
   {
     question: 'Do you offer the same properties as Airbnb or VRBO?',
