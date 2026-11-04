@@ -12,27 +12,13 @@ import { getPropertyHighlights } from '@/lib/propertyHighlights'
 
 type PropertyCardProps = {
   property: HostawayProperty
-  searchParams?: {
-    checkIn?: string
-    checkOut?: string
-    guests?: string
-  }
 }
 
-export function PropertyCard({
-  property,
-  searchParams,
-}: PropertyCardProps) {
+export function PropertyCard({ property }: PropertyCardProps) {
   const coverPhoto = property.photos.find((p) => p.isCover) || property.photos[0]
   const highlights = getPropertyHighlights(property)
 
-  // Build detail page URL with search params
-  const params = new URLSearchParams()
-  if (searchParams?.checkIn) params.set('checkIn', searchParams.checkIn)
-  if (searchParams?.checkOut) params.set('checkOut', searchParams.checkOut)
-  if (searchParams?.guests) params.set('guests', searchParams.guests)
-  const queryString = params.toString()
-  const detailHref = `/stays/${property.id}${queryString ? `?${queryString}` : ''}`
+  const detailHref = `/stays/${property.id}`
 
   return (
     <article className={clsx(cardClasses({ linked: true }), 'flex flex-col')}>

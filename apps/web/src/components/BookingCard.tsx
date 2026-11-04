@@ -20,7 +20,7 @@ export function BookingCard({ bookingUrl }: { bookingUrl: string }) {
         className="w-full justify-center"
         arrow
       >
-        Check Availability
+        Book Now
       </Button>
     </div>
   )

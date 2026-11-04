@@ -1,65 +1,33 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { buildListingBookingUrl, buildSearchBookingUrl } from './booking'
+import { getBookingSiteUrl, getListingBookingUrl } from './booking'
 
 afterEach(() => {
   vi.unstubAllEnvs()
 })
 
-describe('buildListingBookingUrl', () => {
-  it('links to the listing on the branded booking domain by default', () => {
+describe('getBookingSiteUrl', () => {
+  it('defaults to the working Hostaway booking site', () => {
     vi.stubEnv('NEXT_PUBLIC_HOSTAWAY_BOOKING_URL', '')
 
-    expect(buildListingBookingUrl('12345')).toBe(
-      'https://book.strathconasummit.com/listings/12345',
-    )
+    expect(getBookingSiteUrl()).toBe('https://210268-001.holidayfuture.com')
   })
 
-  it('carries chosen dates and guests over to Hostaway', () => {
-    expect(
-      buildListingBookingUrl('12345', {
-        checkIn: '2026-12-01',
-        checkOut: '2026-12-08',
-        guests: 4,
-      }),
-    ).toBe(
-      'https://book.strathconasummit.com/listings/12345?start=2026-12-01&end=2026-12-08&numberOfGuests=4',
-    )
-  })
-
-  it('uses the configured booking URL without doubling slashes', () => {
+  it('switches to the configured address, such as the branded domain', () => {
     vi.stubEnv(
       'NEXT_PUBLIC_HOSTAWAY_BOOKING_URL',
-      'https://example.holidayfuture.com/',
+      'https://book.strathconasummit.com/',
     )
 
-    expect(buildListingBookingUrl('12345')).toBe(
-      'https://example.holidayfuture.com/listings/12345',
-    )
-  })
-
-  it('leaves out a guest count that is not a positive number', () => {
-    expect(buildListingBookingUrl('12345', { guests: Number.NaN })).toBe(
-      'https://book.strathconasummit.com/listings/12345',
-    )
+    expect(getBookingSiteUrl()).toBe('https://book.strathconasummit.com')
   })
 })
 
-describe('buildSearchBookingUrl', () => {
-  it('sends a search with no dates to the Hostaway search page', () => {
-    expect(buildSearchBookingUrl()).toBe(
-      'https://book.strathconasummit.com/search',
-    )
-  })
+describe('getListingBookingUrl', () => {
+  it('links to that listing on the booking site', () => {
+    vi.stubEnv('NEXT_PUBLIC_HOSTAWAY_BOOKING_URL', '')
 
-  it('passes guests through from the search form', () => {
-    expect(
-      buildSearchBookingUrl({
-        checkIn: '2026-12-01',
-        checkOut: '2026-12-08',
-        guests: '2',
-      }),
-    ).toBe(
-      'https://book.strathconasummit.com/search?start=2026-12-01&end=2026-12-08&numberOfGuests=2',
+    expect(getListingBookingUrl('587033')).toBe(
+      'https://210268-001.holidayfuture.com/listings/587033',
     )
   })
 })

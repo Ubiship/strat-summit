@@ -10,28 +10,18 @@ import { RootLayout } from '@/components/RootLayout'
 import { PhotoGallery } from '@/components/PhotoGallery'
 import { BookingCard } from '@/components/BookingCard'
 import { MobileBookingCTA } from '@/components/MobileBookingCTA'
-import { AvailabilityCalendar } from '@/components/AvailabilityCalendar'
 import {
   PropertyHighlights,
   PropertyTypeLabel,
 } from '@/components/PropertyHighlights'
 import { ReviewList } from '@/components/ReviewList'
-import {
-  getProperty,
-  getAvailability,
-  getReviews,
-} from '@/lib/hostaway'
-import { buildListingBookingUrl } from '@/lib/booking'
+import { getProperty, getReviews } from '@/lib/hostaway'
+import { getListingBookingUrl } from '@/lib/booking'
 import { getPropertyHighlights } from '@/lib/propertyHighlights'
 import { site } from '@/lib/site'
 
 type PageProps = {
   params: Promise<{ slug: string }>
-  searchParams: Promise<{
-    checkIn?: string
-    checkOut?: string
-    guests?: string
-  }>
 }
 
 // Cache reviews with 6-hour revalidation
@@ -67,7 +57,6 @@ export async function generateMetadata(props: PageProps): Promise<Metadata> {
 
 export default async function PropertyDetailPage(props: PageProps) {
   const params = await props.params
-  const searchParams = await props.searchParams
 
   // Treat slug as property ID for now (future task will add slug mapping)
   const property = await getProperty(params.slug)
@@ -79,24 +68,7 @@ export default async function PropertyDetailPage(props: PageProps) {
   // Fetch reviews (cached)
   const reviews = await getCachedReviews(property.id.toString())
 
-  // Fetch availability for next 2 months
-  const today = new Date()
-  const twoMonthsLater = new Date(
-    today.getFullYear(),
-    today.getMonth() + 2,
-    today.getDate(),
-  )
-  const formatDate = (date: Date): string => {
-    return date.toISOString().split('T')[0]
-  }
-  const availability = await getAvailability(
-    property.id.toString(),
-    formatDate(today),
-    formatDate(twoMonthsLater),
-  )
-
-  // Any dates already chosen carry over to Hostaway
-  const bookingUrl = buildListingBookingUrl(property.id.toString(), searchParams)
+  const bookingUrl = getListingBookingUrl(property.id.toString())
 
   // Calculate average rating from reviews
   const averageRating =
@@ -175,31 +147,6 @@ export default async function PropertyDetailPage(props: PageProps) {
                   </ul>
                 </FadeIn>
               )}
-
-              {/* Availability Calendar */}
-              <FadeIn className="border-t border-warm-ink/10 py-14">
-                <AvailabilityCalendar
-                  listingId={property.id.toString()}
-                  initialAvailability={availability}
-                />
-              </FadeIn>
-
-              {/* Location */}
-              <FadeIn className="border-t border-warm-ink/10 py-14">
-                <h2 className="type-display text-[clamp(1.5rem,2.5vw,1.75rem)] text-warm-ink">
-                  Location
-                </h2>
-                <p className="mt-4 text-base text-warm-ink/80">
-                  {site.propertyArea}, BC
-                </p>
-                <p className="mt-2 text-sm text-warm-ink/60">
-                  Exact address provided after booking confirmation
-                </p>
-                {/* Future task: Add map integration */}
-                <div className="mt-6 grid aspect-[16/9] place-items-center rounded-[2.75rem] bg-warm-cream">
-                  <p className="text-lg text-warm-ink/40">Map coming soon</p>
-                </div>
-              </FadeIn>
 
               {/* Reviews */}
               <FadeIn className="border-t border-warm-ink/10 py-14">
@@ -291,7 +238,7 @@ export default async function PropertyDetailPage(props: PageProps) {
                     className="mt-6"
                     arrow
                   >
-                    Check Availability
+                    Book Now
                   </Button>
                 </div>
               </FadeIn>

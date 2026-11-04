@@ -7,7 +7,7 @@ export function MobileBookingCTA({ bookingUrl }: { bookingUrl: string }) {
       <div className="flex items-center justify-between gap-4">
         <p className="text-sm font-semibold text-warm-ink/60">See dates and book</p>
         <Button href={bookingUrl} tone="forest" size="sm">
-          Check Availability
+          Book Now
         </Button>
       </div>
     </div>

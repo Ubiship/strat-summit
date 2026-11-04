@@ -11,6 +11,7 @@ import { Footer } from '@/components/Footer'
 import { Kicker } from '@/components/Kicker'
 import { Logo } from '@/components/Logo'
 import { Offices } from '@/components/Offices'
+import { getBookingSiteUrl } from '@/lib/booking'
 
 type NavItem = {
   href: string
@@ -144,7 +145,7 @@ function SiteHeader({
             <NavDropdown key={link.label} item={link} />
           ))}
           <span className="hidden split:block">
-            <Button href="/stays" size="sm">
+            <Button href={getBookingSiteUrl()} size="sm">
               Book Now
             </Button>
           </span>
@@ -239,7 +240,7 @@ function MenuPanel({
         </nav>
 
         <div className="mt-8 mb-10">
-          <Button href="/stays" tone="forest" onClick={onClose} arrow>
+          <Button href={getBookingSiteUrl()} tone="forest" onClick={onClose} arrow>
             Book Now
           </Button>
         </div>
