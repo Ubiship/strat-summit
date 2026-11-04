@@ -1,12 +1,13 @@
 import { Button } from '@/components/Button'
 import { CtaPanel } from '@/components/CtaPanel'
+import { getBookingSiteUrl } from '@/lib/booking'
 
 export function BookingInvitation() {
   return (
     <CtaPanel
       title="Your mountain getaway starts here."
       actions={
-        <Button href="/stays" size="lg" arrow>
+        <Button href={getBookingSiteUrl()} size="lg" arrow>
           Check availability
         </Button>
       }

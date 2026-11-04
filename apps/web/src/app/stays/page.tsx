@@ -3,19 +3,16 @@ import { Suspense } from 'react'
 import { unstable_cache } from 'next/cache'
 
 import { Band } from '@/components/Band'
+import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { PageHero } from '@/components/PageHero'
 import { PropertyCard } from '@/components/PropertyCard'
 import { PropertyFilters } from '@/components/PropertyFilters'
 import { RootLayout } from '@/components/RootLayout'
-import { SearchBar } from '@/components/SearchBar'
+import { getBookingSiteUrl } from '@/lib/booking'
 import { site } from '@/lib/site'
-import {
-  getProperties,
-  getAvailability,
-  type HostawayProperty,
-} from '@/lib/hostaway'
+import { getProperties, type HostawayProperty } from '@/lib/hostaway'
 import { getPropertyHighlights } from '@/lib/propertyHighlights'
 
 export const metadata: Metadata = {
@@ -25,9 +22,6 @@ export const metadata: Metadata = {
 }
 
 type SearchParams = Promise<{
-  checkIn?: string
-  checkOut?: string
-  guests?: string
   bedrooms?: string
   amenities?: string
   propertyType?: string
@@ -42,7 +36,7 @@ const getCachedProperties = unstable_cache(
   { revalidate: 3600 },
 )
 
-async function filterProperties(
+function filterProperties(
   properties: HostawayProperty[],
   filters: Awaited<SearchParams>,
 ) {
@@ -75,41 +69,16 @@ async function filterProperties(
     })
   }
 
-  // If dates provided, keep only properties available for every night
-  if (filters.checkIn && filters.checkOut) {
-    const available = await Promise.all(
-      filtered.map(async (property) => {
-        try {
-          const availability = await getAvailability(
-            property.id.toString(),
-            filters.checkIn!,
-            filters.checkOut!,
-          )
-          return availability.every((day) => day.available) ? property : null
-        } catch (error) {
-          // Log error but don't fail the entire request; still show the property
-          console.error(
-            `Error fetching availability for property ${property.id}:`,
-            error,
-          )
-          return property
-        }
-      }),
-    )
-
-    return available.filter((p) => p !== null)
-  }
-
   return filtered
 }
 
 export default async function StaysPage(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams
   const allProperties = await getCachedProperties()
-  const properties = await filterProperties(allProperties, searchParams)
+  const properties = filterProperties(allProperties, searchParams)
 
-  const hasSearchParams =
-    searchParams.checkIn || searchParams.checkOut || searchParams.guests
+  const hasFilters =
+    searchParams.bedrooms || searchParams.amenities || searchParams.propertyType
 
   return (
     <RootLayout>
@@ -124,10 +93,10 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
 
       <Band>
         <Container>
-          <FadeIn>
-            <Suspense fallback={<div className="h-[200px]" />}>
-              <SearchBar />
-            </Suspense>
+          <FadeIn className="text-center">
+            <Button href={getBookingSiteUrl()} tone="forest" size="lg" arrow>
+              Search availability on our booking portal
+            </Button>
           </FadeIn>
 
           <FadeIn className="mt-8">
@@ -139,13 +108,13 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
           {properties.length === 0 ? (
             <FadeIn className="mt-16 text-center">
               <p className="type-display text-[clamp(1.5rem,2.5vw,2rem)] text-warm-ink">
-                {hasSearchParams
-                  ? 'No properties match your search criteria.'
+                {hasFilters
+                  ? 'No properties match your filters.'
                   : 'No properties available at this time.'}
               </p>
               <p className="mt-4 text-lg text-warm-ink/70">
-                {hasSearchParams
-                  ? 'Try adjusting your dates, guest count, or filters.'
+                {hasFilters
+                  ? 'Try adjusting your filters.'
                   : 'Please check back soon.'}
               </p>
             </FadeIn>
@@ -155,17 +124,14 @@ export default async function StaysPage(props: { searchParams: SearchParams }) {
                 <p className="text-lg font-semibold text-warm-ink/70">
                   {properties.length}{' '}
                   {properties.length === 1 ? 'property' : 'properties'}{' '}
-                  {hasSearchParams ? 'available' : 'in our collection'}
+                  {hasFilters ? 'match your filters' : 'in our collection'}
                 </p>
               </FadeIn>
 
               <FadeInStagger className="mt-8 grid gap-8 split:grid-cols-2 xl:grid-cols-3">
                 {properties.map((property) => (
                   <FadeIn key={property.id}>
-                    <PropertyCard
-                      property={property}
-                      searchParams={searchParams}
-                    />
+                    <PropertyCard property={property} />
                   </FadeIn>
                 ))}
               </FadeInStagger>

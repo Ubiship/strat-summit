@@ -5,6 +5,7 @@ import { cardClasses, IconTile } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
 import { SectionHead } from '@/components/SectionHead'
+import { getBookingSiteUrl } from '@/lib/booking'
 
 function IconBetterValue({ className }: { className?: string }) {
   return (
@@ -91,7 +92,7 @@ export function WhyBookDirect() {
             Book your Mount Washington getaway with local hosts who care for
             every detail of your stay.{' '}
             <Link
-              href="/stays"
+              href={getBookingSiteUrl()}
               className="font-bold text-forest-warm underline decoration-2 underline-offset-2 transition hover:text-forest-deep"
             >
               Check availability

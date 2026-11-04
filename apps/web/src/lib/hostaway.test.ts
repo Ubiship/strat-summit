@@ -1,6 +1,5 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import {
-  buildCheckoutUrl,
   getProperty,
   getPricing,
   getProperties,
@@ -14,42 +13,10 @@ import {
 beforeEach(() => {
   process.env.HOSTAWAY_API_KEY = 'test-api-key'
   process.env.HOSTAWAY_ACCOUNT_ID = 'test-account-id'
-  process.env.HOSTAWAY_CHECKOUT_BASE_URL = 'https://checkout.example.com'
 })
 
 afterEach(() => {
   vi.restoreAllMocks()
-})
-
-describe('buildCheckoutUrl', () => {
-  it('should build a valid checkout URL with all parameters', () => {
-    const url = buildCheckoutUrl('12345', '2026-01-01', '2026-01-08', 2)
-
-    expect(url).toBe(
-      'https://checkout.example.com?listingId=12345&checkIn=2026-01-01&checkOut=2026-01-08&guests=2'
-    )
-  })
-
-  it('should URL-encode special characters in parameters', () => {
-    const url = buildCheckoutUrl('12345', '2026-01-01', '2026-01-08', 2)
-
-    // Verify it's a valid URL
-    expect(() => new URL(url)).not.toThrow()
-  })
-
-  it('should handle single guest', () => {
-    const url = buildCheckoutUrl('12345', '2026-01-01', '2026-01-02', 1)
-
-    expect(url).toContain('guests=1')
-  })
-
-  it('should throw if checkout base URL is not set', () => {
-    delete process.env.HOSTAWAY_CHECKOUT_BASE_URL
-
-    expect(() => buildCheckoutUrl('12345', '2026-01-01', '2026-01-08', 2)).toThrow(
-      'HOSTAWAY_CHECKOUT_BASE_URL environment variable is not set'
-    )
-  })
 })
 
 describe('getProperty', () => {
