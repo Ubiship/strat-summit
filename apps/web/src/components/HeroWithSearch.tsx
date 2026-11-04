@@ -2,14 +2,14 @@
 
 import { Suspense, useId, useState } from 'react'
 import Image from 'next/image'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { FadeIn } from '@/components/FadeIn'
 import { Button } from '@/components/Button'
+import { buildSearchBookingUrl } from '@/lib/booking'
 import { site } from '@/lib/site'
 import clsx from 'clsx'
 
 function SearchFormInner() {
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   const checkInId = useId()
@@ -21,11 +21,7 @@ function SearchFormInner() {
   const [guests, setGuests] = useState(searchParams.get('guests') || '2')
 
   function handleSearch() {
-    const params = new URLSearchParams()
-    if (checkIn) params.set('checkIn', checkIn)
-    if (checkOut) params.set('checkOut', checkOut)
-    if (guests) params.set('guests', guests)
-    router.push(`/stays?${params.toString()}`)
+    window.location.assign(buildSearchBookingUrl({ checkIn, checkOut, guests }))
   }
 
   const inputClasses =

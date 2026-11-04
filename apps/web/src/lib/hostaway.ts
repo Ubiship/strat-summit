@@ -95,14 +95,6 @@ function getAccountId(): string {
   return id
 }
 
-function getCheckoutBaseUrl(): string {
-  const url = process.env.HOSTAWAY_CHECKOUT_BASE_URL
-  if (!url) {
-    throw new Error('HOSTAWAY_CHECKOUT_BASE_URL environment variable is not set')
-  }
-  return url
-}
-
 /**
  * Get an OAuth2 access token using client credentials flow.
  * Tokens are cached and reused until they expire (~2 years).
@@ -464,24 +456,4 @@ export async function getReviews(listingId?: string): Promise<HostawayReview[]> 
     console.error('Failed to fetch reviews:', error)
     return []
   }
-}
-
-/**
- * Build a checkout URL for Hostaway booking
- */
-export function buildCheckoutUrl(
-  listingId: string,
-  checkIn: string,
-  checkOut: string,
-  guests: number,
-): string {
-  const baseUrl = getCheckoutBaseUrl()
-  const params = new URLSearchParams({
-    listingId,
-    checkIn,
-    checkOut,
-    guests: guests.toString(),
-  })
-
-  return `${baseUrl}?${params.toString()}`
 }

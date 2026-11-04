@@ -21,6 +21,7 @@ import {
   getAvailability,
   getReviews,
 } from '@/lib/hostaway'
+import { buildListingBookingUrl } from '@/lib/booking'
 import { getPropertyHighlights } from '@/lib/propertyHighlights'
 import { site } from '@/lib/site'
 
@@ -94,10 +95,8 @@ export default async function PropertyDetailPage(props: PageProps) {
     formatDate(twoMonthsLater),
   )
 
-  // Parse search params for BookingCard
-  const checkIn = searchParams.checkIn
-  const checkOut = searchParams.checkOut
-  const guests = searchParams.guests ? parseInt(searchParams.guests) : 2
+  // Any dates already chosen carry over to Hostaway
+  const bookingUrl = buildListingBookingUrl(property.id.toString(), searchParams)
 
   // Calculate average rating from reviews
   const averageRating =
@@ -283,10 +282,10 @@ export default async function PropertyDetailPage(props: PageProps) {
                     Ready to book?
                   </h2>
                   <p className="mx-auto mt-3 max-w-md text-base text-warm-ink/70">
-                    Select your dates above and secure your stay at {property.name}.
+                    See live availability and secure your stay at {property.name}.
                   </p>
                   <Button
-                    href="#booking-card"
+                    href={bookingUrl}
                     tone="forest"
                     size="md"
                     className="mt-6"
@@ -301,13 +300,7 @@ export default async function PropertyDetailPage(props: PageProps) {
             {/* Right column - Booking card (sticky on desktop) */}
             <FadeIn>
               <div id="booking-card">
-                <BookingCard
-                  listingId={property.id.toString()}
-                  maxGuests={property.maxGuests}
-                  initialCheckIn={checkIn}
-                  initialCheckOut={checkOut}
-                  initialGuests={guests}
-                />
+                <BookingCard bookingUrl={bookingUrl} />
               </div>
             </FadeIn>
           </div>
@@ -315,7 +308,7 @@ export default async function PropertyDetailPage(props: PageProps) {
       </Band>
 
       {/* Mobile sticky booking CTA */}
-      <MobileBookingCTA />
+      <MobileBookingCTA bookingUrl={bookingUrl} />
     </RootLayout>
   )
 }
