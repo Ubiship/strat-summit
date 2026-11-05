@@ -1,6 +1,6 @@
 // Guests browse on this site and book on Hostaway. Every link out goes through
 // this file. It runs in the browser, so the variable must stay NEXT_PUBLIC_.
-const DEFAULT_BOOKING_SITE_URL = 'https://210268-001.holidayfuture.com'
+const DEFAULT_BOOKING_SITE_URL = 'https://book.strathconasummit.com'
 
 export function getBookingSiteUrl(): string {
   return (
