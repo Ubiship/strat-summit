@@ -6,19 +6,19 @@ afterEach(() => {
 })
 
 describe('getBookingSiteUrl', () => {
-  it('defaults to the working Hostaway booking site', () => {
+  it('defaults to the branded Hostaway booking site', () => {
     vi.stubEnv('NEXT_PUBLIC_HOSTAWAY_BOOKING_URL', '')
 
-    expect(getBookingSiteUrl()).toBe('https://210268-001.holidayfuture.com')
+    expect(getBookingSiteUrl()).toBe('https://book.strathconasummit.com')
   })
 
-  it('switches to the configured address, such as the branded domain', () => {
+  it('switches to the configured address and drops a trailing slash', () => {
     vi.stubEnv(
       'NEXT_PUBLIC_HOSTAWAY_BOOKING_URL',
-      'https://book.strathconasummit.com/',
+      'https://210268-001.holidayfuture.com/',
     )
 
-    expect(getBookingSiteUrl()).toBe('https://book.strathconasummit.com')
+    expect(getBookingSiteUrl()).toBe('https://210268-001.holidayfuture.com')
   })
 })
 
@@ -27,7 +27,7 @@ describe('getListingBookingUrl', () => {
     vi.stubEnv('NEXT_PUBLIC_HOSTAWAY_BOOKING_URL', '')
 
     expect(getListingBookingUrl('587033')).toBe(
-      'https://210268-001.holidayfuture.com/listings/587033',
+      'https://book.strathconasummit.com/listings/587033',
     )
   })
 })
