@@ -46,7 +46,9 @@ export default function About() {
   return (
     <RootLayout>
       <PageHero kicker="About us" title="Meet Joel & Amanda">
-        <p>The path to Mount Washington wasn’t exactly a straight line.</p>
+        <p className="text-[clamp(1.375rem,2.2vw,1.625rem)]/[1.4] text-warm-ink">
+          The path to Mount Washington wasn’t exactly a straight line.
+        </p>
       </PageHero>
 
       <Band>
@@ -63,7 +65,7 @@ export default function About() {
                 />
               </div>
             </FadeIn>
-            <FadeIn className="space-y-6 text-[1.1875rem]/[1.7] text-warm-muted split:order-first">
+            <FadeIn className="space-y-6 text-[1.1875rem]/[1.7] text-pretty text-warm-muted split:order-first">
               <p>
                 We met more than 20 years ago while backpacking through Europe.
                 Our shared love of travel and adventure took us all over the
@@ -123,7 +125,7 @@ export default function About() {
                       <p className="mt-2 text-[1.0625rem] font-semibold text-forest-warm">
                         {person.role}
                       </p>
-                      <div className="mt-6 space-y-4 text-[1.0625rem]/[1.7] text-warm-muted">
+                      <div className="mt-6 space-y-4 text-[1.0625rem]/[1.7] text-pretty text-warm-muted">
                         {person.bio.map((paragraph) => (
                           <p key={paragraph}>{paragraph}</p>
                         ))}

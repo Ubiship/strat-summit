@@ -21,7 +21,10 @@ export const metadata: Metadata = {
 type IconProps = { className?: string }
 
 // Line icons drawn to match the homepage "Why book direct" cards.
-function Icon({ className, children }: IconProps & { children: React.ReactNode }) {
+function Icon({
+  className,
+  children,
+}: IconProps & { children: React.ReactNode }) {
   return (
     <svg
       viewBox="0 0 48 48"
@@ -124,9 +127,9 @@ export default function Cleaning() {
         }
       >
         <p>
-          Whether you’re welcoming rental guests or heading home after a
-          weekend on the mountain, our local team takes care of the cleaning so
-          your place is ready for whoever arrives next.
+          Whether you’re welcoming rental guests or heading home after a weekend
+          on the mountain, our local team takes care of the cleaning so your
+          place is ready for whoever arrives next.
         </p>
       </PageHero>
 
@@ -149,7 +152,7 @@ export default function Cleaning() {
                 <h3 className="mt-10 type-display text-[clamp(2rem,3vw,2.375rem)] text-warm-ink">
                   {service.title}
                 </h3>
-                <p className="mt-5 text-[1.0625rem]/[1.7] text-warm-muted">
+                <p className="mt-5 text-[1.0625rem]/[1.7] text-pretty text-warm-muted">
                   {service.description}
                 </p>
               </FadeIn>
