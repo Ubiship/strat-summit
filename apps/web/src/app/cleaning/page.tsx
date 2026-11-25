@@ -115,10 +115,10 @@ export default function Cleaning() {
       <PageHero
         kicker="Cleaning"
         title="A clean mountain home. More time to enjoy it."
-        // TODO: swap for "Cleaning 1" from the client's Google Drive.
         image={{
-          src: site.images.hero,
-          alt: 'Snow-capped mountain peak above Vancouver Island forest',
+          src: site.images.cleaning,
+          alt: 'Bright, freshly cleaned kitchen with white cabinets and a wood ceiling',
+          position: 'center 60%',
         }}
         actions={
           <Button href="/contact" tone="light" size="lg" arrow>

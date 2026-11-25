@@ -23,5 +23,6 @@ export const site = {
     amanda: '/Strat summit images/Amanda Headshot.JPG',
     propertyManagement: '/Strat summit images/Property Management 1.jpg',
     mountWashington: '/Strat summit images/Mt Washington Info 1.jpg',
+    cleaning: '/Strat summit images/Cleaning 1.jpg',
   },
 } as const
