@@ -34,7 +34,7 @@ export function MeetYourHosts() {
             </h2>
             <div className="mt-10 space-y-6 text-[1.0625rem]/[1.75] text-warm-muted">
               <p>
-                A chance meeting while backpacking through Europe more than 16
+                A chance meeting while backpacking through Europe more than 20
                 years ago grew into a life built around adventure and
                 hospitality. Our careers have taken us from wilderness guiding
                 to eight seasons at an internationally acclaimed luxury

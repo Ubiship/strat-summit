@@ -2,74 +2,110 @@ import { type Metadata } from 'next'
 import clsx from 'clsx'
 
 import { Band } from '@/components/Band'
-import { CardIcon } from '@/components/CardIcon'
+import { Button } from '@/components/Button'
+import { cardClasses, IconTile } from '@/components/Card'
 import { ContactSection } from '@/components/ContactSection'
-import { cardClasses } from '@/components/Card'
 import { Container } from '@/components/Container'
 import { FadeIn, FadeInStagger } from '@/components/FadeIn'
-import { NumberBadge } from '@/components/NumberBadge'
 import { PageHero } from '@/components/PageHero'
 import { RootLayout } from '@/components/RootLayout'
 import { SectionHead } from '@/components/SectionHead'
-import { SansAmpersand } from '@/components/SansAmpersand'
-import iconDeepCleaning from '@/images/icons/icon-deep-cleaning.png'
-import iconLinenService from '@/images/icons/icon-linen-service.png'
-import iconRestocking from '@/images/icons/icon-restocking.png'
-import iconTurnoverCleaning from '@/images/icons/icon-turnover-cleaning.png'
 import { site } from '@/lib/site'
 
 export const metadata: Metadata = {
-  title: 'Professional Cleaning Services',
+  title: 'Cleaning Services',
   description:
-    'Professional cleaning for vacation properties on Vancouver Island — turnover cleaning, deep cleaning, linen service, and restocking.',
+    'Vacation rental turnovers, private-use home cleaning, deep cleaning and linen service for Mount Washington homes.',
+}
+
+type IconProps = { className?: string }
+
+// Line icons drawn to match the homepage "Why book direct" cards.
+function Icon({
+  className,
+  children,
+}: IconProps & { children: React.ReactNode }) {
+  return (
+    <svg
+      viewBox="0 0 48 48"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.5}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      {children}
+    </svg>
+  )
+}
+
+function IconChecklist(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="11" y="8" width="26" height="34" rx="3" />
+      <path d="M19 8V6h10v2" />
+      <path d="m17 19 2.5 2.5L24 17" />
+      <path d="M27 20h5" />
+      <path d="m17 30 2.5 2.5L24 28" />
+      <path d="M27 31h5" />
+    </Icon>
+  )
+}
+
+function IconHome(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M8 22 24 9l16 13" />
+      <path d="M12 19v20a2 2 0 0 0 2 2h20a2 2 0 0 0 2-2V19" />
+      <path d="M20 41V30h8v11" />
+    </Icon>
+  )
+}
+
+function IconSparkle(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M22 8c1.2 7.6 4.4 10.8 12 12-7.6 1.2-10.8 4.4-12 12-1.2-7.6-4.4-10.8-12-12 7.6-1.2 10.8-4.4 12-12Z" />
+      <path d="M35 30c.6 3.4 1.6 4.4 5 5-3.4.6-4.4 1.6-5 5-.6-3.4-1.6-4.4-5-5 3.4-.6 4.4-1.6 5-5Z" />
+    </Icon>
+  )
+}
+
+function IconLinen(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <rect x="9" y="30" width="30" height="8" rx="2" />
+      <rect x="11" y="21" width="26" height="8" rx="2" />
+      <rect x="13" y="12" width="22" height="8" rx="2" />
+    </Icon>
+  )
 }
 
 const services = [
   {
-    title: 'Turnover cleaning',
-    icon: iconTurnoverCleaning,
+    title: 'Vacation rental turnovers',
+    Icon: IconChecklist,
     description:
-      'Complete property reset between guests — kitchen, bathrooms, bedrooms, and common areas cleaned to guest-ready standard.',
-    tone: 'outline' as const,
+      'We use a detailed turnover checklist developed specifically for short-term rentals. From fresh linens and clean bathrooms to the finishing touches guests notice, our checklist helps us deliver the consistent standard of cleanliness that earns five-star ratings.',
+  },
+  {
+    title: 'Private-use home cleaning',
+    Icon: IconHome,
+    description:
+      'Give yourself your Sundays back. Enjoy that last ski run or a slower morning, then leave the cleaning to us. We typically come by during the week after you leave, so your home is ready for your next stay.',
   },
   {
     title: 'Deep cleaning',
-    icon: iconDeepCleaning,
+    Icon: IconSparkle,
     description:
-      'Seasonal deep cleans for baseboards, windows, appliances, and high-touch surfaces that need attention beyond regular turnovers.',
-    tone: 'tint' as const,
+      'A more thorough clean for the areas that need extra attention, from baseboards and window tracks to appliances. Book a deep clean before a busy season or when your home is due for a reset.',
   },
   {
     title: 'Linen service',
-    icon: iconLinenService,
+    Icon: IconLinen,
     description:
-      'Fresh bed linens and towels for every stay — washed, pressed, and restocked so you never have to think about laundry logistics.',
-    tone: 'tint' as const,
-  },
-  {
-    title: 'Restocking',
-    icon: iconRestocking,
-    description:
-      'Supplies replenished before each arrival — coffee, paper products, cleaning essentials, and amenities tailored to your property.',
-    tone: 'outline' as const,
-  },
-]
-
-const steps = [
-  {
-    title: 'Book your service',
-    description:
-      'Send us your property details and turnover schedule — one-off cleans or recurring calendar sync.',
-  },
-  {
-    title: 'We clean & document',
-    description:
-      'Checklists completed, issues flagged, and photo confirmation sent after every visit.',
-  },
-  {
-    title: 'Guests arrive guest-ready',
-    description:
-      'Property reset to standard, ready for check-in — no surprises, no missed details.',
+      'When there’s a pile of sheets and towels and only a few hours between stays, laundry can be the hardest part to keep up with. We wash, treat stains, and fold your linens, with pickup and drop-off available.',
   },
 ]
 
@@ -78,42 +114,45 @@ export default function Cleaning() {
     <RootLayout>
       <PageHero
         kicker="Cleaning"
-        title="Professional cleaning for vacation properties."
+        title="A clean mountain home. More time to enjoy it."
         image={{
-          src: site.images.hero,
-          alt: 'Snow-capped mountain peak above Vancouver Island forest',
+          src: site.images.cleaning,
+          alt: 'Bright, freshly cleaned kitchen with white cabinets and a wood ceiling',
+          position: 'center 60%',
         }}
+        actions={
+          <Button href="/contact" tone="light" size="lg" arrow>
+            Inquire About Cleaning
+          </Button>
+        }
       >
         <p>
-          Turnover cleaning built for vacation rentals — consistent standards,
-          photo records, and flexible scheduling so your property is always
-          guest-ready.
+          Whether you’re welcoming rental guests or heading home after a weekend
+          on the mountain, our local team takes care of the cleaning so your
+          place is ready for whoever arrives next.
         </p>
       </PageHero>
 
       <Band>
         <Container>
-          <SectionHead kicker="Services" title="What we offer">
+          <SectionHead kicker="Services" title="What we offer" layout="center">
             <p>
-              From scheduled turnovers to seasonal deep cleans, our service
-              packages are designed around how vacation properties actually
-              operate — not generic residential cleaning templates.
+              Some mountain homes need a reset between guest stays. Others need
+              a clean after a family weekend. We can help with both, along with
+              seasonal deep cleans and linen service when the laundry piles up.
             </p>
           </SectionHead>
-          <FadeInStagger className="mt-16 grid gap-6 split:grid-cols-2">
+          <FadeInStagger className="mt-14 grid gap-8 split:mt-16 split:grid-cols-2">
             {services.map((service) => (
               <FadeIn
                 key={service.title}
-                className={clsx(
-                  cardClasses({ tone: service.tone }),
-                  'flex min-h-[18rem] flex-col p-8 split:p-10',
-                )}
+                className={clsx(cardClasses(), 'flex flex-col p-8 split:p-10')}
               >
-                <CardIcon src={service.icon} />
-                <h3 className="mt-auto pt-10 type-display text-[clamp(2.25rem,3.2vw,2.875rem)]">
+                <IconTile icon={service.Icon} />
+                <h3 className="mt-10 type-display text-[clamp(2rem,3vw,2.375rem)] text-warm-ink">
                   {service.title}
                 </h3>
-                <p className="mt-4 text-[1.0625rem]/[1.55] opacity-90">
+                <p className="mt-5 text-[1.0625rem]/[1.7] text-pretty text-warm-muted">
                   {service.description}
                 </p>
               </FadeIn>
@@ -122,50 +161,14 @@ export default function Cleaning() {
         </Container>
       </Band>
 
-      <Band>
-        <Container>
-          <SectionHead kicker="How it works" title="Three steps to guest-ready">
-            <p>
-              Whether you manage one property or a full portfolio, our workflow
-              stays consistent — reliable turnaround times and clear
-              communication from booking to completion.
-            </p>
-          </SectionHead>
-          <FadeInStagger className="relative mt-16">
-            <FadeIn
-              aria-hidden="true"
-              className="absolute top-[calc(2rem-0.125rem)] right-[calc((100%-6rem)/6)] left-[calc((100%-6rem)/6)] hidden h-1 rounded-full bg-warm-ink/25 split:block"
-            />
-            <ol
-              role="list"
-              className="relative grid gap-12 split:grid-cols-3 split:gap-8"
-            >
-              {steps.map((step, index) => (
-                <li key={step.title}>
-                  <FadeIn className="flex gap-6 split:flex-col split:items-center split:text-center">
-                    <NumberBadge
-                      value={index + 1}
-                      tone="forest"
-                      size="lg"
-                      className="relative"
-                    />
-                    <div>
-                      <h2 className="type-display text-[2.625rem]">
-                        <SansAmpersand>{step.title}</SansAmpersand>
-                      </h2>
-                      <p className="mt-4 text-[1.0625rem]/[1.6] text-warm-muted">
-                        {step.description}
-                      </p>
-                    </div>
-                  </FadeIn>
-                </li>
-              ))}
-            </ol>
-          </FadeInStagger>
-        </Container>
-      </Band>
-
-      <ContactSection />
+      <ContactSection
+        title="Ready to simplify your cleaning routine?"
+        button="Inquire About Cleaning"
+      >
+        Tell us a little about your Mount Washington property and what you need
+        help with. We’ll talk through the services that fit, scheduling, and
+        pricing.
+      </ContactSection>
     </RootLayout>
   )
 }
